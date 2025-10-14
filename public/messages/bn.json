@@ -1,0 +1,10 @@
+{
+  "HomePage": {
+    "welcome": "W3University-এ স্বাগতম"
+  },
+  "Navigation": {
+    "home": "হোম",
+    "about": "আমাদের সম্পর্কে",
+    "contact": "যোগাযোগ"
+  }
+}

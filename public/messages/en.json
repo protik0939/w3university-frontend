@@ -1,0 +1,10 @@
+{
+  "HomePage": {
+    "welcome": "WELCOME TO W3UNIVERSITY"
+  },
+  "Navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "contact": "Contact"
+  }
+}

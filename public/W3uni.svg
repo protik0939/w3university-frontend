@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 94.58">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        font-family: Poppins-Black, Poppins;
+        font-size: 76px;
+        font-weight: 800;
+      }
+
+      .cls-2 {
+        fill: #2e964c;
+      }
+    </style>
+  </defs>
+  <rect class="cls-2" x="1" y=".63" width="148" height="93.32" rx="27.98" ry="27.98"/>
+  <text class="cls-1" transform="translate(13.06 74.16) scale(.95 1)"><tspan x="0" y="0">W3</tspan></text>
+</svg>
