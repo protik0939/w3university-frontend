@@ -1,9 +1,10 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown, Globe } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/lib/LocaleContext";
+import { useTranslations } from "next-intl";
 
 interface DropdownItem {
   name: string;
@@ -17,32 +18,44 @@ interface NavItem {
 }
 
 export default function TopNavBar() {
+  const t = useTranslations('Navigation');
   // 💡 Configurable options
   const navOptions: NavItem[] = [
-    { name: "Home", link: "/" },
+    { name: t("home"), link: "/" },
     {
-      name: "Docs",
+      name: t("Docs"),
       dropdown: [
-        { name: "Getting Started", link: "/docs/start" },
-        { name: "Components", link: "/docs/components" },
-        { name: "API Reference", link: "/docs/api" },
+        { name: t("Getting Started"), link: "/docs/start" },
+        { name: t("Components"), link: "/docs/components" },
+        { name: t("API Reference"), link: "/docs/api" },
       ],
     },
     {
-      name: "Community",
+      name: t("Community"),
       dropdown: [
-        { name: "Discord", link: "https://discord.com" },
-        { name: "GitHub", link: "https://github.com" },
+        { name: t("Discord"), link: "https://discord.com" },
+        { name: t("GitHub"), link: "https://github.com" },
       ],
     },
   ];
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const { locale, setLocale } = useLocale();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleLanguage = () => {
     const newLocale = locale === 'en' ? 'bn' : 'en';
     setLocale(newLocale);
+  };
+
+  // Get the display text for language button
+  const getLanguageText = () => {
+    if (!mounted) return 'EN'; // Always show 'EN' during SSR
+    return locale === 'en' ? 'EN' : 'বাং';
   };
 
   return (
@@ -61,7 +74,7 @@ export default function TopNavBar() {
           width={60}
           height={30}
         />
-        <span className="font-semibold text-white text-lg">University</span>
+        <span className="font-semibold text-white text-lg">{t("University")}</span>
       </div>
 
       {/* Right: Navigation Links + Language Switcher */}
@@ -112,7 +125,7 @@ export default function TopNavBar() {
           aria-label="Switch language"
         >
           <Globe size={18} />
-          <span className="text-sm">{locale === 'en' ? 'EN' : 'বাং'}</span>
+          <span className="text-sm">{getLanguageText()}</span>
         </button>
       </div>
     </nav>

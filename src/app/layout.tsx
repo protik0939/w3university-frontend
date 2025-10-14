@@ -24,13 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link
-        rel="icon"
-        href="./favicon.svg"
-        type="image/<generated>"
-        sizes="<generated>"
-      />
-      <body className={`${hindSiliguri.variable} antialiased`}>
+      <head>
+        <link
+          rel="icon"
+          href="./assets/icons/icon.svg"
+          type="image/<generated>"
+          sizes="<generated>"
+        />
+      </head>
+      <body className={`${hindSiliguri.className} antialiased`}>
         <LocaleProvider>
           <IntlProvider>
             <TopNavBar />

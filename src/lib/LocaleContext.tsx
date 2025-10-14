@@ -12,10 +12,11 @@ interface LocaleContextType {
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 export function LocaleProvider({ children }: Readonly<{ children: React.ReactNode }>) {
+  // Always start with 'en' to match server-side rendering
   const [locale, setLocaleState] = useState<Locale>('en');
 
   useEffect(() => {
-    // Load locale from localStorage on mount
+    // After hydration, load locale from localStorage
     const savedLocale = localStorage.getItem('locale') as Locale;
     if (savedLocale === 'en' || savedLocale === 'bn') {
       setLocaleState(savedLocale);
@@ -23,6 +24,7 @@ export function LocaleProvider({ children }: Readonly<{ children: React.ReactNod
   }, []);
 
   const setLocale = (newLocale: Locale) => {
+    console.log('Setting locale to:', newLocale);
     setLocaleState(newLocale);
     localStorage.setItem('locale', newLocale);
     // No need to reload - the useEffect in IntlProvider will handle the update

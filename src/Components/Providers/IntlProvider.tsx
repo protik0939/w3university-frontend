@@ -3,35 +3,32 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { useLocale } from '@/lib/LocaleContext';
 import { useEffect, useState, ReactNode } from 'react';
+import enMessages from '../../../public/messages/en.json';
+import bnMessages from '../../../public/messages/bn.json';
 
 interface IntlProviderProps {
   children: ReactNode;
 }
 
+const messagesMap = {
+  en: enMessages,
+  bn: bnMessages,
+};
+
 export default function IntlProvider({ children }: Readonly<IntlProviderProps>) {
   const { locale } = useLocale();
-  const [messages, setMessages] = useState<Record<string, unknown> | null>(null);
-
+  const [mounted, setMounted] = useState(false);
+  
   useEffect(() => {
-    // Load messages dynamically based on locale
-    const loadMessages = async () => {
-      try {
-        const messagesModule = await import(`../../../public/messages/${locale}.json`);
-        setMessages(messagesModule.default);
-      } catch (error) {
-        console.error(`Failed to load messages for locale: ${locale}`, error);
-      }
-    };
+    setMounted(true);
+  }, []);
 
-    loadMessages();
-  }, [locale]);
-
-  if (!messages) {
-    return <div>{children}</div>; // Return children without intl while loading
-  }
+  // Always use 'en' messages for initial server render to avoid hydration mismatch
+  const currentMessages = mounted ? messagesMap[locale] : messagesMap.en;
+  const currentLocale = mounted ? locale : 'en';
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider key={currentLocale} locale={currentLocale} messages={currentMessages}>
       {children}
     </NextIntlClientProvider>
   );

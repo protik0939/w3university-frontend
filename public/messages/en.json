@@ -1,10 +1,26 @@
 {
   "HomePage": {
-    "welcome": "WELCOME TO W3UNIVERSITY"
+    "welcome": "WELCOME TO W3UNIVERSITY",
+    "text-1": "Learn to code from scratch",
+    "text-2": "Master programming step by step",
+    "text-3": "Your journey to become a developer starts here",
+    "text-4": "Practice, build, and grow your skills",
+    "text-5": "Learn in English or Bengali — your choice!",
+    "text-6": "From basics to advanced, everything in one place",
+    "text-7": "Code, compile, and create with confidence",
+    "text-8": "Simple explanations. Real examples",
+    "text-9": "Learn HTML, CSS, JavaScript, Python, and more!",
+    "text-10": "Start small, dream big — W3University is with you"
   },
   "Navigation": {
     "home": "Home",
-    "about": "About Us",
-    "contact": "Contact"
+    "Docs": "Docs",
+    "Getting Started": "Getting Started",
+    "Components": "Components",
+    "API Reference": "API Reference",
+    "Community": "Community",
+    "Discord": "Discord",
+    "GitHub": "GitHub",
+    "University" : "University"
   }
 }
