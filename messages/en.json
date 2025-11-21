@@ -2,6 +2,7 @@
   "Navbar": {
     "tutorials": "Tutorials",
     "exercises": "Exercises",
+    "blog": "Blog",
     "certificates": "Certificates",
     "community": "Community",
     "getStarted": "Get Started"
@@ -113,5 +114,34 @@
       "legal": "Legal",
       "copyright": "© 2025 W3University. All rights reserved."
     }
+  },
+  "Blog": {
+    "title": "Dev Dock",
+    "subtitle": "Learn from tutorials, guides, and insights on modern web development",
+    "searchPlaceholder": "Search articles...",
+    "readArticle": "Read Article",
+    "loadMore": "Load More Articles",
+    "noResults": "No articles found matching your criteria."
+  },
+  "Footer": {
+    "description": "The world's largest web developer learning platform. Learn coding with bilingual support.",
+    "quickLinks": "Quick Links",
+    "tutorials": "Tutorials",
+    "exercises": "Exercises",
+    "certificates": "Certificates",
+    "blog": "Blog",
+    "resources": "Resources",
+    "documentation": "Documentation",
+    "community": "Community",
+    "support": "Support",
+    "changelog": "Changelog",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "license": "License",
+    "cookies": "Cookie Policy",
+    "copyright": "© 2025 W3University. All rights reserved.",
+    "madeWith": "Made with",
+    "byDevelopers": "by developers for developers"
   }
 }

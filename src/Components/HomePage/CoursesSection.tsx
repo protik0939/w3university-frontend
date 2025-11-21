@@ -13,7 +13,7 @@ interface CourseCardProps {
 
 function CourseCard({ title, description, lessons, bgColor, textColor }: CourseCardProps) {
   return (
-    <div className="group relative bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-lg p-6 hover:border-green-500/50 transition-all duration-300 cursor-pointer">
+    <div className="group relative bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-lg p-6 hover:border-green-500/50 transition-all duration-300 cursor-pointer">
       {/* Tag */}
       <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md mb-4 ${bgColor}`}>
         <Code size={14} className={textColor} />
@@ -21,10 +21,10 @@ function CourseCard({ title, description, lessons, bgColor, textColor }: CourseC
       </div>
       
       {/* Content */}
-      <p className="text-sm text-gray-400 mb-4">{description}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 transition-colors">{description}</p>
       
       <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-500">{lessons}</span>
+        <span className="text-xs text-gray-500 dark:text-gray-500 transition-colors">{lessons}</span>
         <button className="flex items-center gap-1 text-xs text-green-400 group-hover:gap-2 transition-all">
           Start
           <ChevronRight size={14} />
@@ -50,15 +50,15 @@ export default function CoursesSection() {
   ]
 
   return (
-    <section id="courses" className="py-16 md:py-20 bg-gray-950">
+    <section id="courses" className="py-16 md:py-20 bg-white dark:bg-gray-950 transition-colors">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="flex items-center justify-between mb-12 max-w-6xl mx-auto">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-white">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900 dark:text-white transition-colors">
               {t("title")}
             </h2>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors">
               {t("subtitle")}
             </p>
           </div>
@@ -83,7 +83,7 @@ export default function CoursesSection() {
         </div>
 
         {/* Mobile View All */}
-        <button className="sm:hidden w-full flex items-center justify-center gap-2 px-4 py-3 text-sm text-green-400 border border-gray-800 rounded-lg hover:border-green-500/50 transition-all">
+        <button className="sm:hidden w-full flex items-center justify-center gap-2 px-4 py-3 text-sm text-green-400 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-green-500/50 transition-all">
           {t("viewAll")}
           <ChevronRight size={16} />
         </button>

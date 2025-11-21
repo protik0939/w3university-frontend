@@ -36,7 +36,7 @@ export default function HeroFloatingActions() {
           {/* Language Switcher */}
           <button
             onClick={switchLocale}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-300 hover:text-green-400 bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-green-500/50 rounded-lg transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-green-400 bg-white/80 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 hover:border-green-500/50 rounded-lg transition-all"
           >
             <Globe size={16} />
             <span className="hidden sm:inline">{currentLocale === 'en' ? 'বাংলা' : 'English'}</span>

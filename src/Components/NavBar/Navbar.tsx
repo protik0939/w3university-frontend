@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Code2, Menu, X, Globe, BookOpen, Trophy, Users } from 'lucide-react'
 import { useParams } from 'next/navigation'
+import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -24,6 +25,7 @@ export default function Navbar() {
   const navLinks = [
     { key: 'tutorials', icon: BookOpen, href: '#courses' },
     { key: 'exercises', icon: Code2, href: '#exercises' },
+    { key: 'blog', icon: BookOpen, href: `/${currentLocale}/blog` },
     { key: 'certificates', icon: Trophy, href: '#certificates' },
     { key: 'community', icon: Users, href: '#community' },
   ]
@@ -44,7 +46,7 @@ export default function Navbar() {
         }`}
       >
         {/* Glass background */}
-        <div className="absolute inset-0 bg-gray-900/95 backdrop-blur-xl border-b border-gray-800" />
+        <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 transition-colors" />
         
         <div className="relative container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
@@ -65,7 +67,7 @@ export default function Navbar() {
                 <a
                   key={key}
                   href={href}
-                  className="flex items-center gap-2 text-sm text-gray-300 hover:text-green-400 transition-colors group"
+                  className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 transition-colors group"
                 >
                   <Icon size={16} className="group-hover:scale-110 transition-transform" />
                   <span>{t(key)}</span>
@@ -75,10 +77,13 @@ export default function Navbar() {
 
             {/* Right Section */}
             <div className="flex items-center gap-4">
+              {/* Theme Switcher */}
+              <ThemeSwitcher />
+              
               {/* Language Switcher */}
               <button
                 onClick={switchLocale}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-300 hover:text-green-400 border border-gray-700 hover:border-green-500/50 rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-300 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 border border-gray-700 dark:border-gray-700 hover:border-green-500/50 dark:hover:border-green-500/50 rounded-lg transition-all"
               >
                 <Globe size={16} />
                 <span className="hidden sm:inline">{currentLocale === 'en' ? 'বাংলা' : 'English'}</span>
@@ -92,7 +97,7 @@ export default function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden text-gray-300 hover:text-green-400 transition-colors"
+                className="md:hidden text-gray-700 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 transition-colors"
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -102,7 +107,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden absolute top-16 left-0 right-0 bg-gray-900/98 backdrop-blur-xl border-b border-gray-800 transition-all duration-300 ${
+          className={`md:hidden absolute top-16 left-0 right-0 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 transition-all duration-300 ${
             isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
         >
@@ -111,7 +116,7 @@ export default function Navbar() {
               <a
                 key={key}
                 href={href}
-                className="flex items-center gap-3 text-gray-300 hover:text-green-400 transition-colors py-2"
+                className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <Icon size={20} />
