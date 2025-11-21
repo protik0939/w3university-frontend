@@ -1,0 +1,278 @@
+[
+  {
+    "id": "javascript",
+    "name": "JavaScript",
+    "shortDescription": "A versatile programming language for web development",
+    "image": "/assets/languages/javascript.svg",
+    "description": "JavaScript is one of the most popular programming languages in the world. It's primarily used for web development, allowing developers to create interactive and dynamic web pages.",
+    "version": "ES2024",
+    "difficulty": "Beginner to Advanced",
+    "features": [
+      "Easy to learn and use",
+      "Runs in the browser and on servers (Node.js)",
+      "Large ecosystem and community support",
+      "Event-driven and functional programming",
+      "Cross-platform compatibility"
+    ],
+    "useCases": [
+      "Web application development",
+      "Mobile app development (React Native)",
+      "Server-side programming (Node.js)",
+      "Game development",
+      "Desktop applications (Electron)"
+    ]
+  },
+  {
+    "id": "python",
+    "name": "Python",
+    "shortDescription": "A powerful language for data science and automation",
+    "image": "/assets/languages/python.svg",
+    "description": "Python is a high-level, interpreted programming language known for its simplicity and readability. It's widely used in web development, data science, artificial intelligence, and automation.",
+    "version": "3.12",
+    "difficulty": "Beginner to Advanced",
+    "features": [
+      "Simple and readable syntax",
+      "Extensive standard library",
+      "Strong community support",
+      "Cross-platform compatibility",
+      "Excellent for data science and ML"
+    ],
+    "useCases": [
+      "Data Science and Machine Learning",
+      "Web Development (Django, Flask)",
+      "Automation and Scripting",
+      "Scientific Computing",
+      "API Development"
+    ]
+  },
+  {
+    "id": "java",
+    "name": "Java",
+    "shortDescription": "Enterprise-grade object-oriented programming",
+    "image": "/assets/languages/java.svg",
+    "description": "Java is a robust, object-oriented programming language designed for building large-scale enterprise applications. It follows the principle of 'Write Once, Run Anywhere'.",
+    "version": "Java 21",
+    "difficulty": "Intermediate to Advanced",
+    "features": [
+      "Platform independence (JVM)",
+      "Strong typing and OOP",
+      "Automatic memory management",
+      "Rich API and libraries",
+      "High performance and security"
+    ],
+    "useCases": [
+      "Enterprise applications",
+      "Android app development",
+      "Web applications",
+      "Big Data technologies",
+      "Cloud-based applications"
+    ]
+  },
+  {
+    "id": "cpp",
+    "name": "C++",
+    "shortDescription": "High-performance system programming language",
+    "image": "/assets/languages/cpp.svg",
+    "description": "C++ is a powerful, high-performance programming language that offers low-level memory manipulation while supporting object-oriented, generic, and functional programming paradigms.",
+    "version": "C++23",
+    "difficulty": "Intermediate to Advanced",
+    "features": [
+      "High performance and efficiency",
+      "Low-level memory control",
+      "Multi-paradigm programming",
+      "Large standard library (STL)",
+      "Backward compatible with C"
+    ],
+    "useCases": [
+      "System software",
+      "Game development",
+      "Real-time systems",
+      "Embedded systems",
+      "High-performance applications"
+    ]
+  },
+  {
+    "id": "csharp",
+    "name": "C#",
+    "shortDescription": "Modern language for .NET development",
+    "image": "/assets/languages/csharp.svg",
+    "description": "C# is a modern, object-oriented programming language developed by Microsoft. It's part of the .NET framework and is widely used for building Windows applications, games, and web services.",
+    "version": "C# 12",
+    "difficulty": "Intermediate",
+    "features": [
+      "Modern and type-safe",
+      "Integrated with .NET ecosystem",
+      "LINQ for data queries",
+      "Asynchronous programming support",
+      "Cross-platform with .NET Core"
+    ],
+    "useCases": [
+      "Windows applications",
+      "Unity game development",
+      "Web applications (ASP.NET)",
+      "Mobile apps (Xamarin)",
+      "Cloud services (Azure)"
+    ]
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript",
+    "shortDescription": "JavaScript with static typing",
+    "image": "/assets/languages/typescript.svg",
+    "description": "TypeScript is a strongly typed superset of JavaScript that compiles to plain JavaScript. It adds optional static typing, classes, and interfaces to JavaScript.",
+    "version": "5.3",
+    "difficulty": "Intermediate",
+    "features": [
+      "Static type checking",
+      "Enhanced IDE support",
+      "Object-oriented features",
+      "Compile-time error detection",
+      "Compatible with JavaScript"
+    ],
+    "useCases": [
+      "Large-scale web applications",
+      "Frontend frameworks (React, Angular)",
+      "Node.js backend development",
+      "API development",
+      "Enterprise applications"
+    ]
+  },
+  {
+    "id": "php",
+    "name": "PHP",
+    "shortDescription": "Server-side scripting for web development",
+    "image": "/assets/languages/php.svg",
+    "description": "PHP is a popular server-side scripting language designed for web development. It's embedded in HTML and excels at creating dynamic web pages.",
+    "version": "8.3",
+    "difficulty": "Beginner to Intermediate",
+    "features": [
+      "Easy to learn and deploy",
+      "Extensive web framework support",
+      "Built-in database connectivity",
+      "Large community and resources",
+      "Cross-platform compatibility"
+    ],
+    "useCases": [
+      "Web application development",
+      "Content Management Systems (WordPress)",
+      "E-commerce platforms",
+      "RESTful APIs",
+      "Server-side scripting"
+    ]
+  },
+  {
+    "id": "ruby",
+    "name": "Ruby",
+    "shortDescription": "Elegant language focused on simplicity",
+    "image": "/assets/languages/ruby.svg",
+    "description": "Ruby is a dynamic, object-oriented programming language focused on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.",
+    "version": "3.3",
+    "difficulty": "Beginner to Intermediate",
+    "features": [
+      "Elegant and readable syntax",
+      "Pure object-oriented",
+      "Flexible and dynamic",
+      "Rich standard library",
+      "Strong metaprogramming"
+    ],
+    "useCases": [
+      "Web development (Ruby on Rails)",
+      "Automation and scripting",
+      "Data processing",
+      "Prototyping",
+      "DevOps tools"
+    ]
+  },
+  {
+    "id": "go",
+    "name": "Go",
+    "shortDescription": "Fast and efficient for concurrent systems",
+    "image": "/assets/languages/go.svg",
+    "description": "Go (Golang) is a statically typed, compiled programming language designed at Google. It's known for its simplicity, efficiency, and excellent support for concurrent programming.",
+    "version": "1.22",
+    "difficulty": "Intermediate",
+    "features": [
+      "Fast compilation and execution",
+      "Built-in concurrency (goroutines)",
+      "Simple and clean syntax",
+      "Strong standard library",
+      "Garbage collection"
+    ],
+    "useCases": [
+      "Cloud services and microservices",
+      "Network programming",
+      "Command-line tools",
+      "Distributed systems",
+      "DevOps and infrastructure"
+    ]
+  },
+  {
+    "id": "rust",
+    "name": "Rust",
+    "shortDescription": "Memory-safe systems programming",
+    "image": "/assets/languages/rust.svg",
+    "description": "Rust is a systems programming language focused on safety, speed, and concurrency. It provides memory safety without using garbage collection.",
+    "version": "1.75",
+    "difficulty": "Advanced",
+    "features": [
+      "Memory safety without GC",
+      "Zero-cost abstractions",
+      "Fearless concurrency",
+      "Modern tooling (Cargo)",
+      "Cross-platform support"
+    ],
+    "useCases": [
+      "Systems programming",
+      "WebAssembly applications",
+      "Embedded systems",
+      "Command-line tools",
+      "Network services"
+    ]
+  },
+  {
+    "id": "swift",
+    "name": "Swift",
+    "shortDescription": "Modern language for iOS development",
+    "image": "/assets/languages/swift.svg",
+    "description": "Swift is a powerful and intuitive programming language developed by Apple for iOS, macOS, watchOS, and tvOS app development. It's designed to be safe, fast, and expressive.",
+    "version": "5.9",
+    "difficulty": "Intermediate",
+    "features": [
+      "Safe and expressive syntax",
+      "Fast performance",
+      "Modern language features",
+      "Interactive playground",
+      "Automatic memory management"
+    ],
+    "useCases": [
+      "iOS app development",
+      "macOS applications",
+      "watchOS and tvOS apps",
+      "Server-side Swift",
+      "Machine learning with Core ML"
+    ]
+  },
+  {
+    "id": "kotlin",
+    "name": "Kotlin",
+    "shortDescription": "Modern language for Android development",
+    "image": "/assets/languages/kotlin.svg",
+    "description": "Kotlin is a modern, concise, and safe programming language that runs on the JVM. It's officially supported for Android development and offers full Java interoperability.",
+    "version": "1.9",
+    "difficulty": "Intermediate",
+    "features": [
+      "Concise and expressive",
+      "Null safety",
+      "Java interoperability",
+      "Coroutines for async",
+      "Multiplatform support"
+    ],
+    "useCases": [
+      "Android app development",
+      "Server-side applications",
+      "Web development",
+      "Multiplatform mobile apps",
+      "Desktop applications"
+    ]
+  }
+]
