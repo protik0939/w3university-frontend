@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import languagesData from '@/data/languages.json';
 
@@ -30,7 +30,7 @@ interface LanguageData {
   useCases: string[];
 }
 
-export default function LanguagePage() {
+function LanguagePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const langId = searchParams.get('lang');
@@ -368,5 +368,17 @@ export default function LanguagePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function LanguagePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    }>
+      <LanguagePageContent />
+    </Suspense>
   );
 }
