@@ -6,7 +6,6 @@ import {
   Edit2, Save, X, Github, Linkedin, Twitter,
   BookOpen, Clock, Trophy, Flame
 } from 'lucide-react'
-import Navbar from '@/Components/NavBar/Navbar'
 import Footer from '@/Components/Footer/Footer'
 
 interface Address {
@@ -147,8 +146,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
-      <Navbar />
-      
       {/* Hero Section with Profile Header */}
       <div className="relative pt-24 pb-12 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800 transition-colors">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>

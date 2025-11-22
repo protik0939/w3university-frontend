@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import { Calendar, Clock, User, Tag, Search, ChevronRight, TrendingUp, Sparkles } from 'lucide-react'
 import { blogPosts } from '@/data/blogData'
-import Navbar from '../NavBar/Navbar'
 import Footer from '../Footer/Footer'
 
 export default function BlogPage() {
@@ -37,8 +36,6 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
-      <Navbar />
-      
       <div className="pt-20 pb-16">
         <div className="container mx-auto px-4">
           {/* Header with gradient background */}

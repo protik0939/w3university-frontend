@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import languagesData from '@/data/languages.json';
 import { Terminal, ChevronRight, Sparkles, Rocket, Globe } from 'lucide-react';
 
@@ -14,6 +14,8 @@ interface Language {
 
 export default function LanguagesPage() {
   const router = useRouter();
+  const params = useParams();
+  const currentLocale = params.locale as string || 'en';
   const languages: Language[] = languagesData;
 
   // Color themes matching homepage style
@@ -33,7 +35,7 @@ export default function LanguagesPage() {
   ];
 
   const handleLanguageClick = (languageId: string) => {
-    router.push(`/language_page?lang=${languageId}`);
+    router.push(`/${currentLocale}/language_page?lang=${languageId}`);
   };
 
   return (
