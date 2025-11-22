@@ -83,7 +83,7 @@ export default function HeroSection() {
               <span className="text-green-400">$</span>
               <span className="text-gray-700 dark:text-gray-300 ml-2 transition-colors">npm run learn</span>
               <span className="text-green-400 ml-2">--course=</span>
-              <span className="text-emerald-400">"{displayedText}"</span>
+              <span className="text-emerald-400">&quot;{displayedText}&quot;</span>
               <span className="animate-pulse text-green-400">_</span>
             </div>
           </div>

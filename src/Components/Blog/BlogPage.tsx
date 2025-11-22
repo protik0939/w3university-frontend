@@ -1,13 +1,11 @@
 'use client'
 import React, { useState } from 'react'
-import { useTranslations } from 'next-intl'
 import { Calendar, Clock, User, Tag, Search, ChevronRight, TrendingUp, Sparkles } from 'lucide-react'
 import { blogPosts } from '@/data/blogData'
 import Navbar from '../NavBar/Navbar'
 import Footer from '../Footer/Footer'
 
 export default function BlogPage() {
-  const t = useTranslations('Blog')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
 

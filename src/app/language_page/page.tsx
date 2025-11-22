@@ -298,7 +298,6 @@ function LanguagePageContent() {
 
             <div className="space-y-6">
               {exercises.map((exercise) => {
-                const isAnswered = selectedAnswers[exercise.id] !== undefined;
                 const isCorrect = selectedAnswers[exercise.id] === exercise.correctAnswer;
 
                 return (
