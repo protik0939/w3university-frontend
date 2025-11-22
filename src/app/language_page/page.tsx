@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import languagesData from '@/data/languages.json';
+import { Terminal, Code, BookOpen, Dumbbell, ChevronLeft, ChevronDown, CheckCircle2, XCircle } from 'lucide-react';
 
 interface Tutorial {
   id: number;
@@ -58,10 +59,10 @@ function LanguagePageContent() {
 
   if (!languageInfo) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 transition-colors">Loading...</p>
         </div>
       </div>
     );
@@ -143,57 +144,83 @@ function LanguagePageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with Back Button */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
-        <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
+      {/* Hero Header with Terminal Theme */}
+      <section className="relative min-h-[40vh] flex items-end overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors">
+        {/* Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
+        
+        {/* Gradient Orb */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-green-500/20 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 py-12 z-10 w-full">
+          {/* Back Button */}
           <button
             onClick={() => router.push('/languages')}
-            className="mb-4 flex items-center text-white hover:text-gray-200 transition-colors"
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-green-400 dark:hover:text-green-400 transition-colors mb-8"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to Languages
+            <ChevronLeft size={20} />
+            <span className="text-sm">Back to Languages</span>
           </button>
-          <h1 className="text-5xl font-bold mb-4">{languageInfo.name}</h1>
-          <p className="text-xl opacity-90">{languageInfo.description}</p>
+
+          {/* Language Info */}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-16 h-16 bg-green-500/10 rounded-lg flex items-center justify-center">
+              <span className="text-2xl font-bold text-green-400">{languageInfo.name.charAt(0)}</span>
+            </div>
+            <div>
+              <div className="flex items-center gap-2 text-green-400 mb-1">
+                <Terminal size={14} />
+                <span className="text-xs font-mono uppercase tracking-wider">Language</span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white transition-colors">
+                {languageInfo.name}
+              </h1>
+            </div>
+          </div>
+
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl transition-colors">
+            {languageInfo.description}
+          </p>
         </div>
-      </div>
+      </section>
 
       {/* Navigation Tabs */}
-      <div className="bg-white shadow-md sticky top-0 z-10">
+      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
         <div className="container mx-auto px-4">
-          <div className="flex space-x-8">
+          <div className="flex gap-2 overflow-x-auto">
             <button
               onClick={() => setActiveTab('about')}
-              className={`py-4 px-6 font-semibold transition-colors ${
+              className={`flex items-center gap-2 py-3 px-4 font-medium text-sm transition-all whitespace-nowrap ${
                 activeTab === 'about'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-green-400 border-b-2 border-green-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-green-400 dark:hover:text-green-400'
               }`}
             >
-              About
+              <BookOpen size={16} />
+              <span>About</span>
             </button>
             <button
               onClick={() => setActiveTab('tutorial')}
-              className={`py-4 px-6 font-semibold transition-colors ${
+              className={`flex items-center gap-2 py-3 px-4 font-medium text-sm transition-all whitespace-nowrap ${
                 activeTab === 'tutorial'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-green-400 border-b-2 border-green-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-green-400 dark:hover:text-green-400'
               }`}
             >
-              Tutorials
+              <Code size={16} />
+              <span>Tutorials</span>
             </button>
             <button
               onClick={() => setActiveTab('exercise')}
-              className={`py-4 px-6 font-semibold transition-colors ${
+              className={`flex items-center gap-2 py-3 px-4 font-medium text-sm transition-all whitespace-nowrap ${
                 activeTab === 'exercise'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-green-400 border-b-2 border-green-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-green-400 dark:hover:text-green-400'
               }`}
             >
-              Exercises
+              <Dumbbell size={16} />
+              <span>Exercises</span>
             </button>
           </div>
         </div>
@@ -204,38 +231,48 @@ function LanguagePageContent() {
         {/* About Section */}
         {activeTab === 'about' && (
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">About {languageInfo.name}</h2>
-            <div className="bg-white rounded-lg shadow-md p-8">
+            <div className="bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-lg p-8 transition-colors">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">Version</h3>
-                  <p className="text-gray-600">{languageInfo.version}</p>
+                <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 transition-colors">
+                  <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2 transition-colors">Version</h3>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white transition-colors">{languageInfo.version}</p>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">Difficulty Level</h3>
-                  <p className="text-gray-600">{languageInfo.difficulty}</p>
+                <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 transition-colors">
+                  <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2 transition-colors">Difficulty Level</h3>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white transition-colors">{languageInfo.difficulty}</p>
                 </div>
               </div>
               
-              <div className="prose max-w-none">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Overview</h3>
-                <p className="text-gray-600 mb-4">
-                  {languageInfo.description}
-                </p>
-                
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 mt-6">Key Features</h3>
-                <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  {languageInfo.features.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 transition-colors">
+                    <div className="w-1 h-6 bg-green-400 rounded" />
+                    Key Features
+                  </h3>
+                  <ul className="space-y-3">
+                    {languageInfo.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-3 text-gray-600 dark:text-gray-400 transition-colors">
+                        <CheckCircle2 className="text-green-400 mt-0.5 flex-shrink-0" size={18} />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 mt-6">Use Cases</h3>
-                <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  {languageInfo.useCases.map((useCase, index) => (
-                    <li key={index}>{useCase}</li>
-                  ))}
-                </ul>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 transition-colors">
+                    <div className="w-1 h-6 bg-emerald-400 rounded" />
+                    Use Cases
+                  </h3>
+                  <ul className="space-y-3">
+                    {languageInfo.useCases.map((useCase, index) => (
+                      <li key={index} className="flex items-start gap-3 text-gray-600 dark:text-gray-400 transition-colors">
+                        <Code className="text-emerald-400 mt-0.5 flex-shrink-0" size={18} />
+                        <span>{useCase}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -244,34 +281,32 @@ function LanguagePageContent() {
         {/* Tutorial Section */}
         {activeTab === 'tutorial' && (
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">Tutorials</h2>
             <div className="space-y-4">
               {tutorials.map((tutorial) => (
-                <div key={tutorial.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div key={tutorial.id} className="bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden transition-colors">
                   <button
                     onClick={() => toggleTutorial(tutorial.id)}
-                    className="w-full px-6 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                    className="w-full px-6 py-4 flex justify-between items-center hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors"
                   >
-                    <span className="text-lg font-semibold text-gray-800">{tutorial.title}</span>
-                    <svg
-                      className={`w-6 h-6 text-gray-600 transform transition-transform ${
+                    <span className="text-lg font-semibold text-gray-900 dark:text-white transition-colors">{tutorial.title}</span>
+                    <ChevronDown
+                      className={`text-gray-600 dark:text-gray-400 transform transition-transform ${
                         expandedTutorial === tutorial.id ? 'rotate-180' : ''
                       }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+                      size={24}
+                    />
                   </button>
                   
                   {expandedTutorial === tutorial.id && (
-                    <div className="px-6 py-4 border-t border-gray-200">
-                      <p className="text-gray-600 mb-4">{tutorial.content}</p>
+                    <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 transition-colors">
+                      <p className="text-gray-600 dark:text-gray-400 mb-4 transition-colors">{tutorial.content}</p>
                       {tutorial.codeExample && (
                         <div>
-                          <h4 className="text-sm font-semibold text-gray-700 mb-2">Code Example:</h4>
-                          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto">
+                          <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2 transition-colors">
+                            <Code size={14} className="text-green-400" />
+                            Code Example:
+                          </h4>
+                          <pre className="bg-gray-900 dark:bg-gray-950 text-green-400 p-4 rounded-lg overflow-x-auto border border-gray-800">
                             <code>{tutorial.codeExample}</code>
                           </pre>
                         </div>
@@ -288,10 +323,12 @@ function LanguagePageContent() {
         {activeTab === 'exercise' && (
           <div className="max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold text-gray-800">Exercises</h2>
+              <div />
               {showResults && (
-                <div className="text-xl font-semibold text-blue-600">
-                  Score: {calculateScore()} / {exercises.length}
+                <div className="px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <span className="text-lg font-semibold text-green-400">
+                    Score: {calculateScore()} / {exercises.length}
+                  </span>
                 </div>
               )}
             </div>
@@ -301,8 +338,8 @@ function LanguagePageContent() {
                 const isCorrect = selectedAnswers[exercise.id] === exercise.correctAnswer;
 
                 return (
-                  <div key={exercise.id} className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  <div key={exercise.id} className="bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-lg p-6 transition-colors">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors">
                       Question {exercise.id}: {exercise.question}
                     </h3>
                     <div className="space-y-3">
@@ -315,25 +352,25 @@ function LanguagePageContent() {
                             key={index}
                             onClick={() => !showResults && handleAnswerSelect(exercise.id, index)}
                             disabled={showResults}
-                            className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-colors ${
+                            className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all ${
                               showResults
                                 ? isCorrectAnswer
-                                  ? 'border-green-500 bg-green-50'
+                                  ? 'border-green-500 bg-green-500/10 dark:bg-green-500/10'
                                   : isSelected
-                                  ? 'border-red-500 bg-red-50'
-                                  : 'border-gray-200'
+                                  ? 'border-red-500 bg-red-500/10 dark:bg-red-500/10'
+                                  : 'border-gray-200 dark:border-gray-800'
                                 : isSelected
-                                ? 'border-blue-500 bg-blue-50'
-                                : 'border-gray-200 hover:border-blue-300'
+                                ? 'border-green-500 bg-green-500/10 dark:bg-green-500/10'
+                                : 'border-gray-200 dark:border-gray-800 hover:border-green-400'
                             }`}
                           >
                             <div className="flex items-center">
-                              <span className="flex-1">{option}</span>
+                              <span className="flex-1 text-gray-900 dark:text-white transition-colors">{option}</span>
                               {showResults && isCorrectAnswer && (
-                                <span className="text-green-600 font-semibold">✓ Correct</span>
+                                <CheckCircle2 className="text-green-500" size={20} />
                               )}
                               {showResults && isSelected && !isCorrect && (
-                                <span className="text-red-600 font-semibold">✗ Wrong</span>
+                                <XCircle className="text-red-500" size={20} />
                               )}
                             </div>
                           </button>
@@ -350,14 +387,14 @@ function LanguagePageContent() {
                 <button
                   onClick={checkAnswers}
                   disabled={Object.keys(selectedAnswers).length !== exercises.length}
-                  className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                  className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all shadow-lg shadow-green-500/20"
                 >
                   Submit Answers
                 </button>
               ) : (
                 <button
                   onClick={resetExercises}
-                  className="px-8 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors"
+                  className="px-8 py-3 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-700"
                 >
                   Reset Exercises
                 </button>
@@ -373,8 +410,11 @@ function LanguagePageContent() {
 export default function LanguagePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center transition-colors">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400 transition-colors">Loading...</p>
+        </div>
       </div>
     }>
       <LanguagePageContent />
