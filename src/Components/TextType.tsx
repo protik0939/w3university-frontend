@@ -1,7 +1,6 @@
 'use client';
 
 import { ElementType, useEffect, useRef, useState, createElement, useMemo, useCallback } from 'react';
-import { gsap } from 'gsap';
 
 interface TextTypeProps {
   className?: string;
@@ -85,19 +84,6 @@ const TextType = ({
   }, [startOnVisible]);
 
   useEffect(() => {
-    if (showCursor && cursorRef.current) {
-      gsap.set(cursorRef.current, { opacity: 1 });
-      gsap.to(cursorRef.current, {
-        opacity: 0,
-        duration: cursorBlinkDuration,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power2.inOut'
-      });
-    }
-  }, [showCursor, cursorBlinkDuration]);
-
-  useEffect(() => {
     if (!isVisible) return;
 
     let timeout: NodeJS.Timeout;
@@ -177,17 +163,28 @@ const TextType = ({
       className: `inline-block whitespace-pre-wrap tracking-tight ${className}`,
       ...props
     },
-    <span className="inline" style={{ color: getCurrentTextColor() }}>
-      {displayedText}
-    </span>,
-    showCursor && (
-      <span
-        ref={cursorRef}
-        className={`ml-1 inline-block opacity-100 ${shouldHideCursor ? 'hidden' : ''} ${cursorClassName}`}
-      >
-        {cursorCharacter}
+    <>
+      <style jsx>{`
+        @keyframes cursor-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .cursor-blink {
+          animation: cursor-blink ${cursorBlinkDuration * 2}s ease-in-out infinite;
+        }
+      `}</style>
+      <span className="inline" style={{ color: getCurrentTextColor() }}>
+        {displayedText}
       </span>
-    )
+      {showCursor && (
+        <span
+          ref={cursorRef}
+          className={`ml-1 inline-block cursor-blink ${shouldHideCursor ? 'hidden' : ''} ${cursorClassName}`}
+        >
+          {cursorCharacter}
+        </span>
+      )}
+    </>
   );
 };
 

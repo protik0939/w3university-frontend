@@ -1,18 +1,6 @@
 import { notFound } from 'next/navigation'
 import { NextIntlClientProvider } from 'next-intl'
-import { Geist, Geist_Mono } from "next/font/google"
 import { ThemeProvider } from '@/lib/ThemeContext'
-import "../globals.css"
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-})
 
 const locales = ['en', 'bn']
 
@@ -40,19 +28,10 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider>
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ThemeProvider>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {children}
+      </NextIntlClientProvider>
+    </ThemeProvider>
   )
-}
-
-export const metadata = {
-  title: 'W3University - Learn to Code',
-  description: 'The world\'s largest web developer learning platform. Learn coding with bilingual support in English and Bengali.',
 }

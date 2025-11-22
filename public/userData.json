@@ -1,0 +1,174 @@
+[
+  {
+    "id": 1,
+    "name": "Shakib Al Hasan",
+    "username": "shakib1952",
+    "email": "shakib.hasan@example.com",
+    "phone": "+880 1712-345678",
+    "address": {
+      "street": "123 Mirpur Road",
+      "city": "Dhaka",
+      "state": "Dhaka Division",
+      "country": "Bangladesh",
+      "zip": "1216"
+    },
+    "bio": "Full-stack developer passionate about building scalable web applications. Love learning new technologies and contributing to open-source projects.",
+    "avatar": "https://ui-avatars.com/api/?name=Shakib+Al+Hasan&background=10b981&color=fff&size=200",
+    "joinedDate": "2023-01-15",
+    "skillsCompleted": [
+      {
+        "id": 1,
+        "name": "HTML Basics",
+        "category": "Web Development",
+        "completedDate": "2023-02-20",
+        "progress": 100
+      },
+      {
+        "id": 2,
+        "name": "CSS Fundamentals",
+        "category": "Web Development",
+        "completedDate": "2023-03-15",
+        "progress": 100
+      },
+      {
+        "id": 3,
+        "name": "JavaScript ES6+",
+        "category": "Programming",
+        "completedDate": "2023-05-10",
+        "progress": 100
+      },
+      {
+        "id": 4,
+        "name": "React.js",
+        "category": "Frontend Framework",
+        "completedDate": "2023-07-25",
+        "progress": 100
+      },
+      {
+        "id": 5,
+        "name": "Node.js & Express",
+        "category": "Backend Development",
+        "completedDate": "2023-09-12",
+        "progress": 100
+      },
+      {
+        "id": 6,
+        "name": "TypeScript",
+        "category": "Programming",
+        "completedDate": "2023-11-05",
+        "progress": 100
+      },
+      {
+        "id": 7,
+        "name": "Next.js 14",
+        "category": "Full-stack Framework",
+        "completedDate": "2024-01-18",
+        "progress": 100
+      },
+      {
+        "id": 8,
+        "name": "Tailwind CSS",
+        "category": "CSS Framework",
+        "completedDate": "2024-03-22",
+        "progress": 100
+      },
+      {
+        "id": 9,
+        "name": "MongoDB Basics",
+        "category": "Database",
+        "completedDate": "2024-05-30",
+        "progress": 100
+      },
+      {
+        "id": 10,
+        "name": "Git & GitHub",
+        "category": "Version Control",
+        "completedDate": "2024-07-14",
+        "progress": 100
+      }
+    ],
+    "stats": {
+      "totalCourses": 10,
+      "hoursLearned": 342,
+      "certificatesEarned": 8,
+      "currentStreak": 15
+    },
+    "social": {
+      "github": "https://github.com/shakib1952",
+      "linkedin": "https://linkedin.com/in/shakib-al-hasan",
+      "twitter": "https://twitter.com/shakib1952"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Tamim Iqbal",
+    "username": "tamim_dev",
+    "email": "tamim.iqbal@example.com",
+    "phone": "+880 1812-987654",
+    "address": {
+      "street": "456 Gulshan Avenue",
+      "city": "Dhaka",
+      "state": "Dhaka Division",
+      "country": "Bangladesh",
+      "zip": "1212"
+    },
+    "bio": "Frontend enthusiast with a keen eye for design. Specializing in creating beautiful and responsive user interfaces.",
+    "avatar": "https://ui-avatars.com/api/?name=Tamim+Iqbal&background=059669&color=fff&size=200",
+    "joinedDate": "2023-03-20",
+    "skillsCompleted": [
+      {
+        "id": 1,
+        "name": "HTML Basics",
+        "category": "Web Development",
+        "completedDate": "2023-04-10",
+        "progress": 100
+      },
+      {
+        "id": 2,
+        "name": "CSS Fundamentals",
+        "category": "Web Development",
+        "completedDate": "2023-05-05",
+        "progress": 100
+      },
+      {
+        "id": 3,
+        "name": "JavaScript ES6+",
+        "category": "Programming",
+        "completedDate": "2023-06-20",
+        "progress": 100
+      },
+      {
+        "id": 4,
+        "name": "React.js",
+        "category": "Frontend Framework",
+        "completedDate": "2023-08-15",
+        "progress": 100
+      },
+      {
+        "id": 8,
+        "name": "Tailwind CSS",
+        "category": "CSS Framework",
+        "completedDate": "2023-10-22",
+        "progress": 100
+      },
+      {
+        "id": 11,
+        "name": "Figma Design",
+        "category": "UI/UX",
+        "completedDate": "2024-01-10",
+        "progress": 100
+      }
+    ],
+    "stats": {
+      "totalCourses": 6,
+      "hoursLearned": 198,
+      "certificatesEarned": 5,
+      "currentStreak": 22
+    },
+    "social": {
+      "github": "https://github.com/tamim_dev",
+      "linkedin": "https://linkedin.com/in/tamim-iqbal",
+      "twitter": "https://twitter.com/tamim_dev"
+    }
+  }
+]

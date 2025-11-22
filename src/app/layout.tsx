@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Hind_Siliguri } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import TopNavBar from "@/Components/NavBar/TopNavBar";
-import { LocaleProvider } from "@/lib/LocaleContext";
-import IntlProvider from "@/Components/Providers/IntlProvider";
 
-
-const hindSiliguri = Hind_Siliguri({
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "700"], // normal, medium, bold
-  variable: "--font-hind-siliguri",
-});
+})
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+})
 
 export const metadata: Metadata = {
   title: "W3University",
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="icon"
@@ -32,13 +32,8 @@ export default function RootLayout({
           sizes="<generated>"
         />
       </head>
-      <body className={`${hindSiliguri.className} antialiased`}>
-        <LocaleProvider>
-          <IntlProvider>
-            <TopNavBar />
-            {children}
-          </IntlProvider>
-        </LocaleProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );
