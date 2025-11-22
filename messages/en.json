@@ -1,0 +1,147 @@
+{
+  "Navbar": {
+    "tutorials": "Tutorials",
+    "exercises": "Exercises",
+    "blog": "Blog",
+    "certificates": "Certificates",
+    "community": "Community",
+    "getStarted": "Get Started"
+  },
+  "HomePage": {
+    "welcome": "Welcome to W3University",
+    "hero": {
+      "title": "Learn to Code",
+      "subtitle": "Master programming languages with interactive tutorials",
+      "description": "The world's largest web developer learning platform. Learn coding with bilingual support in English and Bengali.",
+      "cta_primary": "Start Learning",
+      "cta_secondary": "Browse Courses",
+      "typing_texts": [
+        "Learn HTML",
+        "Learn CSS",
+        "Learn JavaScript",
+        "Learn Python",
+        "Learn React",
+        "Learn Node.js",
+        "Learn TypeScript",
+        "Learn Next.js",
+        "শিখুন বাংলায়",
+        "Build Your Future"
+      ]
+    },
+    "features": {
+      "title": "Why Choose W3University?",
+      "subtitle": "Everything you need to become a professional developer",
+      "feature1": {
+        "title": "Interactive Learning",
+        "description": "Learn by doing with interactive code editors and real-time feedback"
+      },
+      "feature2": {
+        "title": "Bilingual Support",
+        "description": "Learn in English or Bengali - your choice, your comfort"
+      },
+      "feature3": {
+        "title": "Practical Examples",
+        "description": "Real-world examples and projects to build your portfolio"
+      },
+      "feature4": {
+        "title": "Self-Paced Learning",
+        "description": "Learn at your own speed, anytime, anywhere"
+      },
+      "feature5": {
+        "title": "Free Forever",
+        "description": "Access quality education without any cost barriers"
+      },
+      "feature6": {
+        "title": "Certificates",
+        "description": "Earn certificates to showcase your achievements"
+      }
+    },
+    "courses": {
+      "title": "Popular Courses",
+      "subtitle": "Start your coding journey with our most popular tutorials",
+      "viewAll": "View All Courses",
+      "html": {
+        "title": "HTML",
+        "description": "The language for building web pages",
+        "lessons": "50+ lessons"
+      },
+      "css": {
+        "title": "CSS",
+        "description": "The language for styling web pages",
+        "lessons": "45+ lessons"
+      },
+      "javascript": {
+        "title": "JavaScript",
+        "description": "The language for programming web pages",
+        "lessons": "80+ lessons"
+      },
+      "python": {
+        "title": "Python",
+        "description": "A popular programming language",
+        "lessons": "70+ lessons"
+      },
+      "react": {
+        "title": "React",
+        "description": "A JavaScript library for building UI",
+        "lessons": "60+ lessons"
+      },
+      "nodejs": {
+        "title": "Node.js",
+        "description": "A JavaScript runtime environment",
+        "lessons": "55+ lessons"
+      }
+    },
+    "stats": {
+      "title": "Join Millions of Learners Worldwide",
+      "students": "10M+",
+      "studentsLabel": "Active Learners",
+      "courses": "100+",
+      "coursesLabel": "Free Courses",
+      "languages": "2",
+      "languagesLabel": "Languages",
+      "hours": "1000+",
+      "hoursLabel": "Hours of Content"
+    },
+    "cta": {
+      "title": "Ready to Start Your Coding Journey?",
+      "subtitle": "Join thousands of learners and start coding today",
+      "button": "Get Started Free"
+    },
+    "footer": {
+      "description": "The world's largest web developer learning platform",
+      "quickLinks": "Quick Links",
+      "support": "Support",
+      "legal": "Legal",
+      "copyright": "© 2025 W3University. All rights reserved."
+    }
+  },
+  "Blog": {
+    "title": "Dev Dock",
+    "subtitle": "Learn from tutorials, guides, and insights on modern web development",
+    "searchPlaceholder": "Search articles...",
+    "readArticle": "Read Article",
+    "loadMore": "Load More Articles",
+    "noResults": "No articles found matching your criteria."
+  },
+  "Footer": {
+    "description": "The world's largest web developer learning platform. Learn coding with bilingual support.",
+    "quickLinks": "Quick Links",
+    "tutorials": "Tutorials",
+    "exercises": "Exercises",
+    "certificates": "Certificates",
+    "blog": "Blog",
+    "resources": "Resources",
+    "documentation": "Documentation",
+    "community": "Community",
+    "support": "Support",
+    "changelog": "Changelog",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "license": "License",
+    "cookies": "Cookie Policy",
+    "copyright": "© 2025 W3University. All rights reserved.",
+    "madeWith": "Made with",
+    "byDevelopers": "by developers for developers"
+  }
+}
