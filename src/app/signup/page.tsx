@@ -203,7 +203,7 @@ export default function SignupPage() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        placeholder="john@example.com"
+                        placeholder="Your email address"
                         className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500"
                       />
                     </div>
