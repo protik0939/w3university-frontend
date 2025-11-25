@@ -13,6 +13,30 @@ export default function BlogPostDetail() {
 
   const post = blogPosts.find(p => p.id === id)
 
+  const handleShare = async () => {
+    if (!post) return
+
+    const shareData = {
+      title: post.title,
+      text: post.excerpt,
+      url: window.location.href,
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(window.location.href)
+        alert('Link copied to clipboard!')
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        console.error('Error sharing:', error)
+      }
+    }
+  }
+
   if (!post) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 pt-20">
@@ -113,10 +137,17 @@ export default function BlogPostDetail() {
               
               {/* Action Buttons */}
               <div className="ml-auto flex items-center gap-3">
-                <button className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+                <button 
+                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                  aria-label="Bookmark this article"
+                >
                   <Bookmark size={18} />
                 </button>
-                <button className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors">
+                <button 
+                  onClick={handleShare}
+                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                  aria-label="Share this article"
+                >
                   <Share2 size={18} />
                 </button>
               </div>
