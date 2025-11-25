@@ -77,7 +77,7 @@ export default function TagFilterPage() {
                 </h1>
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-lg">
-                {filteredPosts.length} article{filteredPosts.length !== 1 ? 's' : ''} tagged with <span className="text-green-400 font-semibold">"{tagName}"</span>
+                {filteredPosts.length} article{filteredPosts.length !== 1 ? 's' : ''} tagged with <span className="text-green-400 font-semibold">&apos;{tagName}&apos;</span>
               </p>
             </div>
           </div>
