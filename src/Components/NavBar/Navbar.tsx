@@ -27,7 +27,7 @@ export default function Navbar() {
     { key: 'tutorials', icon: BookOpen, href: '#courses' },
     { key: 'exercises', icon: Code2, href: `/${currentLocale}/languages` },
     { key: 'blog', icon: BookOpen, href: `/${currentLocale}/blog` },
-    { key: 'certificates', icon: Trophy, href: '#certificates' },
+    { key: 'certificates', icon: Trophy, href: `/${currentLocale}/certificates` },
     { key: 'profile', icon: Users, href: `/${currentLocale}/profile` },
   ]
 

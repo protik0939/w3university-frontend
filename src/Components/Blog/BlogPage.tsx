@@ -3,8 +3,12 @@ import React, { useState } from 'react'
 import { Calendar, Clock, User, Tag, Search, ChevronRight, TrendingUp, Sparkles } from 'lucide-react'
 import { blogPosts } from '@/data/blogData'
 import Footer from '../Footer/Footer'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 export default function BlogPage() {
+  const params = useParams()
+  const locale = (params?.locale as string) || 'en'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
 
@@ -68,52 +72,54 @@ export default function BlogPage() {
               <TrendingUp size={20} className="text-green-400" />
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors">Featured Article</h2>
             </div>
-            <article className="group relative bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-900/80 dark:to-gray-900/40 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden hover:border-green-500/50 transition-all duration-300 cursor-pointer">
-              <div className="grid md:grid-cols-2 gap-6 p-8">
-                <div className="flex flex-col justify-center">
-                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg mb-4 border w-fit ${getCategoryColor(featuredPost.category)}`}>
-                    <Tag size={14} />
-                    <span className="text-sm font-semibold">{featuredPost.category}</span>
+            <Link href={`/${locale}/blog/${featuredPost.id}`}>
+              <article className="group relative bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-900/80 dark:to-gray-900/40 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden hover:border-green-500/50 transition-all duration-300 cursor-pointer">
+                <div className="grid md:grid-cols-2 gap-6 p-8">
+                  <div className="flex flex-col justify-center">
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg mb-4 border w-fit ${getCategoryColor(featuredPost.category)}`}>
+                      <Tag size={14} />
+                      <span className="text-sm font-semibold">{featuredPost.category}</span>
+                    </div>
+                    
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-green-400 transition-colors">
+                      {featuredPost.title}
+                    </h3>
+                    
+                    <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed transition-colors">
+                      {featuredPost.excerpt}
+                    </p>
+                    
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-500 mb-6 transition-colors">
+                      <div className="flex items-center gap-2">
+                        <User size={16} />
+                        <span>{featuredPost.author}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} />
+                        <span>{new Date(featuredPost.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock size={16} />
+                        <span>{featuredPost.readTime}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-green-400 font-medium group-hover:gap-3 transition-all">
+                      Read Full Article
+                      <ChevronRight size={20} />
+                    </div>
                   </div>
                   
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-green-400 transition-colors">
-                    {featuredPost.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed transition-colors">
-                    {featuredPost.excerpt}
-                  </p>
-                  
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-500 mb-6 transition-colors">
-                    <div className="flex items-center gap-2">
-                      <User size={16} />
-                      <span>{featuredPost.author}</span>
+                  <div className="hidden md:flex items-center justify-center">
+                    <div className="w-full h-64 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30 dark:border-green-500/30 flex items-center justify-center">
+                      <div className="text-6xl">📝</div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar size={16} />
-                      <span>{new Date(featuredPost.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock size={16} />
-                      <span>{featuredPost.readTime}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-green-400 font-medium group-hover:gap-3 transition-all">
-                    Read Full Article
-                    <ChevronRight size={20} />
                   </div>
                 </div>
                 
-                <div className="hidden md:flex items-center justify-center">
-                  <div className="w-full h-64 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30 dark:border-green-500/30 flex items-center justify-center">
-                    <div className="text-6xl">📝</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            </article>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              </article>
+            </Link>
           </div>
 
           {/* Search and Filter */}
@@ -165,53 +171,55 @@ export default function BlogPage() {
             {filteredPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.slice(1).map((post) => (
-                  <article
+                  <Link
                     key={post.id}
-                    className="group relative bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 cursor-pointer flex flex-col"
+                    href={`/${locale}/blog/${post.id}`}
                   >
-                    {/* Image placeholder */}
-                    <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-center relative overflow-hidden transition-colors">
-                      <div className="text-5xl opacity-50">💻</div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-gray-100/80 dark:from-gray-900/80 to-transparent" />
-                    </div>
-                    
-                    <div className="p-6 flex flex-col flex-grow">
-                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md mb-3 border w-fit ${getCategoryColor(post.category)}`}>
-                        <Tag size={12} />
-                        <span className="text-xs font-semibold">{post.category}</span>
+                    <article className="group relative bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 cursor-pointer flex flex-col h-full">
+                      {/* Image placeholder */}
+                      <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-center relative overflow-hidden transition-colors">
+                        <div className="text-5xl opacity-50">💻</div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-100/80 dark:from-gray-900/80 to-transparent" />
+                      </div>
+                      
+                      <div className="p-6 flex flex-col flex-grow">
+                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md mb-3 border w-fit ${getCategoryColor(post.category)}`}>
+                          <Tag size={12} />
+                          <span className="text-xs font-semibold">{post.category}</span>
+                        </div>
+
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-green-400 transition-colors line-clamp-2">
+                          {post.title}
+                        </h2>
+
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-grow transition-colors">
+                          {post.excerpt}
+                        </p>
+
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500 mb-4 pt-4 border-t border-gray-200 dark:border-gray-800 transition-colors">
+                          <div className="flex items-center gap-1.5">
+                            <User size={14} />
+                            <span>{post.author}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <Calendar size={14} />
+                            <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <Clock size={14} />
+                            <span>{post.readTime}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-sm text-green-400 font-medium group-hover:gap-3 transition-all">
+                          Read More
+                          <ChevronRight size={16} />
+                        </div>
                       </div>
 
-                      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-green-400 transition-colors line-clamp-2">
-                        {post.title}
-                      </h2>
-
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-grow transition-colors">
-                        {post.excerpt}
-                      </p>
-
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500 mb-4 pt-4 border-t border-gray-200 dark:border-gray-800 transition-colors">
-                        <div className="flex items-center gap-1.5">
-                          <User size={14} />
-                          <span>{post.author}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Calendar size={14} />
-                          <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Clock size={14} />
-                          <span>{post.readTime}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm text-green-400 font-medium group-hover:gap-3 transition-all">
-                        Read More
-                        <ChevronRight size={16} />
-                      </div>
-                    </div>
-
-                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 rounded-xl transition-opacity pointer-events-none" />
-                  </article>
+                      <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 rounded-xl transition-opacity pointer-events-none" />
+                    </article>
+                  </Link>
                 ))}
               </div>
             ) : (
