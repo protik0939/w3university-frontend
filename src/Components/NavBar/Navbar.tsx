@@ -82,7 +82,7 @@ export default function Navbar() {
               {/* Language Switcher */}
               <button
                 onClick={switchLocale}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-300 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 border border-gray-700 dark:border-gray-700 hover:border-green-500/50 dark:hover:border-green-500/50 rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 border border-gray-300 dark:border-gray-700 hover:border-green-500/50 dark:hover:border-green-500/50 rounded-lg transition-all bg-white dark:bg-gray-900/50"
               >
                 <Globe size={16} />
                 <span className="hidden sm:inline">{currentLocale === 'en' ? 'বাংলা' : 'English'}</span>
