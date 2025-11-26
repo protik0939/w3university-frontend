@@ -50,10 +50,13 @@ export default function Navbar() {
         <div className="relative container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href={`/${currentLocale}`} className="flex items-center gap-2 group">
-              <div className="relative">
-                <Code2 className="text-green-500 group-hover:text-green-400 transition-colors" size={28} />
-                <div className="absolute inset-0 bg-green-500/20 blur-xl group-hover:bg-green-400/30 transition-all" />
+            <Link href={`/${currentLocale}`} className="flex items-center gap-3 group">
+              <div className="relative w-10 h-10">
+                <img 
+                  src="/assets/icons/icon.svg" 
+                  alt="Ekushey Coding Logo" 
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                />
               </div>
               <span className="text-lg font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
                 Ekushey Coding
