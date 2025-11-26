@@ -21,11 +21,26 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    // Add your login logic here
+    
+    // Simulate login API call
     setTimeout(() => {
+      // In a real app, validate credentials with backend
+      // For now, we'll accept any login and store user info
+      const userData = {
+        id: 1,
+        email: formData.email,
+        isLoggedIn: true,
+        loginTime: new Date().toISOString()
+      }
+      
+      // Store user session in localStorage
+      localStorage.setItem('userSession', JSON.stringify(userData))
+      
+      // Redirect to profile page
+      window.location.href = `/${currentLocale}/profile`
+      
       setIsLoading(false)
-      console.log('Login attempt:', formData)
-    }, 2000)
+    }, 1500)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

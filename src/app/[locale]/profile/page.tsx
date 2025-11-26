@@ -7,6 +7,7 @@ import {
   BookOpen, Clock, Trophy, Flame
 } from 'lucide-react'
 import Footer from '@/Components/Footer/Footer'
+import { useParams, useRouter } from 'next/navigation'
 
 interface Address {
   street: string
@@ -52,39 +53,89 @@ interface UserData {
   social: Social
 }
 
+interface UserSession {
+  id: number
+  email: string
+  isLoggedIn: boolean
+  loginTime: string
+}
+
 export default function ProfilePage() {
+  const router = useRouter()
+  const params = useParams()
+  const currentLocale = (params?.locale as string) || 'en'
+  
   const [userData, setUserData] = useState<UserData | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editedData, setEditedData] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  // Simulating logged-in user ID (change this to fetch from auth context)
-  const loggedInUserId = 1
-
+  // Check authentication on mount
   useEffect(() => {
     setMounted(true)
+    
+    // Check if user is logged in
+    const userSession = localStorage.getItem('userSession')
+    
+    if (!userSession) {
+      // Not logged in, redirect to login page
+      window.location.href = `/${currentLocale}/login`
+      return
+    }
+    
+    try {
+      const session: UserSession = JSON.parse(userSession)
+      
+      if (!session.isLoggedIn) {
+        // Invalid session, redirect to login
+        localStorage.removeItem('userSession')
+        window.location.href = `/${currentLocale}/login`
+        return
+      }
+      
+      // User is authenticated
+      setIsAuthenticated(true)
+      
+    } catch (error) {
+      // Invalid session data, redirect to login
+      localStorage.removeItem('userSession')
+      window.location.href = `/${currentLocale}/login`
+    }
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+    if (!mounted || !isAuthenticated) return
     
-    // Fetch user data from dummy JSON
-    fetch('/userData.json')
-      .then(res => res.json())
-      .then((data: UserData[]) => {
-        const user = data.find(u => u.id === loggedInUserId)
-        if (user) {
-          setUserData(user)
-          setEditedData(user)
-        }
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error('Error loading user data:', err)
-        setLoading(false)
-      })
-  }, [loggedInUserId, mounted])
+    // Get user session to find the logged-in user ID
+    const userSession = localStorage.getItem('userSession')
+    if (!userSession) return
+    
+    try {
+      const session: UserSession = JSON.parse(userSession)
+      const loggedInUserId = session.id
+      
+      // Fetch user data from dummy JSON
+      fetch('/userData.json')
+        .then(res => res.json())
+        .then((data: UserData[]) => {
+          const user = data.find(u => u.id === loggedInUserId)
+          if (user) {
+            setUserData(user)
+            setEditedData(user)
+          }
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error('Error loading user data:', err)
+          setLoading(false)
+        })
+    } catch (error) {
+      console.error('Error parsing user session:', error)
+      setLoading(false)
+    }
+  }, [mounted, isAuthenticated])
 
   const handleEdit = () => {
     if (!userData) return
@@ -125,7 +176,14 @@ export default function ProfilePage() {
     } : null)
   }
 
-  if (!mounted || loading) {
+  const handleLogout = () => {
+    // Clear user session
+    localStorage.removeItem('userSession')
+    // Redirect to login page
+    window.location.href = `/${currentLocale}/login`
+  }
+
+  if (!mounted || loading || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
@@ -137,8 +195,17 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">User not found</h2>
-          <p className="text-gray-600 dark:text-gray-400">Please log in to view your profile.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Profile not found</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Unable to load your profile data.</p>
+          <button
+            onClick={() => {
+              localStorage.removeItem('userSession')
+              window.location.href = `/${currentLocale}/login`
+            }}
+            className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-lg transition-all"
+          >
+            Return to Login
+          </button>
         </div>
       </div>
     )
@@ -214,17 +281,27 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Edit Button */}
-                <div className="relative">
+                {/* Action Buttons */}
+                <div className="relative flex gap-3">
                   {!isEditing ? (
-                    <button
-                      onClick={handleEdit}
-                      type="button"
-                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20 cursor-pointer"
-                    >
-                      <Edit2 size={18} />
-                      Edit Profile
-                    </button>
+                    <>
+                      <button
+                        onClick={handleEdit}
+                        type="button"
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20 cursor-pointer"
+                      >
+                        <Edit2 size={18} />
+                        Edit Profile
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        type="button"
+                        className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-red-500/20 cursor-pointer"
+                      >
+                        <LogOut size={18} />
+                        Logout
+                      </button>
+                    </>
                   ) : (
                     <div className="flex gap-2">
                       <button
