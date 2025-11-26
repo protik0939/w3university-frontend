@@ -34,7 +34,7 @@ export default function Footer() {
     { icon: Github, href: 'https://github.com', label: 'GitHub' },
     { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
     { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:contact@w3university.com', label: 'Email' },
+    { icon: Mail, href: 'mailto:contact@ekusheycoding.com', label: 'Email' },
   ]
 
   return (
@@ -53,7 +53,7 @@ export default function Footer() {
                 <div className="absolute inset-0 bg-green-500/20 blur-xl group-hover:bg-green-400/30 transition-all" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                W3University
+                Ekushey Coding
               </span>
             </a>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 max-w-xs transition-colors">

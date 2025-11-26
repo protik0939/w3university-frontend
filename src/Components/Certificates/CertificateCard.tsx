@@ -285,7 +285,7 @@ function MinimalCertificate({ certificate }: { certificate: CertificateData }) {
             <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
             <span className="text-xs text-gray-500 dark:text-gray-500 font-mono">VERIFIED</span>
           </div>
-          <span className="text-xs text-gray-400">w3university.com</span>
+          <span className="text-xs text-gray-400">ekusheycoding.com</span>
         </div>
       </div>
     </div>

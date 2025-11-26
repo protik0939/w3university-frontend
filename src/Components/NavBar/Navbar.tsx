@@ -56,7 +56,7 @@ export default function Navbar() {
                 <div className="absolute inset-0 bg-green-500/20 blur-xl group-hover:bg-green-400/30 transition-all" />
               </div>
               <span className="text-lg font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                W3University
+                Ekushey Coding
               </span>
             </Link>
 

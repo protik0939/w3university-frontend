@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "W3University",
-  description: "W3University — Learn to Code. Build the Future.",
+  title: "Ekushey Coding",
+  description: "Ekushey Coding — Learn to Code. Build the Future.",
 };
 
 export default function RootLayout({

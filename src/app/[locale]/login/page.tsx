@@ -271,7 +271,7 @@ export default function LoginPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
-                      New to W3University?
+                      New to Ekushey Coding?
                     </h3>
                     <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                       Create a free account to start learning today!

@@ -9,7 +9,7 @@
     "profile": "Profile"
   },
   "HomePage": {
-    "welcome": "Welcome to W3University",
+    "welcome": "Welcome to Ekushey Coding",
     "hero": {
       "title": "Learn to Code",
       "subtitle": "Master programming languages with interactive tutorials",
@@ -30,7 +30,7 @@
       ]
     },
     "features": {
-      "title": "Why Choose W3University?",
+      "title": "Why Choose Ekushey Coding?",
       "subtitle": "Everything you need to become a professional developer",
       "feature1": {
         "title": "Interactive Learning",
@@ -113,7 +113,7 @@
       "quickLinks": "Quick Links",
       "support": "Support",
       "legal": "Legal",
-      "copyright": "© 2025 W3University. All rights reserved."
+      "copyright": "© 2025 Ekushey Coding. All rights reserved."
     }
   },
   "Blog": {
@@ -141,7 +141,7 @@
     "terms": "Terms of Service",
     "license": "License",
     "cookies": "Cookie Policy",
-    "copyright": "© 2025 W3University. All rights reserved.",
+    "copyright": "© 2025 Ekushey Coding. All rights reserved.",
     "madeWith": "Made with",
     "byDevelopers": "by developers for developers"
   },
