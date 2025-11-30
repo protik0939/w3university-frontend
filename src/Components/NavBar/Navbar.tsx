@@ -63,7 +63,7 @@ export default function Navbar() {
     const authToken = localStorage.getItem('authToken')
     
     try {
-      await fetch('http://localhost:8000/api/logout', {
+      await fetch('https://backend-w3university.vercel.app/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

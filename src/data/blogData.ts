@@ -1,17 +1,32 @@
 export interface BlogPost {
-  id: string
+  id: number
+  slug: string
   title: string
+  title_bn: string
   excerpt: string
+  excerpt_bn: string
   content: string
+  content_bn: string
   author: string
-  date: string
-  readTime: string
+  author_bn: string
   category: string
+  category_bn: string
   tags: string[]
-  imageUrl?: string
+  tags_bn: string[]
+  read_time: string
+  read_time_bn: string
+  image_url?: string
+  views?: number
+  created_at: string
+  updated_at: string
+  published_at?: string
 }
 
-export const blogPosts: BlogPost[] = [
+// Static blog data is deprecated - now using API from Laravel backend
+// See src/lib/blogApi.ts for API integration
+export const blogPosts: BlogPost[] = [] as any; 
+
+/*[
   {
     id: '1',
     title: 'Getting Started with React Hooks: A Complete Guide',
@@ -202,3 +217,4 @@ Touch targets on mobile devices need to be large enough for fingers, typically a
     tags: ['Responsive Design', 'CSS', 'Mobile'],
   },
 ]
+*/

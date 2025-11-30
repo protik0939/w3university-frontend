@@ -1,7 +1,7 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Calendar, Clock, User, Tag, Search, ChevronRight, TrendingUp, Sparkles } from 'lucide-react'
-import { blogPosts } from '@/data/blogData'
+import { BlogPost, fetchBlogs, fetchCategories } from '@/lib/blogApi'
 import Footer from '../Footer/Footer'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -11,17 +11,87 @@ export default function BlogPage() {
   const locale = (params?.locale as string) || 'en'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [categories, setCategories] = useState<string[]>(['All'])
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const [totalPages, setTotalPages] = useState(1)
 
-  const categories = ['All', 'React', 'TypeScript', 'CSS', 'Node.js', 'Python', 'JavaScript', 'Next.js', 'Tools', 'Web Design']
+  // Fetch blogs from API
+  useEffect(() => {
+    const loadBlogs = async () => {
+      setLoading(true)
+      try {
+        const result = await fetchBlogs({
+          page,
+          per_page: 10,
+          ...(searchQuery && { search: searchQuery }),
+          ...(selectedCategory !== 'All' && { category: selectedCategory })
+        })
 
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+        if (page === 1) {
+          setBlogPosts(result.data)
+        } else {
+          // Prevent duplicates when loading more
+          setBlogPosts(prev => {
+            const existingIds = new Set(prev.map(p => p.id))
+            const newPosts = result.data.filter(p => !existingIds.has(p.id))
+            return [...prev, ...newPosts]
+          })
+        }
+
+        setHasMore(result.current_page < result.last_page)
+        setTotalPages(result.last_page)
+      } catch (error) {
+        console.error('Error fetching blogs:', error)
+        setBlogPosts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadBlogs()
+  }, [page, searchQuery, selectedCategory])
+
+  // Fetch categories
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategories()
+        setCategories(['All', ...data])
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    loadCategories()
+  }, [])
+
+  // Reset page when filters change
+  useEffect(() => {
+    if (page !== 1) setPage(1)
+  }, [searchQuery, selectedCategory])
 
   const featuredPost = blogPosts[0]
+
+  const getLocalizedField = (post: BlogPost, field: keyof BlogPost): string => {
+    if (locale === 'bn') {
+      const bnField = `${field}_bn` as keyof BlogPost
+      return (post[bnField] as string) || (post[field] as string) || ''
+    }
+    return (post[field] as string) || ''
+  }
+
+  const getLocalizedTags = (post: BlogPost): string[] => {
+    return locale === 'bn' ? post.tags_bn : post.tags
+  }
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      setPage(prev => prev + 1)
+    }
+  }
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
@@ -67,40 +137,41 @@ export default function BlogPage() {
           </div>
 
           {/* Featured Post */}
+          {featuredPost && (
           <div className="max-w-6xl mx-auto mb-16">
             <div className="flex items-center gap-2 mb-6">
               <TrendingUp size={20} className="text-green-400" />
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors">Featured Article</h2>
             </div>
-            <Link href={`/${locale}/blog/${featuredPost.id}`}>
+            <Link href={`/${locale}/blog/${featuredPost.slug}`}>
               <article className="group relative bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-900/80 dark:to-gray-900/40 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden hover:border-green-500/50 transition-all duration-300 cursor-pointer">
                 <div className="grid md:grid-cols-2 gap-6 p-8">
                   <div className="flex flex-col justify-center">
-                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg mb-4 border w-fit ${getCategoryColor(featuredPost.category)}`}>
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg mb-4 border w-fit ${getCategoryColor(getLocalizedField(featuredPost, 'category'))}`}>
                       <Tag size={14} />
-                      <span className="text-sm font-semibold">{featuredPost.category}</span>
+                      <span className="text-sm font-semibold">{getLocalizedField(featuredPost, 'category')}</span>
                     </div>
                     
                     <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-green-400 transition-colors">
-                      {featuredPost.title}
+                      {getLocalizedField(featuredPost, 'title')}
                     </h3>
                     
                     <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed transition-colors">
-                      {featuredPost.excerpt}
+                      {getLocalizedField(featuredPost, 'excerpt')}
                     </p>
                     
                     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-500 mb-6 transition-colors">
                       <div className="flex items-center gap-2">
                         <User size={16} />
-                        <span>{featuredPost.author}</span>
+                        <span>{getLocalizedField(featuredPost, 'author')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar size={16} />
-                        <span>{new Date(featuredPost.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        <span>{new Date(featuredPost.published_at || featuredPost.created_at).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Clock size={16} />
-                        <span>{featuredPost.readTime}</span>
+                        <span>{getLocalizedField(featuredPost, 'read_time')}</span>
                       </div>
                     </div>
                     
@@ -121,6 +192,7 @@ export default function BlogPage() {
               </article>
             </Link>
           </div>
+          )}
 
           {/* Search and Filter */}
           <div className="max-w-6xl mx-auto mb-12">
@@ -161,19 +233,23 @@ export default function BlogPage() {
           {searchQuery && (
             <div className="max-w-6xl mx-auto mb-6">
               <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors">
-                Found <span className="text-green-400 font-semibold">{filteredPosts.length}</span> article{filteredPosts.length !== 1 ? 's' : ''}
+                Found <span className="text-green-400 font-semibold">{blogPosts.length}</span> article{blogPosts.length !== 1 ? 's' : ''}
               </p>
             </div>
           )}
 
           {/* Blog Grid */}
           <div className="max-w-6xl mx-auto">
-            {filteredPosts.length > 0 ? (
+            {loading && page === 1 ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
+              </div>
+            ) : blogPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPosts.slice(1).map((post) => (
+                {blogPosts.slice(1).map((post: BlogPost, index: number) => (
                   <Link
-                    key={post.id}
-                    href={`/${locale}/blog/${post.id}`}
+                    key={`${post.slug}-${post.id}-${index}`}
+                    href={`/${locale}/blog/${post.slug}`}
                   >
                     <article className="group relative bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 cursor-pointer flex flex-col h-full">
                       {/* Image placeholder */}
@@ -183,31 +259,31 @@ export default function BlogPage() {
                       </div>
                       
                       <div className="p-6 flex flex-col flex-grow">
-                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md mb-3 border w-fit ${getCategoryColor(post.category)}`}>
+                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md mb-3 border w-fit ${getCategoryColor(getLocalizedField(post, 'category'))}`}>
                           <Tag size={12} />
-                          <span className="text-xs font-semibold">{post.category}</span>
+                          <span className="text-xs font-semibold">{getLocalizedField(post, 'category')}</span>
                         </div>
 
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-green-400 transition-colors line-clamp-2">
-                          {post.title}
+                          {getLocalizedField(post, 'title')}
                         </h2>
 
                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-grow transition-colors">
-                          {post.excerpt}
+                          {getLocalizedField(post, 'excerpt')}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-500 mb-4 pt-4 border-t border-gray-200 dark:border-gray-800 transition-colors">
                           <div className="flex items-center gap-1.5">
                             <User size={14} />
-                            <span>{post.author}</span>
+                            <span>{getLocalizedField(post, 'author')}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <Calendar size={14} />
-                            <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                            <span>{new Date(post.created_at).toLocaleDateString(locale === 'bn' ? 'bn-BD' : 'en-US', { month: 'short', day: 'numeric' })}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <Clock size={14} />
-                            <span>{post.readTime}</span>
+                            <span>{getLocalizedField(post, 'read_time')}</span>
                           </div>
                         </div>
 
@@ -232,10 +308,14 @@ export default function BlogPage() {
           </div>
 
           {/* Load More */}
-          {filteredPosts.length > 0 && (
+          {blogPosts.length > 0 && hasMore && (
             <div className="max-w-6xl mx-auto mt-12 text-center">
-              <button className="px-8 py-3 bg-gray-100 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:border-green-500/50 hover:text-green-400 hover:shadow-lg hover:shadow-green-500/10 transition-all font-medium">
-                Load More Articles
+              <button 
+                onClick={handleLoadMore}
+                disabled={loading}
+                className="px-8 py-3 bg-gray-100 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:border-green-500/50 hover:text-green-400 hover:shadow-lg hover:shadow-green-500/10 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Loading...' : 'Load More Articles'}
               </button>
             </div>
           )}
