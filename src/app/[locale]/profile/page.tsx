@@ -114,7 +114,7 @@ export default function ProfilePage() {
       setIsAuthenticated(true)
       
       // Fetch user data from Laravel API
-      fetch('http://localhost:8000/api/user', {
+      fetch('https://backend-w3university.vercel.app/api/user', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ export default function ProfilePage() {
     
     try {
       // Call Laravel logout API
-      await fetch('http://localhost:8000/api/logout', {
+      await fetch('https://backend-w3university.vercel.app/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

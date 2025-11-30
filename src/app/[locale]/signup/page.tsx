@@ -32,7 +32,7 @@ export default function SignupPage() {
     setIsLoading(true)
     
     try {
-      const response = await fetch('http://localhost:8000/api/register', {
+      const response = await fetch('https://backend-w3university.vercel.app/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
