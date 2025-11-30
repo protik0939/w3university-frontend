@@ -22,12 +22,61 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate password match
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!')
+      return
+    }
+    
     setIsLoading(true)
-    // Add your signup logic here
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch('https://backend-w3university.vercel.app/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          password_confirmation: formData.confirmPassword
+        })
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        // Store user session
+        const userSession = {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.name,
+          isLoggedIn: true,
+          loginTime: new Date().toISOString(),
+          token: data.token
+        }
+        
+        localStorage.setItem('userSession', JSON.stringify(userSession))
+        localStorage.setItem('authToken', data.token)
+        
+        // Redirect to profile
+        window.location.href = `/${currentLocale}/profile`
+      } else {
+        // Handle validation errors
+        const errorMessage = data.message || 'Registration failed'
+        const errors = data.errors ? Object.values(data.errors).flat().join('\n') : ''
+        alert(`${errorMessage}${errors ? '\n' + errors : ''}`)
+      }
+    } catch (error) {
+      console.error('Registration error:', error)
+      alert('An error occurred during registration. Please try again.')
+    } finally {
       setIsLoading(false)
-      console.log('Signup attempt:', formData)
-    }, 2000)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

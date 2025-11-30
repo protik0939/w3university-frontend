@@ -1,5 +1,6 @@
-import BlogPostDetail from '@/Components/Blog/BlogPostDetail'
+'use client'
+import BlogPostDetailNew from '@/Components/Blog/BlogPostDetailNew'
 
 export default function BlogPost() {
-  return <BlogPostDetail />
+  return <BlogPostDetailNew />
 }

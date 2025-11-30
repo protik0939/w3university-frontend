@@ -34,7 +34,7 @@ export default function Footer() {
     { icon: Github, href: 'https://github.com', label: 'GitHub' },
     { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
     { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:contact@w3university.com', label: 'Email' },
+    { icon: Mail, href: 'mailto:contact@ekusheycoding.com', label: 'Email' },
   ]
 
   return (
@@ -47,13 +47,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <a href={`/${currentLocale}`} className="flex items-center gap-2 group mb-4">
-              <div className="relative">
-                <Code2 className="text-green-500 group-hover:text-green-400 transition-colors" size={32} />
-                <div className="absolute inset-0 bg-green-500/20 blur-xl group-hover:bg-green-400/30 transition-all" />
+            <a href={`/${currentLocale}`} className="flex items-center gap-3 group mb-4">
+              <div className="relative w-12 h-12">
+                <img 
+                  src="/assets/icons/icon.svg" 
+                  alt="Ekushey Coding Logo" 
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                W3University
+                Ekushey Coding
               </span>
             </a>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 max-w-xs transition-colors">
