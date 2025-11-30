@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import { useTranslations } from 'next-intl'
 import { Code2, Mail, Lock, Eye, EyeOff, ChevronRight, Terminal, Github } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
@@ -127,7 +126,7 @@ export default function LoginPage() {
                     Sign In
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Don't have an account?{' '}
+                    Don&apos;t have an account?{' '}
                     <Link 
                       href={`/${currentLocale}/signup`}
                       className="text-green-500 hover:text-green-400 font-medium transition-colors"

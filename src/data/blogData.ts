@@ -24,7 +24,7 @@ export interface BlogPost {
 
 // Static blog data is deprecated - now using API from Laravel backend
 // See src/lib/blogApi.ts for API integration
-export const blogPosts: BlogPost[] = [] as any; 
+export const blogPosts: BlogPost[] = []; 
 
 /*[
   {

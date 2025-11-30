@@ -11,7 +11,7 @@ export default function BlogPostDetail() {
   const id = params.id as string
   const locale = params.locale as string
 
-  const post = blogPosts.find(p => p.id === id)
+  const post = blogPosts.find(p => p.id === Number(id))
 
   const handleShare = async () => {
     if (!post) return
@@ -128,11 +128,11 @@ export default function BlogPostDetail() {
               </div>
               <div className="flex items-center gap-2">
                 <Calendar size={18} />
-                <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                <span>{post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={18} />
-                <span>{post.readTime}</span>
+                <span>{post.read_time}</span>
               </div>
               
               {/* Action Buttons */}

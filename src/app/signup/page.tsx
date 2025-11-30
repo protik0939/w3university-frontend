@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import { useTranslations } from 'next-intl'
 import { Code2, Mail, Lock, User, Eye, EyeOff, ChevronRight, Terminal, Github } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
@@ -305,7 +304,7 @@ export default function SignupPage() {
 
                 {/* Additional Info */}
                 <p className="mt-6 text-xs text-center text-gray-500 dark:text-gray-400">
-                  By signing up, you'll get access to free courses, certificates, and a supportive community.
+                  By signing up, you&apos;ll get access to free courses, certificates, and a supportive community.
                 </p>
               </div>
             </div>

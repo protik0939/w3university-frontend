@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Award, Share2, Download, Check, Calendar, User } from 'lucide-react'
+import { Award, Share2, Download, Check, Calendar } from 'lucide-react'
 
 interface CertificateData {
   id: string
@@ -40,7 +40,7 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 2000)
       }
-    } catch (error) {
+    } catch {
       console.log('Share cancelled or failed')
     } finally {
       setIsSharing(false)

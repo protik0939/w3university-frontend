@@ -144,11 +144,20 @@ export async function fetchCategories(): Promise<string[]> {
   const response = await fetch(`${API_BASE_URL}/blogs/categories`)
   if (!response.ok) throw new Error('Failed to fetch categories')
   const result = await response.json()
-  // Handle if categories come as objects with category/category_bn
-  if (Array.isArray(result) && result.length > 0 && typeof result[0] === 'object') {
-    return result.map((cat: any) => cat.category || cat)
+
+  // Normalize categories to string[] whether API returns strings or objects with category/category_bn
+  if (Array.isArray(result)) {
+    return result.map((cat: unknown) => {
+      if (typeof cat === 'string') return cat
+      if (cat && typeof cat === 'object') {
+        const obj = cat as { category?: string; category_bn?: string } | Record<string, unknown>
+        return (obj as { category?: string }).category ?? (obj as { category_bn?: string }).category_bn ?? ''
+      }
+      return String(cat)
+    })
   }
-  return result
+
+  return []
 }
 
 // Fetch popular blogs

@@ -7,7 +7,7 @@ import {
   BookOpen, Clock, Trophy, Flame, LogOut
 } from 'lucide-react'
 import Footer from '@/Components/Footer/Footer'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 interface Address {
   street: string
@@ -61,7 +61,6 @@ interface UserSession {
 }
 
 export default function ProfilePage() {
-  const router = useRouter()
   const params = useParams()
   const currentLocale = (params?.locale as string) || 'en'
   
@@ -158,12 +157,13 @@ export default function ProfilePage() {
               setLoading(false)
             })
         })
-        .catch(error => {
-          console.error('Error fetching user data:', error)
+        .catch(() => {
+          console.error('Error fetching user data')
           setLoading(false)
         })
       
     } catch (error) {
+      console.error('Error parsing session data:', error)
       // Invalid session data, redirect to login
       localStorage.removeItem('userSession')
       localStorage.removeItem('authToken')
