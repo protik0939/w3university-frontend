@@ -139,11 +139,11 @@ export default function TagFilterPage() {
                         </div>
                         <div className="flex items-center gap-1.5">
                           <Calendar size={14} />
-                          <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                          <span>{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <Clock size={14} />
-                          <span>{post.readTime}</span>
+                          <span>{post.read_time}</span>
                         </div>
                       </div>
 
