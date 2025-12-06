@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Code2, Menu, X, Globe, BookOpen, Trophy, Users, User, LogOut } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface UserSession {
   id: number
@@ -21,7 +22,6 @@ export default function Navbar() {
   const [userSession, setUserSession] = useState<UserSession | null>(null)
   const t = useTranslations('Navbar')
   const params = useParams()
-  const router = useRouter()
   const currentLocale = params.locale as string
 
   useEffect(() => {
@@ -111,7 +111,9 @@ export default function Navbar() {
             {/* Logo */}
             <Link href={`/${currentLocale}`} className="flex items-center gap-3 group">
               <div className="relative w-10 h-10">
-                <img 
+                <Image
+                  height={40}
+                  width={40} 
                   src="/assets/icons/icon.svg" 
                   alt="Ekushey Coding Logo" 
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform"

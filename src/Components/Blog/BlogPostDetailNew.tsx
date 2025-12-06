@@ -5,6 +5,7 @@ import { BlogPost, fetchBlogBySlug, fetchBlogs, getLocalizedField } from '@/lib/
 import Footer from '../Footer/Footer'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import Image from 'next/image'
 
 export default function BlogPostDetailNew() {
   const params = useParams()
@@ -178,7 +179,9 @@ export default function BlogPostDetailNew() {
             {/* Featured Image */}
             {post.image_url && (
               <div className="mb-12 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
-                <img
+                <Image
+                  height={200}
+                  width={300}
                   src={post.image_url}
                   alt={getLocalizedField(post, 'title', locale)}
                   className="w-full h-auto"
@@ -234,7 +237,7 @@ export default function BlogPostDetailNew() {
                       <article className="bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/10 transition-all duration-300">
                         <div className="w-full h-40 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-center relative overflow-hidden transition-colors">
                           {relatedPost.image_url ? (
-                            <img src={relatedPost.image_url} alt={getLocalizedField(relatedPost, 'title', locale)} className="w-full h-full object-cover" />
+                            <Image height={100} width={150} src={relatedPost.image_url} alt={getLocalizedField(relatedPost, 'title', locale)} className="w-full h-full object-cover" />
                           ) : (
                             <>
                               <div className="text-4xl opacity-50">📄</div>

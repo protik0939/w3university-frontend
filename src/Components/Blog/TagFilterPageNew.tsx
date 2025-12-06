@@ -5,6 +5,7 @@ import { BlogPost, fetchBlogs, getLocalizedField } from '@/lib/blogApi'
 import Footer from '../Footer/Footer'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import Image from 'next/image'
 
 export default function TagFilterPageNew() {
   const params = useParams()
@@ -132,7 +133,7 @@ export default function TagFilterPageNew() {
                       {/* Image */}
                       <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-center relative overflow-hidden transition-colors">
                         {post.image_url ? (
-                          <img src={post.image_url} alt={getLocalizedField(post, 'title', locale)} className="w-full h-full object-cover" />
+                          <Image height={192} width={256} src={post.image_url} alt={getLocalizedField(post, 'title', locale)} className="w-full h-full object-cover" />
                         ) : (
                           <>
                             <div className="text-5xl opacity-50">💻</div>

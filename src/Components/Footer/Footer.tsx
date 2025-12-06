@@ -1,8 +1,9 @@
 'use client'
 import React from 'react'
 import { useTranslations } from 'next-intl'
-import { Code2, Github, Twitter, Linkedin, Mail, Heart } from 'lucide-react'
+import { Github, Twitter, Linkedin, Mail, Heart } from 'lucide-react'
 import { useParams } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Footer() {
   const t = useTranslations('Footer')
@@ -49,7 +50,9 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <a href={`/${currentLocale}`} className="flex items-center gap-3 group mb-4">
               <div className="relative w-12 h-12">
-                <img 
+                <Image
+                  height={48}
+                  width={48}
                   src="/assets/icons/icon.svg" 
                   alt="Ekushey Coding Logo" 
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform"

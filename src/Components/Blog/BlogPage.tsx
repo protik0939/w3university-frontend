@@ -16,7 +16,6 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-  const [totalPages, setTotalPages] = useState(1)
 
   // Fetch blogs from API
   useEffect(() => {
@@ -42,7 +41,6 @@ export default function BlogPage() {
         }
 
         setHasMore(result.current_page < result.last_page)
-        setTotalPages(result.last_page)
       } catch (error) {
         console.error('Error fetching blogs:', error)
         setBlogPosts([])
@@ -71,6 +69,7 @@ export default function BlogPage() {
   // Reset page when filters change
   useEffect(() => {
     if (page !== 1) setPage(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedCategory])
 
   const featuredPost = blogPosts[0]
@@ -81,10 +80,6 @@ export default function BlogPage() {
       return (post[bnField] as string) || (post[field] as string) || ''
     }
     return (post[field] as string) || ''
-  }
-
-  const getLocalizedTags = (post: BlogPost): string[] => {
-    return locale === 'bn' ? post.tags_bn : post.tags
   }
 
   const handleLoadMore = () => {
