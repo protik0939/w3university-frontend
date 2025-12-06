@@ -5,6 +5,7 @@ import { isAdminAuthenticated } from '@/lib/auth'
 import { useToast } from '@/Components/Providers/ToastProvider'
 import { fetchAdminBlogs, deleteBlog, AdminBlog } from '@/lib/api/admin'
 import AdminSidebar from '@/Components/Admin/AdminSidebar'
+import Breadcrumb from '@/Components/Admin/Breadcrumb'
 import { Search, Plus, Edit2, Trash2, Eye, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -84,9 +85,14 @@ function BlogsContent() {
         {/* Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
         
-        {/* Header */}
-        <div className="relative z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 transition-colors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Breadcrumb */}
+          <Breadcrumb items={[
+            { label: 'Blogs' }
+          ]} />
+
+          {/* Header */}
+          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6 mt-6 transition-colors">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Manage Blogs</h1>
@@ -103,9 +109,6 @@ function BlogsContent() {
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Controls */}
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6 transition-colors">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">

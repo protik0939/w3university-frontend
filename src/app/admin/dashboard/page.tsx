@@ -1,10 +1,11 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { isAdminAuthenticated } from '@/lib/auth'
 import { useToast } from '@/Components/Providers/ToastProvider'
 import { fetchDashboardStats, DashboardStats } from '@/lib/api/admin'
 import AdminSidebar from '@/Components/Admin/AdminSidebar'
+import Breadcrumb from '@/Components/Admin/Breadcrumb'
 import { 
   BarChart3, 
   FileText, 
@@ -17,7 +18,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-export default function AdminDashboard() {
+function DashboardContent() {
   const router = useRouter()
   const { showToast } = useToast()
   const [stats, setStats] = useState<DashboardStats | null>(null)
@@ -37,8 +38,18 @@ export default function AdminDashboard() {
       const data = await fetchDashboardStats()
       setStats(data)
     } catch (error) {
-      showToast('Failed to load dashboard stats', 'error')
       console.error('Dashboard stats error:', error)
+      showToast('Failed to fetch dashboard stats', 'error')
+      // Set empty stats on error to prevent null issues
+      setStats({
+        total_blogs: 0,
+        published_blogs: 0,
+        draft_blogs: 0,
+        total_views: 0,
+        total_categories: 0,
+        recent_blogs: [],
+        popular_categories: []
+      })
     } finally {
       setLoading(false)
     }
@@ -63,9 +74,12 @@ export default function AdminDashboard() {
         {/* Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
         
-        {/* Header */}
-        <div className="relative z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 transition-colors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Breadcrumb */}
+          <Breadcrumb items={[]} />
+
+          {/* Header */}
+          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-8 mt-6 transition-colors">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Dashboard</h1>
@@ -82,9 +96,6 @@ export default function AdminDashboard() {
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-green-500/10 transition-all group">
@@ -242,5 +253,17 @@ export default function AdminDashboard() {
         </div>
       </div>
     </AdminSidebar>
+  )
+}
+
+export default function AdminDashboard() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-green-500" />
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }

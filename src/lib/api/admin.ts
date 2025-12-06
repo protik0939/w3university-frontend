@@ -75,15 +75,17 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
     })
 
     if (!response.ok) {
-      throw new Error('Failed to fetch dashboard stats')
+      const errorText = await response.text()
+      console.error('Dashboard stats API error:', response.status, errorText)
+      throw new Error(`Failed to fetch dashboard stats: ${response.status}`)
     }
 
     const data = await response.json()
     
     return {
-      total_blogs: data.total || 0,
-      published_blogs: data.published || 0,
-      draft_blogs: data.drafts || 0,
+      total_blogs: data.total || data.total_blogs || 0,
+      published_blogs: data.published || data.published_blogs || 0,
+      draft_blogs: data.drafts || data.draft_blogs || 0,
       total_views: data.total_views || 0,
       total_categories: data.total_categories || 0,
       recent_blogs: data.recent_blogs || [],

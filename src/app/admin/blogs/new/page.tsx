@@ -2,8 +2,9 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/Components/Providers/ToastProvider'
-import { ArrowLeft, Save, Terminal, Globe } from 'lucide-react'
-import Link from 'next/link'
+import { Save, Globe } from 'lucide-react'
+import AdminSidebar from '@/Components/Admin/AdminSidebar'
+import Breadcrumb from '@/Components/Admin/Breadcrumb'
 
 export default function NewBlogPage() {
   const router = useRouter()
@@ -40,29 +41,27 @@ export default function NewBlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors relative overflow-hidden">
-      {/* Grid Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
-      
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/blogs"
-              className="p-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded-lg transition-all"
-            >
-              <ArrowLeft size={20} />
-            </Link>
+    <AdminSidebar>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors relative overflow-hidden">
+        {/* Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-[size:72px_72px]" />
+        
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Breadcrumb */}
+          <Breadcrumb items={[
+            { label: 'Blogs', href: '/admin/blogs' },
+            { label: 'New Blog' }
+          ]} />
+
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Terminal size={16} className="text-green-500" />
-                <span className="text-xs font-mono uppercase tracking-wider text-green-500">New Post</span>
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Create New Blog</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Create New Blog</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Add a new blog post in both English and Bengali
+              </p>
             </div>
           </div>
-        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -238,15 +237,10 @@ export default function NewBlogPage() {
               <Save size={20} />
               {loading ? 'Creating...' : 'Create Blog'}
             </button>
-            <Link
-              href="/admin/blogs"
-              className="px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-semibold rounded-lg transition-all border border-gray-200 dark:border-gray-700"
-            >
-              Cancel
-            </Link>
           </div>
         </form>
       </div>
     </div>
+    </AdminSidebar>
   )
 }
