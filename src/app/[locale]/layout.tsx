@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { NextIntlClientProvider } from 'next-intl'
-import { ThemeProvider } from '@/lib/ThemeContext'
+import Navbar from '@/Components/NavBar/Navbar'
 
 const locales = ['en', 'bn']
 
@@ -28,10 +28,9 @@ export default async function LocaleLayout({
   }
 
   return (
-    <ThemeProvider>
-      <NextIntlClientProvider locale={locale} messages={messages}>
-        {children}
-      </NextIntlClientProvider>
-    </ThemeProvider>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <Navbar />
+      {children}
+    </NextIntlClientProvider>
   )
 }

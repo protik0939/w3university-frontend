@@ -4,10 +4,10 @@ import Image from 'next/image'
 import { 
   User, Mail, Phone, MapPin, Calendar, Award, 
   Edit2, Save, X, Github, Linkedin, Twitter,
-  BookOpen, Clock, Trophy, Flame
+  BookOpen, Clock, Trophy, Flame, LogOut
 } from 'lucide-react'
-import Navbar from '@/Components/NavBar/Navbar'
 import Footer from '@/Components/Footer/Footer'
+import { useParams } from 'next/navigation'
 
 interface Address {
   street: string
@@ -53,39 +53,123 @@ interface UserData {
   social: Social
 }
 
+interface UserSession {
+  id: number
+  email: string
+  isLoggedIn: boolean
+  loginTime: string
+}
+
 export default function ProfilePage() {
+  const params = useParams()
+  const currentLocale = (params?.locale as string) || 'en'
+  
   const [userData, setUserData] = useState<UserData | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editedData, setEditedData] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  // Simulating logged-in user ID (change this to fetch from auth context)
-  const loggedInUserId = 1
-
+  // Check authentication and fetch user data on mount
   useEffect(() => {
     setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
     
-    // Fetch user data from dummy JSON
-    fetch('/userData.json')
-      .then(res => res.json())
-      .then((data: UserData[]) => {
-        const user = data.find(u => u.id === loggedInUserId)
-        if (user) {
-          setUserData(user)
-          setEditedData(user)
-        }
-        setLoading(false)
+    console.log('Profile page mounted, checking authentication...')
+    
+    // Check if user is logged in
+    const userSession = localStorage.getItem('userSession')
+    const authToken = localStorage.getItem('authToken')
+    
+    console.log('UserSession exists:', !!userSession)
+    console.log('AuthToken exists:', !!authToken)
+    
+    if (!userSession || !authToken) {
+      console.log('No session found, redirecting to login...')
+      // Not logged in, redirect to login page
+      setTimeout(() => {
+        window.location.href = `/${currentLocale}/login`
+      }, 100)
+      return
+    }
+    
+    try {
+      const session: UserSession = JSON.parse(userSession)
+      console.log('Parsed session:', session)
+      
+      if (!session.isLoggedIn) {
+        console.log('Session invalid, redirecting to login...')
+        // Invalid session, redirect to login
+        localStorage.removeItem('userSession')
+        localStorage.removeItem('authToken')
+        setTimeout(() => {
+          window.location.href = `/${currentLocale}/login`
+        }, 100)
+        return
+      }
+      
+      console.log('User authenticated, fetching data...')
+      // User is authenticated, fetch user data from API
+      setIsAuthenticated(true)
+      
+      // Fetch user data from Laravel API
+      fetch('https://backend-w3university.vercel.app/api/user', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        credentials: 'include'
       })
-      .catch(err => {
-        console.error('Error loading user data:', err)
-        setLoading(false)
-      })
-  }, [loggedInUserId, mounted])
+        .then(response => {
+          if (!response.ok) {
+            // If unauthorized, clear session and redirect
+            if (response.status === 401) {
+              localStorage.removeItem('userSession')
+              localStorage.removeItem('authToken')
+              window.location.href = `/${currentLocale}/login`
+              return null
+            }
+            throw new Error('Failed to fetch user data')
+          }
+          return response.json()
+        })
+        .then(apiUserData => {
+          if (!apiUserData) return
+          
+          // Map API response to UserData interface
+          // For now, using static data structure from userData.json
+          // You can modify this to match your Laravel API response
+          fetch('/userData.json')
+            .then(res => res.json())
+            .then(staticData => {
+              // Merge API data with static data structure
+              const mergedData = {
+                ...staticData,
+                id: apiUserData.id,
+                name: apiUserData.name,
+                email: apiUserData.email,
+                // Add other fields from API as needed
+              }
+              setUserData(mergedData)
+              setEditedData(mergedData)
+              setLoading(false)
+            })
+        })
+        .catch(() => {
+          console.error('Error fetching user data')
+          setLoading(false)
+        })
+      
+    } catch (error) {
+      console.error('Error parsing session data:', error)
+      // Invalid session data, redirect to login
+      localStorage.removeItem('userSession')
+      localStorage.removeItem('authToken')
+      window.location.href = `/${currentLocale}/login`
+    }
+  }, [currentLocale])
 
   const handleEdit = () => {
     if (!userData) return
@@ -126,7 +210,31 @@ export default function ProfilePage() {
     } : null)
   }
 
-  if (!mounted || loading) {
+  const handleLogout = async () => {
+    const authToken = localStorage.getItem('authToken')
+    
+    try {
+      // Call Laravel logout API
+      await fetch('https://backend-w3university.vercel.app/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        credentials: 'include'
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      // Clear local storage regardless of API response
+      localStorage.removeItem('userSession')
+      localStorage.removeItem('authToken')
+      window.location.href = `/${currentLocale}/login`
+    }
+  }
+
+  if (!mounted || loading || !isAuthenticated || !userData) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
@@ -134,21 +242,8 @@ export default function ProfilePage() {
     )
   }
 
-  if (!userData) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">User not found</h2>
-          <p className="text-gray-600 dark:text-gray-400">Please log in to view your profile.</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
-      <Navbar />
-      
       {/* Hero Section with Profile Header */}
       <div className="relative pt-24 pb-12 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800 transition-colors">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -159,11 +254,11 @@ export default function ProfilePage() {
                 {/* Avatar */}
                 <div className="relative">
                   <Image
-                    src={userData.avatar}
-                    alt={userData.name}
+                    src={userData?.avatar || '/assets/icons/icon.svg'}
+                    alt={userData?.name || 'User'}
                     width={128}
                     height={128}
-                    className="w-32 h-32 rounded-full border-4 border-green-500 shadow-lg"
+                    className="w-32 h-32 rounded-full border-4 border-green-500 shadow-lg object-cover"
                   />
                   <div className="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full p-2 shadow-lg">
                     <Award size={20} />
@@ -176,7 +271,7 @@ export default function ProfilePage() {
                     <div className="space-y-4">
                       <input
                         type="text"
-                        value={editedData.name}
+                        value={editedData?.name || ''}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         className="text-3xl font-bold bg-white dark:bg-gray-800 border-2 border-green-500 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-400 w-full"
                         placeholder="Full Name"
@@ -184,13 +279,13 @@ export default function ProfilePage() {
                       />
                       <input
                         type="text"
-                        value={editedData.username}
+                        value={editedData?.username || ''}
                         onChange={(e) => handleInputChange('username', e.target.value)}
                         className="text-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-400 w-full"
                         placeholder="@username"
                       />
                       <textarea
-                        value={editedData.bio}
+                        value={editedData?.bio || ''}
                         onChange={(e) => handleInputChange('bio', e.target.value)}
                         className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                         rows={3}
@@ -200,34 +295,44 @@ export default function ProfilePage() {
                   ) : (
                     <>
                       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        {userData.name}
+                        {userData?.name || 'User'}
                       </h1>
                       <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
-                        @{userData.username}
+                        @{userData?.username || 'username'}
                       </p>
                       <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                        {userData.bio}
+                        {userData?.bio || 'No bio available'}
                       </p>
                     </>
                   )}
 
                   <div className="flex items-center gap-2 mt-4 text-sm text-gray-600 dark:text-gray-400">
                     <Calendar size={16} />
-                    <span>Joined {new Date(userData.joinedDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                    <span>Joined {userData?.joinedDate ? new Date(userData.joinedDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recently'}</span>
                   </div>
                 </div>
 
-                {/* Edit Button */}
-                <div className="relative">
+                {/* Action Buttons */}
+                <div className="relative flex gap-3">
                   {!isEditing ? (
-                    <button
-                      onClick={handleEdit}
-                      type="button"
-                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20 cursor-pointer"
-                    >
-                      <Edit2 size={18} />
-                      Edit Profile
-                    </button>
+                    <>
+                      <button
+                        onClick={handleEdit}
+                        type="button"
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20 cursor-pointer"
+                      >
+                        <Edit2 size={18} />
+                        Edit Profile
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        type="button"
+                        className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-red-500/20 cursor-pointer"
+                      >
+                        <LogOut size={18} />
+                        Logout
+                      </button>
+                    </>
                   ) : (
                     <div className="flex gap-2">
                       <button
@@ -265,7 +370,7 @@ export default function ProfilePage() {
                   <BookOpen className="text-green-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData.stats.totalCourses}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.totalCourses || 0}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Courses</p>
                 </div>
               </div>
@@ -277,7 +382,7 @@ export default function ProfilePage() {
                   <Clock className="text-blue-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData.stats.hoursLearned}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.hoursLearned || 0}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Hours</p>
                 </div>
               </div>
@@ -289,7 +394,7 @@ export default function ProfilePage() {
                   <Trophy className="text-yellow-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData.stats.certificatesEarned}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.certificatesEarned || 0}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Certificates</p>
                 </div>
               </div>
@@ -301,7 +406,7 @@ export default function ProfilePage() {
                   <Flame className="text-red-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData.stats.currentStreak}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.currentStreak || 0}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Day Streak</p>
                 </div>
               </div>
@@ -324,7 +429,7 @@ export default function ProfilePage() {
                         <Mail className="text-green-500 flex-shrink-0" size={20} />
                         <input
                           type="email"
-                          value={editedData.email}
+                          value={editedData?.email || ''}
                           onChange={(e) => handleInputChange('email', e.target.value)}
                           className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="email@example.com"
@@ -334,7 +439,7 @@ export default function ProfilePage() {
                         <Phone className="text-green-500 flex-shrink-0" size={20} />
                         <input
                           type="tel"
-                          value={editedData.phone}
+                          value={editedData?.phone || ''}
                           onChange={(e) => handleInputChange('phone', e.target.value)}
                           className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                           placeholder="+880 1XXX-XXXXXX"
@@ -345,11 +450,11 @@ export default function ProfilePage() {
                     <>
                       <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                         <Mail className="text-green-500" size={20} />
-                        <span>{userData.email}</span>
+                        <span>{userData?.email || 'N/A'}</span>
                       </div>
                       <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                         <Phone className="text-green-500" size={20} />
-                        <span>{userData.phone}</span>
+                        <span>{userData?.phone || 'N/A'}</span>
                       </div>
                     </>
                   )}
@@ -367,7 +472,7 @@ export default function ProfilePage() {
                   <div className="space-y-3">
                     <input
                       type="text"
-                      value={editedData.address.street}
+                      value={editedData?.address?.street || ''}
                       onChange={(e) => handleAddressChange('street', e.target.value)}
                       placeholder="Street Address"
                       className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -375,14 +480,14 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-2 gap-3">
                       <input
                         type="text"
-                        value={editedData.address.city}
+                        value={editedData?.address?.city || ''}
                         onChange={(e) => handleAddressChange('city', e.target.value)}
                         placeholder="City"
                         className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                       <input
                         type="text"
-                        value={editedData.address.state}
+                        value={editedData?.address?.state || ''}
                         onChange={(e) => handleAddressChange('state', e.target.value)}
                         placeholder="State/Division"
                         className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -391,14 +496,14 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-2 gap-3">
                       <input
                         type="text"
-                        value={editedData.address.country}
+                        value={editedData?.address?.country || ''}
                         onChange={(e) => handleAddressChange('country', e.target.value)}
                         placeholder="Country"
                         className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                       <input
                         type="text"
-                        value={editedData.address.zip}
+                        value={editedData?.address?.zip || ''}
                         onChange={(e) => handleAddressChange('zip', e.target.value)}
                         placeholder="ZIP Code"
                         className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -407,9 +512,9 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                   <div className="text-gray-700 dark:text-gray-300">
-                    <p>{userData.address.street}</p>
-                    <p>{userData.address.city}, {userData.address.state}</p>
-                    <p>{userData.address.country} - {userData.address.zip}</p>
+                    <p>{userData?.address?.street || 'N/A'}</p>
+                    <p>{userData?.address?.city || 'N/A'}, {userData?.address?.state || 'N/A'}</p>
+                    <p>{userData?.address?.country || 'N/A'} - {userData?.address?.zip || 'N/A'}</p>
                   </div>
                 )}
               </div>
@@ -418,11 +523,11 @@ export default function ProfilePage() {
               <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                   <Award size={24} className="text-green-500" />
-                  Skills Completed ({userData.skillsCompleted.length})
+                  Skills Completed ({userData?.skillsCompleted?.length || 0})
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {userData.skillsCompleted.map((skill) => (
+                  {userData?.skillsCompleted?.map((skill) => (
                     <div
                       key={skill.id}
                       className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 border border-green-200 dark:border-green-900/30 rounded-lg p-4 transition-colors hover:shadow-md"
@@ -461,7 +566,7 @@ export default function ProfilePage() {
                         <Github className="text-gray-900 dark:text-white flex-shrink-0" size={20} />
                         <input
                           type="url"
-                          value={editedData.social.github}
+                          value={editedData?.social?.github || ''}
                           onChange={(e) => handleSocialChange('github', e.target.value)}
                           placeholder="https://github.com/username"
                           className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -471,7 +576,7 @@ export default function ProfilePage() {
                         <Linkedin className="text-blue-500 flex-shrink-0" size={20} />
                         <input
                           type="url"
-                          value={editedData.social.linkedin}
+                          value={editedData?.social?.linkedin || ''}
                           onChange={(e) => handleSocialChange('linkedin', e.target.value)}
                           placeholder="https://linkedin.com/in/username"
                           className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -481,7 +586,7 @@ export default function ProfilePage() {
                         <Twitter className="text-sky-500 flex-shrink-0" size={20} />
                         <input
                           type="url"
-                          value={editedData.social.twitter}
+                          value={editedData?.social?.twitter || ''}
                           onChange={(e) => handleSocialChange('twitter', e.target.value)}
                           placeholder="https://twitter.com/username"
                           className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -490,33 +595,42 @@ export default function ProfilePage() {
                     </>
                   ) : (
                     <>
-                      <a
-                        href={userData.social.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                      >
-                        <Github size={20} className="group-hover:scale-110 transition-transform" />
-                        <span className="text-sm">GitHub</span>
-                      </a>
-                      <a
-                        href={userData.social.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                      >
-                        <Linkedin size={20} className="group-hover:scale-110 transition-transform" />
-                        <span className="text-sm">LinkedIn</span>
-                      </a>
-                      <a
-                        href={userData.social.twitter}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                      >
-                        <Twitter size={20} className="group-hover:scale-110 transition-transform" />
-                        <span className="text-sm">Twitter</span>
-                      </a>
+                      {userData?.social?.github && (
+                        <a
+                          href={userData.social.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
+                        >
+                          <Github size={20} className="group-hover:scale-110 transition-transform" />
+                          <span className="text-sm">GitHub</span>
+                        </a>
+                      )}
+                      {userData?.social?.linkedin && (
+                        <a
+                          href={userData.social.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
+                        >
+                          <Linkedin size={20} className="group-hover:scale-110 transition-transform" />
+                          <span className="text-sm">LinkedIn</span>
+                        </a>
+                      )}
+                      {userData?.social?.twitter && (
+                        <a
+                          href={userData.social.twitter}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
+                        >
+                          <Twitter size={20} className="group-hover:scale-110 transition-transform" />
+                          <span className="text-sm">Twitter</span>
+                        </a>
+                      )}
+                      {!userData?.social?.github && !userData?.social?.linkedin && !userData?.social?.twitter && (
+                        <p className="text-sm text-gray-500 dark:text-gray-400">No social links added yet</p>
+                      )}
                     </>
                   )}
                 </div>
@@ -526,7 +640,7 @@ export default function ProfilePage() {
               <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl p-6 text-white shadow-lg">
                 <h3 className="text-lg font-bold mb-4">Keep Learning! 🚀</h3>
                 <p className="text-sm text-green-50 mb-4">
-                  You&apos;re on a {userData.stats.currentStreak}-day streak! Keep up the great work.
+                  You&apos;re on a {userData?.stats?.currentStreak || 0}-day streak! Keep up the great work.
                 </p>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
                   <div className="flex justify-between text-sm mb-1">

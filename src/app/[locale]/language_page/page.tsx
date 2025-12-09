@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import languagesData from '@/data/languages.json';
 import { Terminal, Code, BookOpen, Dumbbell, ChevronLeft, ChevronDown, CheckCircle2, XCircle } from 'lucide-react';
 
@@ -34,6 +34,8 @@ interface LanguageData {
 function LanguagePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = useParams();
+  const currentLocale = params.locale as string || 'en';
   const langId = searchParams.get('lang');
   
   const [activeTab, setActiveTab] = useState<'about' | 'tutorial' | 'exercise'>('about');
@@ -49,13 +51,13 @@ function LanguagePageContent() {
         setLanguageInfo(language);
       } else {
         // Redirect to languages page if language not found
-        router.push('/languages');
+        router.push(`/${currentLocale}/languages`);
       }
     } else {
       // Redirect to languages page if no language specified
-      router.push('/languages');
+      router.push(`/${currentLocale}/languages`);
     }
-  }, [langId, router]);
+  }, [langId, router, currentLocale]);
 
   if (!languageInfo) {
     return (
@@ -156,7 +158,7 @@ function LanguagePageContent() {
         <div className="container mx-auto px-4 py-12 z-10 w-full">
           {/* Back Button */}
           <button
-            onClick={() => router.push('/languages')}
+            onClick={() => router.push(`/${currentLocale}/languages`)}
             className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-green-400 dark:hover:text-green-400 transition-colors mb-8"
           >
             <ChevronLeft size={20} />
