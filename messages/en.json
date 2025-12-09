@@ -222,5 +222,45 @@
     "errorDetail": "The requested page could not be located on this server.",
     "homeButton": "Go to Homepage",
     "backButton": "Go Back"
+  },
+  "Exercises": {
+    "title": "Programming Exercises",
+    "subtitle": "Challenge yourself with {total}+ coding exercises across 12 programming languages. From beginner to advanced, sharpen your skills one problem at a time.",
+    "badge": "Practice & Master",
+    "stats": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "search": {
+      "placeholder": "Search exercises, tags, or keywords...",
+      "showing": "Showing {count} exercise",
+      "showing_plural": "Showing {count} exercises",
+      "clearFilters": "Clear filters"
+    },
+    "filters": {
+      "allLanguages": "All Languages",
+      "allLevels": "All Levels"
+    },
+    "noResults": {
+      "title": "No exercises found",
+      "description": "Try adjusting your filters or search query"
+    },
+    "exercise": {
+      "problemStatement": "Problem Statement",
+      "inputDescription": "Input Description",
+      "outputDescription": "Output Description",
+      "sampleInput": "Sample Input",
+      "sampleOutput": "Sample Output",
+      "noInput": "No specific input required",
+      "readyToSolve": "Ready to solve this challenge?",
+      "startCoding": "Start Coding"
+    },
+    "cta": {
+      "title": "Keep Practicing, Keep Growing",
+      "description": "The best way to learn programming is by doing. Start with beginner exercises and work your way up to advanced challenges.",
+      "browseTutorials": "Browse Tutorials",
+      "earnCertificates": "Earn Certificates"
+    }
   }
 }

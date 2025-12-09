@@ -20,9 +20,15 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [userSession, setUserSession] = useState<UserSession | null>(null)
+  const [mounted, setMounted] = useState(false)
   const t = useTranslations('Navbar')
   const params = useParams()
   const currentLocale = params.locale as string
+
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,10 +87,10 @@ export default function Navbar() {
       window.location.href = `/${currentLocale}/login`
     }
   }
-
+  
   const navLinks = [
-    { key: 'tutorials', icon: BookOpen, href: '#courses' },
-    { key: 'exercises', icon: Code2, href: `/${currentLocale}/languages` },
+    { key: 'tutorials', icon: BookOpen, href: `/${currentLocale}/tutorial` },
+    { key: 'exercises', icon: Code2, href: `/${currentLocale}/exercises` },
     { key: 'blog', icon: BookOpen, href: `/${currentLocale}/blog` },
     { key: 'certificates', icon: Trophy, href: `/${currentLocale}/certificates` },
     { key: 'profile', icon: Users, href: `/${currentLocale}/profile` },
@@ -153,7 +159,7 @@ export default function Navbar() {
               </button>
 
               {/* User Menu or Login Button */}
-              {userSession ? (
+              {mounted && userSession ? (
                 <div className="relative">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -186,13 +192,15 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
-              ) : (
+              ) : mounted ? (
                 <Link
                   href={`/${currentLocale}/login`}
                   className="hidden sm:block px-4 py-1.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20"
                 >
                   {t('getStarted')}
                 </Link>
+              ) : (
+                <div className="hidden sm:block w-20 h-9" /> // Placeholder to prevent layout shift
               )}
 
               {/* Mobile Menu Button */}
@@ -213,7 +221,7 @@ export default function Navbar() {
           }`}
         >
           <div className="container mx-auto px-4 py-4 space-y-3">
-            {userSession && (
+            {mounted && userSession && (
               <div className="pb-3 mb-3 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white font-bold">
@@ -237,7 +245,7 @@ export default function Navbar() {
                 <span>{t(key)}</span>
               </Link>
             ))}
-            {userSession ? (
+            {mounted && (userSession ? (
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-3 w-full mt-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
@@ -253,7 +261,7 @@ export default function Navbar() {
               >
                 {t('getStarted')}
               </Link>
-            )}
+            ))}
           </div>
         </div>
       </nav>

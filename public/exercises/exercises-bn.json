@@ -1,0 +1,670 @@
+{
+  "languages": [
+    {
+      "languageId": "javascript",
+      "languageName": "JavaScript",
+      "exercises": [
+        {
+          "id": "js-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি ফাংশন লিখুন যা \"Hello, World!\" স্ট্রিং রিটার্ন করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" স্ট্রিং রিটার্ন করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "স্ট্রিং"]
+        },
+        {
+          "id": "js-002",
+          "title": "দুটি সংখ্যার যোগফল",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি ফাংশন লিখুন যা প্যারামিটার হিসেবে দুটি সংখ্যা নেয় এবং তাদের যোগফল রিটার্ন করে।",
+          "inputDescription": "দুটি সংখ্যা a এবং b।",
+          "outputDescription": "a এবং b এর যোগফল।",
+          "sampleInput": "a = 5, b = 3",
+          "sampleOutput": "8",
+          "tags": ["মৌলিক", "গণিত"]
+        },
+        {
+          "id": "js-003",
+          "title": "জোড় বা বিজোড় চেক করুন",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি ফাংশন লিখুন যা একটি সংখ্যা নেয় এবং \"Even\" রিটার্ন করে যদি এটি জোড় হয়, \"Odd\" যদি বিজোড় হয়।",
+          "inputDescription": "একটি পূর্ণসংখ্যা n।",
+          "outputDescription": "স্ট্রিং \"Even\" অথবা \"Odd\"।",
+          "sampleInput": "n = 4",
+          "sampleOutput": "Even",
+          "tags": ["শর্ত", "মৌলিক"]
+        },
+        {
+          "id": "js-004",
+          "title": "স্ট্রিং উল্টান",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি ফাংশন লিখুন যা একটি স্ট্রিং নেয় এবং এটি উল্টে রিটার্ন করে।",
+          "inputDescription": "একটি স্ট্রিং str।",
+          "outputDescription": "উল্টানো স্ট্রিং।",
+          "sampleInput": "str = \"hello\"",
+          "sampleOutput": "olleh",
+          "tags": ["স্ট্রিং", "ম্যানিপুলেশন"]
+        },
+        {
+          "id": "js-005",
+          "title": "অ্যারেতে সবচেয়ে বড় খুঁজুন",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি ফাংশন লিখুন যা সংখ্যার একটি অ্যারে নেয় এবং সবচেয়ে বড় সংখ্যা রিটার্ন করে।",
+          "inputDescription": "পূর্ণসংখ্যার একটি অ্যারে।",
+          "outputDescription": "অ্যারের সবচেয়ে বড় পূর্ণসংখ্যা।",
+          "sampleInput": "[3, 7, 2, 9, 1]",
+          "sampleOutput": "9",
+          "tags": ["অ্যারে", "লুপ"]
+        },
+        {
+          "id": "js-006",
+          "title": "প্যালিনড্রোম চেকার",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি ফাংশন লিখুন যা চেক করে একটি স্ট্রিং প্যালিনড্রোম কিনা (সামনে এবং পিছন থেকে একই পড়া যায়)।",
+          "inputDescription": "একটি স্ট্রিং str।",
+          "outputDescription": "বুলিয়ান true যদি প্যালিনড্রোম হয়, অন্যথায় false।",
+          "sampleInput": "str = \"racecar\"",
+          "sampleOutput": "true",
+          "tags": ["স্ট্রিং", "অ্যালগোরিদম"]
+        },
+        {
+          "id": "js-007",
+          "title": "ফিবোনাচি সিকোয়েন্স",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি ফাংশন লিখুন যা ফিবোনাচি সিকোয়েন্সের প্রথম n সংখ্যা জেনারেট করে।",
+          "inputDescription": "একটি পূর্ণসংখ্যা n (n >= 1)।",
+          "outputDescription": "প্রথম n ফিবোনাচি সংখ্যা সম্বলিত একটি অ্যারে।",
+          "sampleInput": "n = 7",
+          "sampleOutput": "[0, 1, 1, 2, 3, 5, 8]",
+          "tags": ["রিকার্শন", "অ্যালগোরিদম"]
+        },
+        {
+          "id": "js-008",
+          "title": "ডিপ ক্লোন অবজেক্ট",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি ফাংশন লিখুন যা একটি নেস্টেড অবজেক্টের ডিপ ক্লোন তৈরি করে।",
+          "inputDescription": "একটি নেস্টেড অবজেক্ট obj।",
+          "outputDescription": "অবজেক্টের একটি ডিপ ক্লোনড কপি।",
+          "sampleInput": "obj = {a: 1, b: {c: 2}}",
+          "sampleOutput": "{a: 1, b: {c: 2}}",
+          "tags": ["অবজেক্ট", "রিকার্শন"]
+        },
+        {
+          "id": "js-009",
+          "title": "ডিবাউন্স ফাংশন",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি ডিবাউন্স ফাংশন ইমপ্লিমেন্ট করুন যা শেষবার কল করার পর একটি নির্দিষ্ট সময় অতিবাহিত না হওয়া পর্যন্ত ফাংশনের এক্সিকিউশন বিলম্বিত করে।",
+          "inputDescription": "একটি ফাংশন func এবং মিলিসেকেন্ডে বিলম্বের সময়।",
+          "outputDescription": "ফাংশনের একটি ডিবাউন্সড ভার্সন।",
+          "sampleInput": "func = console.log, delay = 300",
+          "sampleOutput": "Debounced function",
+          "tags": ["ক্লোজার", "অ্যাসিঙ্ক", "পারফরম্যান্স"]
+        }
+      ]
+    },
+    {
+      "languageId": "python",
+      "languageName": "Python",
+      "exercises": [
+        {
+          "id": "py-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি প্রোগ্রাম লিখুন যা কনসোলে \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "কনসোলে \"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "প্রিন্ট"]
+        },
+        {
+          "id": "py-002",
+          "title": "বৃত্তের ক্ষেত্রফল গণনা",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি ফাংশন লিখুন যা ব্যাসার্ধ দিয়ে বৃত্তের ক্ষেত্রফল গণনা করে। π = 3.14159 ব্যবহার করুন।",
+          "inputDescription": "একটি ফ্লোট radius।",
+          "outputDescription": "বৃত্তের ক্ষেত্রফল (ফ্লোট)।",
+          "sampleInput": "radius = 5",
+          "sampleOutput": "78.53975",
+          "tags": ["গণিত", "মৌলিক"]
+        },
+        {
+          "id": "py-003",
+          "title": "লিস্ট কম্প্রিহেনশন",
+          "difficulty": "Beginner",
+          "problemStatement": "লিস্ট কম্প্রিহেনশন ব্যবহার করে 1 থেকে n পর্যন্ত সংখ্যার বর্গের একটি লিস্ট তৈরি করুন।",
+          "inputDescription": "একটি পূর্ণসংখ্যা n।",
+          "outputDescription": "বর্গের একটি লিস্ট [1, 4, 9, 16, ...]।",
+          "sampleInput": "n = 5",
+          "sampleOutput": "[1, 4, 9, 16, 25]",
+          "tags": ["লিস্ট", "কম্প্রিহেনশন"]
+        },
+        {
+          "id": "py-004",
+          "title": "স্বরবর্ণ গণনা",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি ফাংশন লিখুন যা একটি স্ট্রিংয়ে স্বরবর্ণ (a, e, i, o, u) এর সংখ্যা গণনা করে।",
+          "inputDescription": "একটি স্ট্রিং text।",
+          "outputDescription": "স্বরবর্ণের সংখ্যা (পূর্ণসংখ্যা)।",
+          "sampleInput": "text = \"Hello World\"",
+          "sampleOutput": "3",
+          "tags": ["স্ট্রিং", "ইটারেশন"]
+        },
+        {
+          "id": "py-005",
+          "title": "মৌলিক সংখ্যা চেকার",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি ফাংশন লিখুন যা চেক করে একটি সংখ্যা মৌলিক কিনা।",
+          "inputDescription": "একটি পূর্ণসংখ্যা n (n > 1)।",
+          "outputDescription": "বুলিয়ান True যদি মৌলিক হয়, অন্যথায় False।",
+          "sampleInput": "n = 17",
+          "sampleOutput": "True",
+          "tags": ["অ্যালগোরিদম", "গণিত"]
+        },
+        {
+          "id": "py-006",
+          "title": "দুটি সাজানো লিস্ট মার্জ করুন",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি ফাংশন লিখুন যা দুটি সাজানো লিস্টকে একটি সাজানো লিস্টে মার্জ করে।",
+          "inputDescription": "দুটি সাজানো লিস্ট list1 এবং list2।",
+          "outputDescription": "একটি মার্জ করা এবং সাজানো লিস্ট।",
+          "sampleInput": "list1 = [1, 3, 5], list2 = [2, 4, 6]",
+          "sampleOutput": "[1, 2, 3, 4, 5, 6]",
+          "tags": ["লিস্ট", "সর্টিং", "অ্যালগোরিদম"]
+        },
+        {
+          "id": "py-007",
+          "title": "বাইনারি সার্চ",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি সাজানো অ্যারেতে টার্গেট মানের ইনডেক্স খুঁজতে বাইনারি সার্চ অ্যালগোরিদম ইমপ্লিমেন্ট করুন।",
+          "inputDescription": "একটি সাজানো লিস্ট arr এবং একটি টার্গেট মান।",
+          "outputDescription": "টার্গেটের ইনডেক্স যদি পাওয়া যায়, অন্যথায় -1।",
+          "sampleInput": "arr = [1, 3, 5, 7, 9], target = 5",
+          "sampleOutput": "2",
+          "tags": ["অ্যালগোরিদম", "সার্চ", "ডিভাইড-অ্যান্ড-কনকার"]
+        },
+        {
+          "id": "py-008",
+          "title": "ক্লাস ইনহেরিটেন্স",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি বেস ক্লাস Animal তৈরি করুন speak() মেথড সহ, এবং ডেরাইভড ক্লাস Dog এবং Cat যারা speak() ওভাররাইড করে তাদের নিজস্ব শব্দ দিয়ে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "বিভিন্ন প্রাণীর শব্দ দিয়ে পলিমরফিজম প্রদর্শন করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Dog: Woof! Cat: Meow!",
+          "tags": ["ওওপি", "ইনহেরিটেন্স", "পলিমরফিজম"]
+        },
+        {
+          "id": "py-009",
+          "title": "ডেকোরেটর ফাংশন",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি ডেকোরেটর তৈরি করুন যা একটি ফাংশনের এক্সিকিউশন সময় পরিমাপ করে।",
+          "inputDescription": "একটি ফাংশন যা ডেকোরেট করতে হবে।",
+          "outputDescription": "সেকেন্ডে এক্সিকিউশন সময়।",
+          "sampleInput": "def slow_function(): time.sleep(2)",
+          "sampleOutput": "Execution time: 2.001s",
+          "tags": ["ডেকোরেটর", "উন্নত", "ফাংশন"]
+        }
+      ]
+    },
+    {
+      "languageId": "java",
+      "languageName": "Java",
+      "exercises": [
+        {
+          "id": "java-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি জাভা প্রোগ্রাম লিখুন যা কনসোলে \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "আউটপুট"]
+        },
+        {
+          "id": "java-002",
+          "title": "অ্যারে উপাদানের যোগফল",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি মেথড লিখুন যা একটি পূর্ণসংখ্যা অ্যারের সব উপাদানের যোগফল গণনা করে।",
+          "inputDescription": "একটি পূর্ণসংখ্যা অ্যারে arr।",
+          "outputDescription": "সব উপাদানের যোগফল (পূর্ণসংখ্যা)।",
+          "sampleInput": "arr = {1, 2, 3, 4, 5}",
+          "sampleOutput": "15",
+          "tags": ["অ্যারে", "লুপ"]
+        },
+        {
+          "id": "java-003",
+          "title": "স্ট্রিং ম্যানিপুলেশন",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি মেথড লিখুন যা একটি স্ট্রিংকে বড় হাতের অক্ষরে রূপান্তরিত করে এবং সব স্পেস সরিয়ে দেয়।",
+          "inputDescription": "একটি স্ট্রিং str।",
+          "outputDescription": "স্পেস ছাড়া এবং বড় হাতের অক্ষরে পরিবর্তিত স্ট্রিং।",
+          "sampleInput": "str = \"hello world\"",
+          "sampleOutput": "HELLOWORLD",
+          "tags": ["স্ট্রিং", "ম্যানিপুলেশন"]
+        },
+        {
+          "id": "java-004",
+          "title": "অ্যারেতে ডুপ্লিকেট খুঁজুন",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি মেথড লিখুন যা একটি অ্যারেতে সব ডুপ্লিকেট উপাদান খুঁজে বের করে এবং তাদের একটি লিস্ট হিসেবে রিটার্ন করে।",
+          "inputDescription": "একটি পূর্ণসংখ্যা অ্যারে arr।",
+          "outputDescription": "ডুপ্লিকেট উপাদানের ArrayList।",
+          "sampleInput": "arr = {1, 2, 3, 2, 4, 1}",
+          "sampleOutput": "[1, 2]",
+          "tags": ["অ্যারে", "কালেকশন", "অ্যালগোরিদম"]
+        },
+        {
+          "id": "java-005",
+          "title": "স্ট্যাক ইমপ্লিমেন্ট করুন",
+          "difficulty": "Intermediate",
+          "problemStatement": "push, pop, peek, এবং isEmpty মেথড সহ একটি Stack ডেটা স্ট্রাকচার ইমপ্লিমেন্ট করুন।",
+          "inputDescription": "স্ট্যাক অপারেশন।",
+          "outputDescription": "কার্যকর স্ট্যাক ইমপ্লিমেন্টেশন।",
+          "sampleInput": "push(1), push(2), pop(), peek()",
+          "sampleOutput": "2, 1",
+          "tags": ["ডেটা-স্ট্রাকচার", "স্ট্যাক", "ওওপি"]
+        },
+        {
+          "id": "java-006",
+          "title": "বাইনারি ট্রি ট্রাভার্সাল",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি বাইনারি ট্রির জন্য inorder, preorder, এবং postorder ট্রাভার্সাল ইমপ্লিমেন্ট করুন।",
+          "inputDescription": "একটি বাইনারি ট্রি রুট নোড।",
+          "outputDescription": "বিভিন্ন ট্রাভার্সাল উপস্থাপন করে তিনটি লিস্ট।",
+          "sampleInput": "Tree: 1, 2, 3, 4, 5",
+          "sampleOutput": "Inorder: [4,2,5,1,3]",
+          "tags": ["ট্রি", "রিকার্শন", "ডেটা-স্ট্রাকচার"]
+        },
+        {
+          "id": "java-007",
+          "title": "থ্রেড সিঙ্ক্রোনাইজেশন",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি মাল্টি-থ্রেডেড প্রোগ্রাম তৈরি করুন যা সিঙ্ক্রোনাইজেশন ব্যবহার করে নিরাপদে একটি শেয়ার্ড কাউন্টার ইনক্রিমেন্ট করে।",
+          "inputDescription": "শেয়ার্ড কাউন্টার অ্যাক্সেস করছে একাধিক থ্রেড।",
+          "outputDescription": "চূড়ান্ত গণনা সঠিক হওয়া উচিত।",
+          "sampleInput": "5 threads, 1000 increments each",
+          "sampleOutput": "5000",
+          "tags": ["মাল্টিথ্রেডিং", "সিঙ্ক্রোনাইজেশন", "কনকারেন্সি"]
+        },
+        {
+          "id": "java-008",
+          "title": "জেনেরিক ক্লাস ইমপ্লিমেন্টেশন",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি জেনেরিক Pair<T, U> ক্লাস তৈরি করুন যা গেটার এবং সেটার সহ বিভিন্ন ধরনের দুটি মান ধারণ করতে পারে।",
+          "inputDescription": "জেনেরিক টাইপ প্যারামিটার।",
+          "outputDescription": "কার্যকর জেনেরিক ক্লাস।",
+          "sampleInput": "Pair<String, Integer> p = new Pair<>(\"Age\", 25)",
+          "sampleOutput": "Age: 25",
+          "tags": ["জেনেরিক", "ওওপি", "উন্নত"]
+        },
+        {
+          "id": "java-009",
+          "title": "ডিজাইন প্যাটার্ন: সিঙ্গেলটন",
+          "difficulty": "Advanced",
+          "problemStatement": "থ্রেড-নিরাপদ লেজি ইনিশিয়ালাইজেশন সহ সিঙ্গেলটন ডিজাইন প্যাটার্ন ইমপ্লিমেন্ট করুন।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "থ্রেড-নিরাপদ সিঙ্গেলটন ক্লাস।",
+          "sampleInput": "",
+          "sampleOutput": "Same instance returned always",
+          "tags": ["ডিজাইন-প্যাটার্ন", "সিঙ্গেলটন", "মাল্টিথ্রেডিং"]
+        }
+      ]
+    },
+    {
+      "languageId": "cpp",
+      "languageName": "C++",
+      "exercises": [
+        {
+          "id": "cpp-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি C++ প্রোগ্রাম লিখুন যা কনসোলে \"Hello, World!\" আউটপুট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "iostream"]
+        },
+        {
+          "id": "cpp-002",
+          "title": "পয়েন্টার মৌলিক",
+          "difficulty": "Intermediate",
+          "problemStatement": "পয়েন্টার ব্যবহার করে দুটি সংখ্যা অদলবদল করার জন্য একটি ফাংশন লিখুন।",
+          "inputDescription": "দুটি পূর্ণসংখ্যা a এবং b।",
+          "outputDescription": "a এবং b এর অদলবদল করা মান।",
+          "sampleInput": "a = 5, b = 10",
+          "sampleOutput": "a = 10, b = 5",
+          "tags": ["পয়েন্টার", "মৌলিক"]
+        },
+        {
+          "id": "cpp-003",
+          "title": "STL ভেক্টর",
+          "difficulty": "Advanced",
+          "problemStatement": "পূর্ণসংখ্যা সংরক্ষণ করতে STL ভেক্টর ব্যবহার করুন, তাদের সাজান এবং ডুপ্লিকেট অপসারণ করুন।",
+          "inputDescription": "পূর্ণসংখ্যার একটি ভেক্টর।",
+          "outputDescription": "ডুপ্লিকেট ছাড়া সাজানো ভেক্টর।",
+          "sampleInput": "vec = {5, 2, 8, 2, 9, 5}",
+          "sampleOutput": "{2, 5, 8, 9}",
+          "tags": ["stl", "ভেক্টর", "অ্যালগোরিদম"]
+        }
+      ]
+    },
+    {
+      "languageId": "csharp",
+      "languageName": "C#",
+      "exercises": [
+        {
+          "id": "cs-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি C# প্রোগ্রাম লিখুন যা কনসোলে \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "কনসোল"]
+        },
+        {
+          "id": "cs-002",
+          "title": "LINQ কুয়েরি",
+          "difficulty": "Intermediate",
+          "problemStatement": "পূর্ণসংখ্যার একটি লিস্ট ফিল্টার করতে এবং শুধুমাত্র জোড় সংখ্যা রিটার্ন করতে LINQ ব্যবহার করুন।",
+          "inputDescription": "সংখ্যার একটি List<int>।",
+          "outputDescription": "শুধুমাত্র জোড় সংখ্যা সম্বলিত একটি নতুন লিস্ট।",
+          "sampleInput": "numbers = {1, 2, 3, 4, 5, 6}",
+          "sampleOutput": "{2, 4, 6}",
+          "tags": ["linq", "কালেকশন"]
+        },
+        {
+          "id": "cs-003",
+          "title": "Async/Await",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি অ্যাসিঙ্ক মেথড তৈরি করুন যা বিলম্বের সাথে ডেটা আনার অনুকরণ করে।",
+          "inputDescription": "মিলিসেকেন্ডে বিলম্বের সময়।",
+          "outputDescription": "নির্দিষ্ট বিলম্বের পরে ডেটা।",
+          "sampleInput": "delay = 2000",
+          "sampleOutput": "Data fetched after 2 seconds",
+          "tags": ["অ্যাসিঙ্ক", "await", "টাস্ক"]
+        }
+      ]
+    },
+    {
+      "languageId": "typescript",
+      "languageName": "TypeScript",
+      "exercises": [
+        {
+          "id": "ts-001",
+          "title": "টাইপ অ্যানোটেশন",
+          "difficulty": "Beginner",
+          "problemStatement": "সঠিক টাইপ অ্যানোটেশন সহ একটি ফাংশন তৈরি করুন যা দুটি সংখ্যা যোগ করে।",
+          "inputDescription": "টাইপ অ্যানোটেশন সহ দুটি সংখ্যা।",
+          "outputDescription": "রিটার্ন টাইপ অ্যানোটেশন সহ যোগফল।",
+          "sampleInput": "a: number = 5, b: number = 3",
+          "sampleOutput": "8",
+          "tags": ["মৌলিক", "টাইপ"]
+        },
+        {
+          "id": "ts-002",
+          "title": "জেনেরিক ফাংশন",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি জেনেরিক ফাংশন তৈরি করুন যা যেকোনো ধরনের অ্যারের প্রথম উপাদান রিটার্ন করে।",
+          "inputDescription": "যেকোনো ধরনের অ্যারে।",
+          "outputDescription": "সঠিক টাইপ ইনফারেন্স সহ প্রথম উপাদান।",
+          "sampleInput": "[1, 2, 3] or [\"a\", \"b\", \"c\"]",
+          "sampleOutput": "1 or \"a\"",
+          "tags": ["জেনেরিক", "অ্যারে"]
+        },
+        {
+          "id": "ts-003",
+          "title": "টাইপ গার্ড",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি টাইপ গার্ড ফাংশন তৈরি করুন যা চেক করে একটি অবজেক্ট Dog বা Cat টাইপের কিনা।",
+          "inputDescription": "Animal অবজেক্ট।",
+          "outputDescription": "সঠিক চেক সহ টাইপ ন্যারোয়িং।",
+          "sampleInput": "animal = {name: \"Buddy\", bark: () => {}}",
+          "sampleOutput": "Type is Dog",
+          "tags": ["টাইপ-গার্ড", "টাইপ", "উন্নত"]
+        }
+      ]
+    },
+    {
+      "languageId": "php",
+      "languageName": "PHP",
+      "exercises": [
+        {
+          "id": "php-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি PHP স্ক্রিপ্ট লিখুন যা \"Hello, World!\" আউটপুট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" Echo করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "echo"]
+        },
+        {
+          "id": "php-002",
+          "title": "অ্যারে ফাংশন",
+          "difficulty": "Intermediate",
+          "problemStatement": "সংখ্যার একটি অ্যারে ফিল্টার, ম্যাপ এবং রিডিউস করতে অ্যারে ফাংশন ব্যবহার করুন।",
+          "inputDescription": "পূর্ণসংখ্যার অ্যারে।",
+          "outputDescription": "ফিল্টার করা, ম্যাপ করা এবং রিডিউস করা ফলাফল।",
+          "sampleInput": "$arr = [1, 2, 3, 4, 5]",
+          "sampleOutput": "Even numbers: [2, 4]",
+          "tags": ["অ্যারে", "ফাংশন"]
+        },
+        {
+          "id": "php-003",
+          "title": "RESTful API",
+          "difficulty": "Advanced",
+          "problemStatement": "সঠিক HTTP মেথড এবং JSON রেসপন্স সহ একটি RESTful API এন্ডপয়েন্ট তৈরি করুন।",
+          "inputDescription": "API রিকোয়েস্ট।",
+          "outputDescription": "সঠিক স্ট্যাটাস কোড সহ JSON রেসপন্স।",
+          "sampleInput": "GET /api/users/1",
+          "sampleOutput": "{\"id\": 1, \"name\": \"John\"}",
+          "tags": ["api", "rest", "json"]
+        }
+      ]
+    },
+    {
+      "languageId": "ruby",
+      "languageName": "Ruby",
+      "exercises": [
+        {
+          "id": "rb-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি Ruby প্রোগ্রাম লিখুন যা \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "puts"]
+        },
+        {
+          "id": "rb-002",
+          "title": "ব্লক এবং ইটারেটর",
+          "difficulty": "Intermediate",
+          "problemStatement": "একটি অ্যারের উপর ইটারেট করতে each মেথড ব্যবহার করুন ব্লক সহ।",
+          "inputDescription": "মানের একটি অ্যারে।",
+          "outputDescription": "প্রতিটি উপাদান প্রিন্ট হয়েছে।",
+          "sampleInput": "[1, 2, 3, 4, 5]",
+          "sampleOutput": "1 2 3 4 5",
+          "tags": ["ব্লক", "ইটারেটর"]
+        },
+        {
+          "id": "rb-003",
+          "title": "মেটাপ্রোগ্রামিং",
+          "difficulty": "Advanced",
+          "problemStatement": "গতিশীলভাবে গেটার এবং সেটার মেথড তৈরি করতে define_method ব্যবহার করুন।",
+          "inputDescription": "মেথড নাম।",
+          "outputDescription": "গতিশীলভাবে তৈরি মেথড।",
+          "sampleInput": "define_method(:name)",
+          "sampleOutput": "Methods created dynamically",
+          "tags": ["মেটাপ্রোগ্রামিং", "উন্নত", "গতিশীল"]
+        }
+      ]
+    },
+    {
+      "languageId": "go",
+      "languageName": "Go",
+      "exercises": [
+        {
+          "id": "go-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি Go প্রোগ্রাম লিখুন যা \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "fmt"]
+        },
+        {
+          "id": "go-002",
+          "title": "গোরুটিন",
+          "difficulty": "Intermediate",
+          "problemStatement": "একসাথে এক্সিকিউট হয় এমন একাধিক গোরুটিন তৈরি করুন।",
+          "inputDescription": "একাধিক গোরুটিন।",
+          "outputDescription": "সমকালীন এক্সিকিউশন।",
+          "sampleInput": "5 goroutines",
+          "sampleOutput": "All goroutines completed",
+          "tags": ["গোরুটিন", "কনকারেন্সি"]
+        },
+        {
+          "id": "go-003",
+          "title": "চ্যানেল",
+          "difficulty": "Advanced",
+          "problemStatement": "গোরুটিনের মধ্যে যোগাযোগ করতে চ্যানেল ব্যবহার করুন।",
+          "inputDescription": "চ্যানেল অপারেশন।",
+          "outputDescription": "গোরুটিনের মধ্যে ডেটা পাস করা হয়েছে।",
+          "sampleInput": "ch := make(chan int)",
+          "sampleOutput": "Channel communication",
+          "tags": ["চ্যানেল", "কনকারেন্সি"]
+        }
+      ]
+    },
+    {
+      "languageId": "rust",
+      "languageName": "Rust",
+      "exercises": [
+        {
+          "id": "rust-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি Rust প্রোগ্রাম লিখুন যা \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "println"]
+        },
+        {
+          "id": "rust-002",
+          "title": "মালিকানা",
+          "difficulty": "Intermediate",
+          "problemStatement": "মান সরানো এবং ধার নেওয়ার মাধ্যমে মালিকানার নিয়ম প্রদর্শন করুন।",
+          "inputDescription": "স্ট্রিং অপারেশন।",
+          "outputDescription": "মালিকানার বোঝাপড়া।",
+          "sampleInput": "let s1 = String::from(\"hello\")",
+          "sampleOutput": "Ownership moved",
+          "tags": ["মালিকানা", "মৌলিক"]
+        },
+        {
+          "id": "rust-003",
+          "title": "লাইফটাইম",
+          "difficulty": "Advanced",
+          "problemStatement": "রেফারেন্স বৈধ নিশ্চিত করতে লাইফটাইম অ্যানোটেশন ব্যবহার করুন।",
+          "inputDescription": "রেফারেন্স সহ ফাংশন।",
+          "outputDescription": "লাইফটাইম-অ্যানোটেটেড কোড।",
+          "sampleInput": "fn longest<'a>(x: &'a str, y: &'a str) -> &'a str",
+          "sampleOutput": "Lifetimes specified",
+          "tags": ["লাইফটাইম", "উন্নত", "রেফারেন্স"]
+        }
+      ]
+    },
+    {
+      "languageId": "swift",
+      "languageName": "Swift",
+      "exercises": [
+        {
+          "id": "swift-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি Swift প্রোগ্রাম লিখুন যা \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "প্রিন্ট"]
+        },
+        {
+          "id": "swift-002",
+          "title": "অপশনাল",
+          "difficulty": "Intermediate",
+          "problemStatement": "অপশনাল মানের সাথে অপশনাল বাইন্ডিং এবং নিল কোয়েলেসিং প্রদর্শন করুন।",
+          "inputDescription": "অপশনাল মান।",
+          "outputDescription": "অপশনালের নিরাপদ আনর্যাপিং।",
+          "sampleInput": "var name: String?",
+          "sampleOutput": "Optional handled safely",
+          "tags": ["অপশনাল", "নিরাপত্তা"]
+        },
+        {
+          "id": "swift-003",
+          "title": "প্রোটোকল",
+          "difficulty": "Advanced",
+          "problemStatement": "একটি প্রোটোকল সংজ্ঞায়িত করুন এবং একাধিক ধরনে এটি ইমপ্লিমেন্ট করুন।",
+          "inputDescription": "প্রোটোকল সংজ্ঞা।",
+          "outputDescription": "প্রোটোকল কনফরম্যান্স।",
+          "sampleInput": "protocol Drawable { func draw() }",
+          "sampleOutput": "Protocol implemented",
+          "tags": ["প্রোটোকল", "ইন্টারফেস"]
+        }
+      ]
+    },
+    {
+      "languageId": "kotlin",
+      "languageName": "Kotlin",
+      "exercises": [
+        {
+          "id": "kt-001",
+          "title": "হ্যালো ওয়ার্ল্ড",
+          "difficulty": "Beginner",
+          "problemStatement": "একটি Kotlin প্রোগ্রাম লিখুন যা \"Hello, World!\" প্রিন্ট করে।",
+          "inputDescription": "কোন ইনপুট প্রয়োজন নেই।",
+          "outputDescription": "\"Hello, World!\" প্রিন্ট করুন।",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["মৌলিক", "println"]
+        },
+        {
+          "id": "kt-002",
+          "title": "নাল নিরাপত্তা",
+          "difficulty": "Intermediate",
+          "problemStatement": "নিরাপদ কল সহ নালযোগ্য এবং নন-নালযোগ্য ধরন প্রদর্শন করুন।",
+          "inputDescription": "নালযোগ্য মান।",
+          "outputDescription": "নিরাপদ নাল হ্যান্ডলিং।",
+          "sampleInput": "var name: String?",
+          "sampleOutput": "Null safety enforced",
+          "tags": ["নাল-নিরাপত্তা", "মৌলিক"]
+        },
+        {
+          "id": "kt-003",
+          "title": "কোরুটিন",
+          "difficulty": "Advanced",
+          "problemStatement": "অ্যাসিঙ্ক্রোনাস প্রোগ্রামিংয়ের জন্য Kotlin কোরুটিন ব্যবহার করুন।",
+          "inputDescription": "কোরুটিন অপারেশন।",
+          "outputDescription": "অ্যাসিঙ্ক এক্সিকিউশন।",
+          "sampleInput": "GlobalScope.launch { }",
+          "sampleOutput": "Coroutine executed",
+          "tags": ["কোরুটিন", "অ্যাসিঙ্ক", "কনকারেন্সি"]
+        }
+      ]
+    }
+  ]
+}
