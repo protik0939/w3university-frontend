@@ -28,7 +28,7 @@ export default function LoginPage() {
       console.log('Attempting login with:', formData.email)
       
       // Use the authAPI from api.ts which handles both dev and prod URLs
-      await authAPI.login({
+      const data = await authAPI.login({
         email: formData.email,
         password: formData.password
       })
@@ -41,9 +41,9 @@ export default function LoginPage() {
       // Redirect to profile page
       router.push(`/${currentLocale}/profile`)
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error)
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred during login. Please try again.'
+      const errorMessage = error.message || 'An error occurred during login. Please try again.'
       alert(errorMessage)
       setIsLoading(false)
     }

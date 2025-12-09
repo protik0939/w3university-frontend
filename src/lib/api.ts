@@ -24,45 +24,29 @@ export function isAuthenticated(): boolean {
   return !!getAuthToken()
 }
 
-// API Response type - using Record for better type safety
-type ApiResponse = Record<string, unknown>
-
 // API Request Helper
 async function apiRequest(
   endpoint: string,
   options: RequestInit = {}
-): Promise<ApiResponse> {
+): Promise<any> {
   const token = getAuthToken()
   
-  const headers: Record<string, string> = {
+  const headers: HeadersInit = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(options.headers as Record<string, string> || {}),
+    ...(options.headers || {}),
   }
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`
   }
 
-  const url = `${API_BASE_URL}${endpoint}`
-  console.log('API Request:', {
-    url,
-    method: options.method || 'GET',
-    hasToken: !!token
-  })
-
-  const response = await fetch(url, {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   })
 
   const data = await response.json()
-  
-  console.log('API Response:', {
-    status: response.status,
-    ok: response.ok,
-    data
-  })
 
   if (!response.ok) {
     // Handle authentication errors
@@ -72,15 +56,6 @@ async function apiRequest(
       localStorage.removeItem('userSession')
       throw new Error('Session expired. Please login again.')
     }
-    
-    // Handle validation errors (422)
-    if (response.status === 422 && data.errors) {
-      // Laravel validation errors format: { errors: { field: ["error message"] } }
-      const errorMessages = Object.values(data.errors).flat()
-      throw new Error(errorMessages.join(', '))
-    }
-    
-    // Generic error message
     throw new Error(data.message || 'Request failed')
   }
 
@@ -147,74 +122,8 @@ export const authAPI = {
 // Profile APIs
 export const profileAPI = {
   // Get complete profile
-  getProfile: async (): Promise<{
-    success: boolean
-    data: {
-      user: {
-        id: number
-        name: string
-        email: string
-        created_at?: string
-      }
-      profile?: {
-        username?: string
-        phone?: string
-        bio?: string
-        github_url?: string
-        linkedin_url?: string
-        twitter_url?: string
-        portfolio_url?: string
-        location?: string
-        skill_level?: string
-        is_public?: boolean
-        avatar?: string
-        avatar_url?: string
-      }
-      performance?: {
-        total_courses_completed: number
-        total_lessons_completed: number
-        current_streak: number
-        total_points: number
-        total_hours_learned?: number
-        total_certificates_earned?: number
-        experience_level?: number
-      }
-    }
-  }> => {
-    return await apiRequest('/profile') as {
-      success: boolean
-      data: {
-        user: {
-          id: number
-          name: string
-          email: string
-          created_at?: string
-        }
-        profile?: {
-          username?: string
-          phone?: string
-          bio?: string
-          github_url?: string
-          linkedin_url?: string
-          twitter_url?: string
-          portfolio_url?: string
-          location?: string
-          skill_level?: string
-          is_public?: boolean
-          avatar?: string
-          avatar_url?: string
-        }
-        performance?: {
-          total_courses_completed: number
-          total_lessons_completed: number
-          current_streak: number
-          total_points: number
-          total_hours_learned?: number
-          total_certificates_earned?: number
-          experience_level?: number
-        }
-      }
-    }
+  getProfile: async () => {
+    return await apiRequest('/profile')
   },
 
   // Update basic info (name, email)
@@ -312,13 +221,7 @@ export const favoritesAPI = {
   },
 
   // Update favorite
-  updateFavorite: async (id: number, data: Partial<{
-    type: string
-    item_id: number
-    title: string
-    description: string
-    url: string
-  }>) => {
+  updateFavorite: async (id: number, data: any) => {
     return await apiRequest(`/profile/favorites/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -380,7 +283,7 @@ export const publicProfileAPI = {
   },
 }
 
-const apiExports = {
+export default {
   auth: authAPI,
   profile: profileAPI,
   favorites: favoritesAPI,
@@ -388,5 +291,3 @@ const apiExports = {
   performance: performanceAPI,
   publicProfile: publicProfileAPI,
 }
-
-export default apiExports

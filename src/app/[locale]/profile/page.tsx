@@ -1,82 +1,22 @@
 'use client'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { 
   User, Mail, Phone, MapPin, Calendar, Award, 
   Edit2, Save, X, Github, Linkedin, Twitter,
-  BookOpen, Clock, Trophy, Flame, LogOut, Upload, Lock
+  BookOpen, Clock, Trophy, Flame, LogOut, Upload, Lock, Globe
 } from 'lucide-react'
 import Footer from '@/Components/Footer/Footer'
 import { useParams } from 'next/navigation'
 import { profileAPI, getAuthToken, authAPI } from '@/lib/api'
 
-interface ProfileData {
-  user: {
-    id: number
-    name: string
-    email: string
-    created_at?: string
-  }
-  profile?: {
-    username?: string
-    phone?: string
-    bio?: string
-    github_url?: string
-    linkedin_url?: string
-    twitter_url?: string
-    portfolio_url?: string
-    location?: string
-    skill_level?: string
-    is_public?: boolean
-    avatar?: string
-    avatar_url?: string
-  }
-  performance?: {
-    total_courses_completed: number
-    total_lessons_completed: number
-    current_streak: number
-    total_points: number
-    total_hours_learned?: number
-    total_certificates_earned?: number
-    experience_level?: number
-  }
-}
-
-interface EditedData {
-  name: string
-  email: string
-  username: string
-  phone: string
-  bio: string
-  github_url: string
-  linkedin_url: string
-  twitter_url: string
-  portfolio_url: string
-  location: string
-  skill_level: string
-  is_public: boolean
-}
-
 export default function ProfilePage() {
   const params = useParams()
   const currentLocale = (params?.locale as string) || 'en'
   
-  const [profileData, setProfileData] = useState<ProfileData | null>(null)
+  const [profileData, setProfileData] = useState<any>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [editedData, setEditedData] = useState<EditedData>({
-    name: '',
-    email: '',
-    username: '',
-    phone: '',
-    bio: '',
-    github_url: '',
-    linkedin_url: '',
-    twitter_url: '',
-    portfolio_url: '',
-    location: '',
-    skill_level: 'beginner',
-    is_public: true
-  })
+  const [editedData, setEditedData] = useState<any>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -90,35 +30,33 @@ export default function ProfilePage() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
-  const fetchProfile = useCallback(async () => {
+  const fetchProfile = async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await profileAPI.getProfile()
       
-      if (response.success && response.data) {
-        const profileData = response.data as ProfileData
-        setProfileData(profileData)
+      if (response.success) {
+        setProfileData(response.data)
         setEditedData({
-          name: profileData.user.name,
-          email: profileData.user.email,
-          username: profileData.profile?.username || '',
-          phone: profileData.profile?.phone || '',
-          bio: profileData.profile?.bio || '',
-          github_url: profileData.profile?.github_url || '',
-          linkedin_url: profileData.profile?.linkedin_url || '',
-          twitter_url: profileData.profile?.twitter_url || '',
-          portfolio_url: profileData.profile?.portfolio_url || '',
-          location: profileData.profile?.location || '',
-          skill_level: profileData.profile?.skill_level || 'beginner',
-          is_public: profileData.profile?.is_public ?? true
+          name: response.data.user.name,
+          email: response.data.user.email,
+          username: response.data.profile?.username || '',
+          phone: response.data.profile?.phone || '',
+          bio: response.data.profile?.bio || '',
+          github_url: response.data.profile?.github_url || '',
+          linkedin_url: response.data.profile?.linkedin_url || '',
+          twitter_url: response.data.profile?.twitter_url || '',
+          portfolio_url: response.data.profile?.portfolio_url || '',
+          location: response.data.profile?.location || '',
+          skill_level: response.data.profile?.skill_level || 'beginner',
+          is_public: response.data.profile?.is_public ?? true
         })
       }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unknown error')
-      console.error('Error fetching profile:', error)
-      setError(error.message)
-      if (error.message.includes('Session expired') || error.message.includes('Unauthenticated')) {
+    } catch (err: any) {
+      console.error('Error fetching profile:', err)
+      setError(err.message)
+      if (err.message.includes('Session expired') || err.message.includes('Unauthenticated')) {
         setTimeout(() => {
           window.location.href = `/${currentLocale}/login`
         }, 1000)
@@ -126,7 +64,7 @@ export default function ProfilePage() {
     } finally {
       setLoading(false)
     }
-  }, [currentLocale])
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -138,7 +76,7 @@ export default function ProfilePage() {
     }
     
     fetchProfile()
-  }, [currentLocale, fetchProfile])
+  }, [currentLocale])
 
   const handleSave = async () => {
     try {
@@ -163,10 +101,9 @@ export default function ProfilePage() {
       await fetchProfile()
       setIsEditing(false)
       alert('Profile updated successfully!')
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unknown error')
-      console.error('Error saving profile:', error)
-      alert('Failed to save profile: ' + error.message)
+    } catch (err: any) {
+      console.error('Error saving profile:', err)
+      alert('Failed to save profile: ' + err.message)
     } finally {
       setSaving(false)
     }
@@ -199,9 +136,8 @@ export default function ProfilePage() {
         new_password: '',
         new_password_confirmation: ''
       })
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unknown error')
-      alert('Failed to change password: ' + error.message)
+    } catch (err: any) {
+      alert('Failed to change password: ' + err.message)
     }
   }
 
@@ -348,7 +284,7 @@ export default function ProfilePage() {
                   )}
                   <div className="flex items-center gap-2 mt-4 text-sm text-gray-600 dark:text-gray-400">
                     <Calendar size={16} />
-                    <span>Joined {profileData.user.created_at ? new Date(profileData.user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recently'}</span>
+                    <span>Joined {new Date(profileData.user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
                   </div>
                 </div>
 

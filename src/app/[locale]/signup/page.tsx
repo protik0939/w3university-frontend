@@ -37,7 +37,7 @@ export default function SignupPage() {
       console.log('Attempting registration...')
       
       // Use the authAPI from api.ts which handles both dev and prod URLs
-      await authAPI.register({
+      const data = await authAPI.register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -52,9 +52,9 @@ export default function SignupPage() {
       // Redirect to profile page
       router.push(`/${currentLocale}/profile`)
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error)
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred during registration. Please try again.'
+      const errorMessage = error.message || 'An error occurred during registration. Please try again.'
       alert(errorMessage)
       setIsLoading(false)
     }
