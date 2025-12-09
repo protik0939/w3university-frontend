@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, ChevronRight, Terminal } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { authAPI } from '@/lib/api'
 
 export default function LoginPage() {
   const t = useTranslations('Login')
@@ -24,95 +25,26 @@ export default function LoginPage() {
     setIsLoading(true)
     
     try {
-      console.log('Attempting login...')
-      const response = await fetch('https://backend-w3university.vercel.app/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
+      console.log('Attempting login with:', formData.email)
+      
+      // Use the authAPI from api.ts which handles both dev and prod URLs
+      await authAPI.login({
+        email: formData.email,
+        password: formData.password
       })
       
-      console.log('Response status:', response.status)
-      const data = await response.json()
-      console.log('Response data:', data)
-      console.log('Has user?', !!data.user)
-      console.log('Has token?', !!data.token)
-      console.log('Response ok?', response.ok)
+      console.log('Login successful!')
       
-      if (response.ok) {
-        // Check if we have user and token data
-        if (data.user && data.token) {
-          console.log('Login successful, storing session...')
-          
-          // Store user session
-          const userSession = {
-            id: data.user.id,
-            email: data.user.email,
-            name: data.user.name,
-            isLoggedIn: true,
-            loginTime: new Date().toISOString()
-          }
-          
-          console.log('UserSession:', userSession)
-          console.log('Token:', data.token)
-          
-          localStorage.setItem('userSession', JSON.stringify(userSession))
-          localStorage.setItem('authToken', data.token)
-          
-          console.log('Session stored, redirecting...')
-          
-          // Trigger storage event for navbar update
-          window.dispatchEvent(new Event('storage'))
-          
-          // Use router.push for client-side navigation
-          router.push(`/${currentLocale}/profile`)
-        } else if (data.access_token && data.user) {
-          // Laravel Sanctum might return access_token instead of token
-          console.log('Login successful with access_token, storing session...')
-          
-          const userSession = {
-            id: data.user.id,
-            email: data.user.email,
-            name: data.user.name,
-            isLoggedIn: true,
-            loginTime: new Date().toISOString()
-          }
-          
-          console.log('UserSession:', userSession)
-          console.log('Access Token:', data.access_token)
-          
-          localStorage.setItem('userSession', JSON.stringify(userSession))
-          localStorage.setItem('authToken', data.access_token)
-          
-          console.log('Session stored, redirecting...')
-          
-          // Trigger storage event for navbar update
-          window.dispatchEvent(new Event('storage'))
-          
-          // Use router.push for client-side navigation
-          router.push(`/${currentLocale}/profile`)
-        } else {
-          // Response is OK but missing expected data
-          console.error('Login response missing user or token data:', data)
-          alert('Login response is invalid. Please check your backend API.')
-          setIsLoading(false)
-        }
-      } else {
-        // Handle login errors
-        const errorMessage = data.message || 'Login failed'
-        console.error('Login failed:', errorMessage)
-        alert(errorMessage)
-        setIsLoading(false)
-      }
+      // Trigger storage event for navbar update
+      window.dispatchEvent(new Event('storage'))
+      
+      // Redirect to profile page
+      router.push(`/${currentLocale}/profile`)
+      
     } catch (error) {
       console.error('Login error:', error)
-      alert('An error occurred during login. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during login. Please try again.'
+      alert(errorMessage)
       setIsLoading(false)
     }
   }

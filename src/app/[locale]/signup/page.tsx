@@ -1,12 +1,14 @@
 'use client'
 import React, { useState } from 'react'
 import { Mail, Lock, User, Eye, EyeOff, ChevronRight, Terminal } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { authAPI } from '@/lib/api'
 
 export default function SignupPage() {
   const t = useTranslations('Signup')
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -32,49 +34,28 @@ export default function SignupPage() {
     setIsLoading(true)
     
     try {
-      const response = await fetch('https://backend-w3university.vercel.app/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          password_confirmation: formData.confirmPassword
-        })
+      console.log('Attempting registration...')
+      
+      // Use the authAPI from api.ts which handles both dev and prod URLs
+      await authAPI.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        password_confirmation: formData.confirmPassword
       })
       
-      const data = await response.json()
+      console.log('Registration successful!')
       
-      if (response.ok) {
-        // Store user session
-        const userSession = {
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.name,
-          isLoggedIn: true,
-          loginTime: new Date().toISOString(),
-          token: data.token
-        }
-        
-        localStorage.setItem('userSession', JSON.stringify(userSession))
-        localStorage.setItem('authToken', data.token)
-        
-        // Redirect to profile
-        window.location.href = `/${currentLocale}/profile`
-      } else {
-        // Handle validation errors
-        const errorMessage = data.message || 'Registration failed'
-        const errors = data.errors ? Object.values(data.errors).flat().join('\n') : ''
-        alert(`${errorMessage}${errors ? '\n' + errors : ''}`)
-      }
+      // Trigger storage event for navbar update
+      window.dispatchEvent(new Event('storage'))
+      
+      // Redirect to profile page
+      router.push(`/${currentLocale}/profile`)
+      
     } catch (error) {
       console.error('Registration error:', error)
-      alert('An error occurred during registration. Please try again.')
-    } finally {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred during registration. Please try again.'
+      alert(errorMessage)
       setIsLoading(false)
     }
   }
