@@ -302,7 +302,7 @@ export default function SignupPage() {
                   </button>
                 </form>
 
-                {/* Additional Info */}
+                {/* Additional Info  */}
                 <p className="mt-6 text-xs text-center text-gray-500 dark:text-gray-400">
                   By signing up, you&apos;ll get access to free courses, certificates, and a supportive community.
                 </p>
