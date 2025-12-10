@@ -11,7 +11,8 @@ import {
   Menu, 
   X,
   ChevronRight,
-  Terminal
+  Terminal,
+  Code
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -51,6 +52,12 @@ export default function AdminSidebar({ children }: AdminLayoutProps) {
       icon: FileText,
       href: '/admin/blogs',
       active: pathname?.startsWith('/admin/blogs')
+    },
+    {
+      name: 'Exercises',
+      icon: Code,
+      href: '/admin/exercises',
+      active: pathname?.startsWith('/admin/exercises')
     },
     {
       name: 'Settings',
