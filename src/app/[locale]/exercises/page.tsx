@@ -78,12 +78,6 @@ export default function ExercisesPage() {
     fetchExercises();
   }, [currentLocale]);
 
-  // Helper function to translate difficulty
-  const getDifficultyTranslation = (difficulty: string) => {
-    const key = difficulty.toLowerCase() as 'beginner' | 'intermediate' | 'advanced';
-    return t(`stats.${key}`);
-  };
-
   // Color themes for difficulty levels
   const difficultyColors = {
     Beginner: { 
@@ -330,7 +324,7 @@ export default function ExercisesPage() {
                                 {exercise.title}
                               </h3>
                               <span className={`text-xs px-2 py-1 rounded-full ${diffColor.badge} text-white font-medium`}>
-                                {getDifficultyTranslation(exercise.difficulty)}
+                                {exercise.difficulty}
                               </span>
                               <span className="text-xs px-2 py-1 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium">
                                 {language}

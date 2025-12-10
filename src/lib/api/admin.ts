@@ -72,6 +72,7 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   try {
     const response = await fetch(`${API_BASE_URL}/blogs/stats`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -143,6 +144,7 @@ export async function fetchAdminBlogs(params?: {
 
     const response = await fetch(`${API_BASE_URL}/blogs?${queryParams}`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -162,6 +164,7 @@ export async function fetchAdminBlog(id: number | string): Promise<AdminBlog> {
   try {
     const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -182,6 +185,7 @@ export async function createBlog(data: Partial<AdminBlog>): Promise<AdminBlog> {
     const response = await fetch(`${API_BASE_URL}/blogs`, {
       method: 'POST',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data)
     })
 
@@ -203,6 +207,7 @@ export async function updateBlog(id: number | string, data: Partial<AdminBlog>):
     const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data)
     })
 
@@ -223,7 +228,8 @@ export async function deleteBlog(id: number | string): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -241,6 +247,7 @@ export async function bulkDeleteBlogs(ids: number[]): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/blogs/bulk-delete`, {
       method: 'POST',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ ids })
     })
 
@@ -258,6 +265,7 @@ export async function fetchCategories(): Promise<string[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/categories`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -269,5 +277,267 @@ export async function fetchCategories(): Promise<string[]> {
   } catch (error) {
     console.error('Error fetching categories:', error)
     return []
+  }
+}
+
+// ==================== Exercise Management ====================
+
+// Exercise Interface
+export interface AdminExercise {
+  id: number
+  slug: string
+  title: string
+  title_bn?: string
+  description?: string
+  description_bn?: string
+  instructions?: string
+  instructions_bn?: string
+  problem_statement?: string
+  problem_statement_bn?: string
+  input_description?: string
+  input_description_bn?: string
+  output_description?: string
+  output_description_bn?: string
+  sample_input?: string
+  sample_input_bn?: string
+  sample_output?: string
+  sample_output_bn?: string
+  difficulty: string
+  difficulty_bn?: string
+  duration?: number
+  duration_bn?: string
+  category?: string
+  category_bn?: string
+  tags?: string[]
+  tags_bn?: string[]
+  starter_code?: string
+  solution_code?: string
+  programming_language?: string
+  language_id?: string
+  language_name?: string
+  language_name_bn?: string
+  image_url?: string
+  views: number
+  completions: number
+  status: 'published' | 'draft' | 'archived'
+  created_at: string
+  updated_at: string
+  published_at?: string
+}
+
+export interface PaginatedExerciseResponse {
+  data: AdminExercise[]
+  current_page: number
+  last_page: number
+  per_page: number
+  total: number
+}
+
+export interface ExerciseStats {
+  total: number
+  published: number
+  drafts: number
+  archived: number
+  total_views: number
+  total_completions: number
+  by_difficulty: {
+    beginner: number
+    intermediate: number
+    advanced: number
+  }
+  by_language: Array<{
+    language_name: string
+    count: number
+  }>
+  recent_exercises: Array<{
+    id: number
+    title: string
+    difficulty: string
+    views: number
+    created_at: string
+    status: string
+  }>
+}
+
+// Fetch Exercise Stats
+export async function fetchExerciseStats(): Promise<ExerciseStats> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises/stats`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      cache: 'no-store'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch exercise stats')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching exercise stats:', error)
+    throw error
+  }
+}
+
+// Fetch All Exercises with Filters
+export async function fetchAdminExercises(params?: {
+  page?: number
+  per_page?: number
+  search?: string
+  status?: 'published' | 'draft' | 'archived' | 'all'
+  difficulty?: string
+  language_id?: string
+  category?: string
+  sort_by?: 'created_at' | 'title' | 'views' | 'completions'
+  sort_order?: 'asc' | 'desc'
+}): Promise<PaginatedExerciseResponse> {
+  try {
+    const queryParams = new URLSearchParams()
+    if (params?.page) queryParams.append('page', params.page.toString())
+    if (params?.per_page) queryParams.append('per_page', params.per_page.toString())
+    if (params?.search) queryParams.append('search', params.search)
+    if (params?.status && params.status !== 'all') queryParams.append('status', params.status)
+    if (params?.difficulty) queryParams.append('difficulty', params.difficulty)
+    if (params?.language_id) queryParams.append('language_id', params.language_id)
+    if (params?.category) queryParams.append('category', params.category)
+    if (params?.sort_by) queryParams.append('sort_by', params.sort_by)
+    if (params?.sort_order) queryParams.append('sort_order', params.sort_order)
+
+    const response = await fetch(`${API_BASE_URL}/admin/exercises?${queryParams}`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      cache: 'no-store'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch exercises')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching exercises:', error)
+    throw error
+  }
+}
+
+// Fetch Single Exercise
+export async function fetchAdminExercise(id: number | string): Promise<AdminExercise> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises/${id}`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      cache: 'no-store'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch exercise')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching exercise:', error)
+    throw error
+  }
+}
+
+// Create Exercise
+export async function createExercise(data: Partial<AdminExercise>): Promise<AdminExercise> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Failed to create exercise')
+    }
+
+    const result = await response.json()
+    return result.exercise || result
+  } catch (error) {
+    console.error('Error creating exercise:', error)
+    throw error
+  }
+}
+
+// Update Exercise
+export async function updateExercise(id: number | string, data: Partial<AdminExercise>): Promise<AdminExercise> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Failed to update exercise')
+    }
+
+    const result = await response.json()
+    return result.exercise || result
+  } catch (error) {
+    console.error('Error updating exercise:', error)
+    throw error
+  }
+}
+
+// Delete Exercise
+export async function deleteExercise(id: number | string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to delete exercise')
+    }
+  } catch (error) {
+    console.error('Error deleting exercise:', error)
+    throw error
+  }
+}
+
+// Bulk Delete Exercises
+export async function bulkDeleteExercises(ids: number[]): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises/bulk-delete`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ ids })
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to bulk delete exercises')
+    }
+  } catch (error) {
+    console.error('Error bulk deleting exercises:', error)
+    throw error
+  }
+}
+
+// Bulk Update Exercise Status
+export async function bulkUpdateExerciseStatus(ids: number[], status: 'published' | 'draft' | 'archived'): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/exercises/bulk-update-status`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({ ids, status })
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to bulk update exercise status')
+    }
+  } catch (error) {
+    console.error('Error bulk updating exercise status:', error)
+    throw error
   }
 }

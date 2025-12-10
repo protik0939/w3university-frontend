@@ -54,14 +54,23 @@ export default function Navbar() {
         try {
           const parsedSession: UserSession = JSON.parse(session)
           console.log('Navbar - Parsed session:', parsedSession)
-          if (parsedSession.isLoggedIn) {
+          // Check if session has valid structure
+          if (parsedSession.isLoggedIn && parsedSession.user && parsedSession.user.name) {
             setUserSession(parsedSession)
             console.log('Navbar - User session set!')
           } else {
-            console.log('Navbar - Session exists but isLoggedIn is false')
+            console.log('Navbar - Session exists but structure is invalid:', parsedSession)
+            // Clear invalid session
+            localStorage.removeItem('userSession')
+            localStorage.removeItem('authToken')
+            setUserSession(null)
           }
         } catch (error) {
           console.error('Error parsing user session:', error)
+          // Clear invalid session
+          localStorage.removeItem('userSession')
+          localStorage.removeItem('authToken')
+          setUserSession(null)
         }
       } else {
         console.log('Navbar - No session or token found')
@@ -172,7 +181,7 @@ export default function Navbar() {
               </button>
 
               {/* User Menu or Login Button */}
-              {mounted && userSession ? (
+              {mounted && userSession?.user?.name ? (
                 <div className="relative">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -234,7 +243,7 @@ export default function Navbar() {
           }`}
         >
           <div className="container mx-auto px-4 py-4 space-y-3">
-            {mounted && userSession && (
+            {mounted && userSession?.user?.name && (
               <div className="pb-3 mb-3 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white font-bold">

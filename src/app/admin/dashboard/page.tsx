@@ -3,7 +3,7 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { isAdminAuthenticated } from '@/lib/auth'
 import { useToast } from '@/Components/Providers/ToastProvider'
-import { fetchDashboardStats, DashboardStats } from '@/lib/api/admin'
+import { fetchDashboardStats, DashboardStats, fetchExerciseStats, ExerciseStats } from '@/lib/api/admin'
 import AdminSidebar from '@/Components/Admin/AdminSidebar'
 import Breadcrumb from '@/Components/Admin/Breadcrumb'
 import { 
@@ -14,7 +14,10 @@ import {
   Plus,
   Loader2,
   Calendar,
-  Tag
+  Tag,
+  Code,
+  Target,
+  Trophy
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -22,6 +25,7 @@ function DashboardContent() {
   const router = useRouter()
   const { showToast } = useToast()
   const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [exerciseStats, setExerciseStats] = useState<ExerciseStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -35,8 +39,12 @@ function DashboardContent() {
 
   const loadStats = async () => {
     try {
-      const data = await fetchDashboardStats()
-      setStats(data)
+      const [blogData, exerciseData] = await Promise.all([
+        fetchDashboardStats(),
+        fetchExerciseStats().catch(() => null)
+      ])
+      setStats(blogData)
+      setExerciseStats(exerciseData)
     } catch (error) {
       console.error('Dashboard stats error:', error)
       showToast('Failed to fetch dashboard stats', 'error')
@@ -84,80 +92,166 @@ function DashboardContent() {
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Dashboard</h1>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Welcome back! Here&apos;s what&apos;s happening with your blog.
+                  Welcome back! Here&apos;s what&apos;s happening with your content.
                 </p>
               </div>
-              <Link
-                href="/admin/blogs/new"
-                className="flex items-center gap-2 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-green-500/20"
-              >
-                <Plus size={18} />
-                <span className="hidden sm:inline">New Blog</span>
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href="/admin/blogs/new"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-green-500/20"
+                >
+                  <Plus size={18} />
+                  <span className="hidden sm:inline">New Blog</span>
+                </Link>
+                <Link
+                  href="/admin/exercises/new"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-blue-500/20"
+                >
+                  <Code size={18} />
+                  <span className="hidden sm:inline">New Exercise</span>
+                </Link>
+              </div>
             </div>
           </div>
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-green-500/10 transition-all group">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl group-hover:scale-110 transition-transform">
-                  <FileText className="w-6 h-6 text-green-600 dark:text-green-400" />
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
-                    {stats?.total_blogs || 0}
+          {/* Blog Stats Grid */}
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <FileText size={20} className="text-green-500" />
+              Blog Statistics
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-green-500/10 transition-all group">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <FileText className="w-6 h-6 text-green-600 dark:text-green-400" />
                   </div>
-                  <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">All time</p>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                      {stats?.total_blogs || 0}
+                    </div>
+                    <p className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">All time</p>
+                  </div>
                 </div>
+                <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Total Blogs</h3>
               </div>
-              <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Total Blogs</h3>
-            </div>
 
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-blue-500/10 transition-all group">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl group-hover:scale-110 transition-transform">
-                  <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
-                    {stats?.published_blogs || 0}
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-blue-500/10 transition-all group">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">Live content</p>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                      {stats?.published_blogs || 0}
+                    </div>
+                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">Live content</p>
+                  </div>
                 </div>
+                <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Published</h3>
               </div>
-              <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Published</h3>
-            </div>
 
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-yellow-500/10 transition-all group">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl group-hover:scale-110 transition-transform">
-                  <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
-                    {stats?.draft_blogs || 0}
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-yellow-500/10 transition-all group">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <TrendingUp className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1 font-medium">In progress</p>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                      {stats?.draft_blogs || 0}
+                    </div>
+                    <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1 font-medium">In progress</p>
+                  </div>
                 </div>
+                <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Drafts</h3>
               </div>
-              <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Drafts</h3>
-            </div>
 
-            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-purple-500/10 transition-all group">
-              <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl group-hover:scale-110 transition-transform">
-                  <Eye className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
-                    {stats?.total_views?.toLocaleString() || 0}
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-purple-500/10 transition-all group">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <Eye className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <p className="text-xs text-purple-600 dark:text-purple-400 mt-1 font-medium">Engagement</p>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                      {stats?.total_views?.toLocaleString() || 0}
+                    </div>
+                    <p className="text-xs text-purple-600 dark:text-purple-400 mt-1 font-medium">Engagement</p>
+                  </div>
                 </div>
+                <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Total Views</h3>
               </div>
-              <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Total Views</h3>
             </div>
           </div>
+
+          {/* Exercise Stats Grid */}
+          {exerciseStats && (
+            <div className="mb-8">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Code size={20} className="text-blue-500" />
+                Exercise Statistics
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-blue-500/10 transition-all group">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                      <Code className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                        {exerciseStats.total || 0}
+                      </div>
+                      <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">All exercises</p>
+                    </div>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Total Exercises</h3>
+                </div>
+
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-emerald-500/10 transition-all group">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                      <Target className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                        {exerciseStats.published || 0}
+                      </div>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-medium">Available</p>
+                    </div>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Published</h3>
+                </div>
+
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-orange-500/10 transition-all group">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                      <Eye className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                        {exerciseStats.total_views?.toLocaleString() || 0}
+                      </div>
+                      <p className="text-xs text-orange-600 dark:text-orange-400 mt-1 font-medium">Views</p>
+                    </div>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Total Views</h3>
+                </div>
+
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:shadow-lg hover:shadow-pink-500/10 transition-all group">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl group-hover:scale-110 transition-transform">
+                      <Trophy className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">
+                        {exerciseStats.total_completions?.toLocaleString() || 0}
+                      </div>
+                      <p className="text-xs text-pink-600 dark:text-pink-400 mt-1 font-medium">Solved</p>
+                    </div>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 transition-colors">Completions</h3>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Recent Blogs */}
