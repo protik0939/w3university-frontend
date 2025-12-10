@@ -1,0 +1,670 @@
+{
+  "languages": [
+    {
+      "languageId": "javascript",
+      "languageName": "JavaScript",
+      "exercises": [
+        {
+          "id": "js-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a function that returns the string \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Return the string \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "strings"]
+        },
+        {
+          "id": "js-002",
+          "title": "Sum of Two Numbers",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a function that takes two numbers as parameters and returns their sum.",
+          "inputDescription": "Two numbers a and b.",
+          "outputDescription": "The sum of a and b.",
+          "sampleInput": "a = 5, b = 3",
+          "sampleOutput": "8",
+          "tags": ["basics", "arithmetic"]
+        },
+        {
+          "id": "js-003",
+          "title": "Check Even or Odd",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a function that takes a number and returns \"Even\" if it's even, \"Odd\" if it's odd.",
+          "inputDescription": "A single integer n.",
+          "outputDescription": "String \"Even\" or \"Odd\".",
+          "sampleInput": "n = 4",
+          "sampleOutput": "Even",
+          "tags": ["conditionals", "basics"]
+        },
+        {
+          "id": "js-004",
+          "title": "Reverse a String",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function that takes a string and returns it reversed.",
+          "inputDescription": "A string str.",
+          "outputDescription": "The reversed string.",
+          "sampleInput": "str = \"hello\"",
+          "sampleOutput": "olleh",
+          "tags": ["strings", "manipulation"]
+        },
+        {
+          "id": "js-005",
+          "title": "Find Largest in Array",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function that takes an array of numbers and returns the largest number.",
+          "inputDescription": "An array of integers.",
+          "outputDescription": "The largest integer in the array.",
+          "sampleInput": "[3, 7, 2, 9, 1]",
+          "sampleOutput": "9",
+          "tags": ["arrays", "loops"]
+        },
+        {
+          "id": "js-006",
+          "title": "Palindrome Checker",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function that checks if a given string is a palindrome (reads the same forwards and backwards).",
+          "inputDescription": "A string str.",
+          "outputDescription": "Boolean true if palindrome, false otherwise.",
+          "sampleInput": "str = \"racecar\"",
+          "sampleOutput": "true",
+          "tags": ["strings", "algorithms"]
+        },
+        {
+          "id": "js-007",
+          "title": "Fibonacci Sequence",
+          "difficulty": "Advanced",
+          "problemStatement": "Write a function that generates the first n numbers in the Fibonacci sequence.",
+          "inputDescription": "An integer n (n >= 1).",
+          "outputDescription": "An array containing the first n Fibonacci numbers.",
+          "sampleInput": "n = 7",
+          "sampleOutput": "[0, 1, 1, 2, 3, 5, 8]",
+          "tags": ["recursion", "algorithms"]
+        },
+        {
+          "id": "js-008",
+          "title": "Deep Clone Object",
+          "difficulty": "Advanced",
+          "problemStatement": "Write a function that creates a deep clone of a nested object.",
+          "inputDescription": "A nested object obj.",
+          "outputDescription": "A deep cloned copy of the object.",
+          "sampleInput": "obj = {a: 1, b: {c: 2}}",
+          "sampleOutput": "{a: 1, b: {c: 2}}",
+          "tags": ["objects", "recursion"]
+        },
+        {
+          "id": "js-009",
+          "title": "Debounce Function",
+          "difficulty": "Advanced",
+          "problemStatement": "Implement a debounce function that delays the execution of a function until after a specified time has elapsed since the last time it was invoked.",
+          "inputDescription": "A function func and delay time in milliseconds.",
+          "outputDescription": "A debounced version of the function.",
+          "sampleInput": "func = console.log, delay = 300",
+          "sampleOutput": "Debounced function",
+          "tags": ["closures", "async", "performance"]
+        }
+      ]
+    },
+    {
+      "languageId": "python",
+      "languageName": "Python",
+      "exercises": [
+        {
+          "id": "py-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a program that prints \"Hello, World!\" to the console.",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\" to the console.",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "print"]
+        },
+        {
+          "id": "py-002",
+          "title": "Calculate Area of Circle",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a function that calculates the area of a circle given its radius. Use π = 3.14159.",
+          "inputDescription": "A float radius.",
+          "outputDescription": "The area of the circle (float).",
+          "sampleInput": "radius = 5",
+          "sampleOutput": "78.53975",
+          "tags": ["math", "basics"]
+        },
+        {
+          "id": "py-003",
+          "title": "List Comprehension",
+          "difficulty": "Beginner",
+          "problemStatement": "Create a list of squares of numbers from 1 to n using list comprehension.",
+          "inputDescription": "An integer n.",
+          "outputDescription": "A list of squares [1, 4, 9, 16, ...].",
+          "sampleInput": "n = 5",
+          "sampleOutput": "[1, 4, 9, 16, 25]",
+          "tags": ["lists", "comprehension"]
+        },
+        {
+          "id": "py-004",
+          "title": "Count Vowels",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function that counts the number of vowels (a, e, i, o, u) in a given string.",
+          "inputDescription": "A string text.",
+          "outputDescription": "The count of vowels (integer).",
+          "sampleInput": "text = \"Hello World\"",
+          "sampleOutput": "3",
+          "tags": ["strings", "iteration"]
+        },
+        {
+          "id": "py-005",
+          "title": "Prime Number Checker",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function that checks if a given number is prime.",
+          "inputDescription": "An integer n (n > 1).",
+          "outputDescription": "Boolean True if prime, False otherwise.",
+          "sampleInput": "n = 17",
+          "sampleOutput": "True",
+          "tags": ["algorithms", "math"]
+        },
+        {
+          "id": "py-006",
+          "title": "Merge Two Sorted Lists",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function that merges two sorted lists into one sorted list.",
+          "inputDescription": "Two sorted lists list1 and list2.",
+          "outputDescription": "A single merged and sorted list.",
+          "sampleInput": "list1 = [1, 3, 5], list2 = [2, 4, 6]",
+          "sampleOutput": "[1, 2, 3, 4, 5, 6]",
+          "tags": ["lists", "sorting", "algorithms"]
+        },
+        {
+          "id": "py-007",
+          "title": "Binary Search",
+          "difficulty": "Advanced",
+          "problemStatement": "Implement binary search algorithm to find the index of a target value in a sorted array.",
+          "inputDescription": "A sorted list arr and a target value.",
+          "outputDescription": "Index of target if found, -1 otherwise.",
+          "sampleInput": "arr = [1, 3, 5, 7, 9], target = 5",
+          "sampleOutput": "2",
+          "tags": ["algorithms", "search", "divide-and-conquer"]
+        },
+        {
+          "id": "py-008",
+          "title": "Class Inheritance",
+          "difficulty": "Advanced",
+          "problemStatement": "Create a base class Animal with method speak(), and derived classes Dog and Cat that override speak() with their own sounds.",
+          "inputDescription": "No input required.",
+          "outputDescription": "Demonstrate polymorphism with different animal sounds.",
+          "sampleInput": "",
+          "sampleOutput": "Dog: Woof! Cat: Meow!",
+          "tags": ["oop", "inheritance", "polymorphism"]
+        },
+        {
+          "id": "py-009",
+          "title": "Decorator Function",
+          "difficulty": "Advanced",
+          "problemStatement": "Create a decorator that measures the execution time of a function.",
+          "inputDescription": "A function to be decorated.",
+          "outputDescription": "Execution time in seconds.",
+          "sampleInput": "def slow_function(): time.sleep(2)",
+          "sampleOutput": "Execution time: 2.001s",
+          "tags": ["decorators", "advanced", "functions"]
+        }
+      ]
+    },
+    {
+      "languageId": "java",
+      "languageName": "Java",
+      "exercises": [
+        {
+          "id": "java-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a Java program that prints \"Hello, World!\" to the console.",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "output"]
+        },
+        {
+          "id": "java-002",
+          "title": "Sum of Array Elements",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a method that calculates the sum of all elements in an integer array.",
+          "inputDescription": "An integer array arr.",
+          "outputDescription": "The sum of all elements (integer).",
+          "sampleInput": "arr = {1, 2, 3, 4, 5}",
+          "sampleOutput": "15",
+          "tags": ["arrays", "loops"]
+        },
+        {
+          "id": "java-003",
+          "title": "String Manipulation",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a method that converts a string to uppercase and removes all spaces.",
+          "inputDescription": "A string str.",
+          "outputDescription": "Modified string without spaces and in uppercase.",
+          "sampleInput": "str = \"hello world\"",
+          "sampleOutput": "HELLOWORLD",
+          "tags": ["strings", "manipulation"]
+        },
+        {
+          "id": "java-004",
+          "title": "Find Duplicates in Array",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a method that finds all duplicate elements in an array and returns them as a list.",
+          "inputDescription": "An integer array arr.",
+          "outputDescription": "ArrayList of duplicate elements.",
+          "sampleInput": "arr = {1, 2, 3, 2, 4, 1}",
+          "sampleOutput": "[1, 2]",
+          "tags": ["arrays", "collections", "algorithms"]
+        },
+        {
+          "id": "java-005",
+          "title": "Implement Stack",
+          "difficulty": "Intermediate",
+          "problemStatement": "Implement a Stack data structure with push, pop, peek, and isEmpty methods.",
+          "inputDescription": "Stack operations.",
+          "outputDescription": "Working stack implementation.",
+          "sampleInput": "push(1), push(2), pop(), peek()",
+          "sampleOutput": "2, 1",
+          "tags": ["data-structures", "stack", "oop"]
+        },
+        {
+          "id": "java-006",
+          "title": "Binary Tree Traversal",
+          "difficulty": "Intermediate",
+          "problemStatement": "Implement inorder, preorder, and postorder traversal for a binary tree.",
+          "inputDescription": "A binary tree root node.",
+          "outputDescription": "Three lists representing different traversals.",
+          "sampleInput": "Tree: 1, 2, 3, 4, 5",
+          "sampleOutput": "Inorder: [4,2,5,1,3]",
+          "tags": ["trees", "recursion", "data-structures"]
+        },
+        {
+          "id": "java-007",
+          "title": "Thread Synchronization",
+          "difficulty": "Advanced",
+          "problemStatement": "Create a multi-threaded program that safely increments a shared counter using synchronization.",
+          "inputDescription": "Multiple threads accessing shared counter.",
+          "outputDescription": "Final count should be accurate.",
+          "sampleInput": "5 threads, 1000 increments each",
+          "sampleOutput": "5000",
+          "tags": ["multithreading", "synchronization", "concurrency"]
+        },
+        {
+          "id": "java-008",
+          "title": "Generic Class Implementation",
+          "difficulty": "Advanced",
+          "problemStatement": "Create a generic Pair<T, U> class that can hold two values of different types with getters and setters.",
+          "inputDescription": "Generic type parameters.",
+          "outputDescription": "Working generic class.",
+          "sampleInput": "Pair<String, Integer> p = new Pair<>(\"Age\", 25)",
+          "sampleOutput": "Age: 25",
+          "tags": ["generics", "oop", "advanced"]
+        },
+        {
+          "id": "java-009",
+          "title": "Design Pattern: Singleton",
+          "difficulty": "Advanced",
+          "problemStatement": "Implement the Singleton design pattern with thread-safe lazy initialization.",
+          "inputDescription": "No input required.",
+          "outputDescription": "Thread-safe Singleton class.",
+          "sampleInput": "",
+          "sampleOutput": "Same instance returned always",
+          "tags": ["design-patterns", "singleton", "multithreading"]
+        }
+      ]
+    },
+    {
+      "languageId": "cpp",
+      "languageName": "C++",
+      "exercises": [
+        {
+          "id": "cpp-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a C++ program that outputs \"Hello, World!\" to the console.",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "iostream"]
+        },
+        {
+          "id": "cpp-002",
+          "title": "Pointer Basics",
+          "difficulty": "Intermediate",
+          "problemStatement": "Write a function to swap two numbers using pointers.",
+          "inputDescription": "Two integers a and b.",
+          "outputDescription": "Swapped values of a and b.",
+          "sampleInput": "a = 5, b = 10",
+          "sampleOutput": "a = 10, b = 5",
+          "tags": ["pointers", "basics"]
+        },
+        {
+          "id": "cpp-003",
+          "title": "STL Vectors",
+          "difficulty": "Advanced",
+          "problemStatement": "Use STL vector to store integers, sort them, and remove duplicates.",
+          "inputDescription": "A vector of integers.",
+          "outputDescription": "Sorted vector without duplicates.",
+          "sampleInput": "vec = {5, 2, 8, 2, 9, 5}",
+          "sampleOutput": "{2, 5, 8, 9}",
+          "tags": ["stl", "vectors", "algorithms"]
+        }
+      ]
+    },
+    {
+      "languageId": "csharp",
+      "languageName": "C#",
+      "exercises": [
+        {
+          "id": "cs-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a C# program that prints \"Hello, World!\" to the console.",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "console"]
+        },
+        {
+          "id": "cs-002",
+          "title": "LINQ Query",
+          "difficulty": "Intermediate",
+          "problemStatement": "Use LINQ to filter a list of integers and return only even numbers.",
+          "inputDescription": "A List<int> of numbers.",
+          "outputDescription": "A new list containing only even numbers.",
+          "sampleInput": "numbers = {1, 2, 3, 4, 5, 6}",
+          "sampleOutput": "{2, 4, 6}",
+          "tags": ["linq", "collections"]
+        },
+        {
+          "id": "cs-003",
+          "title": "Async/Await",
+          "difficulty": "Advanced",
+          "problemStatement": "Create an async method that simulates fetching data with a delay.",
+          "inputDescription": "Delay time in milliseconds.",
+          "outputDescription": "Data after specified delay.",
+          "sampleInput": "delay = 2000",
+          "sampleOutput": "Data fetched after 2 seconds",
+          "tags": ["async", "await", "tasks"]
+        }
+      ]
+    },
+    {
+      "languageId": "typescript",
+      "languageName": "TypeScript",
+      "exercises": [
+        {
+          "id": "ts-001",
+          "title": "Type Annotations",
+          "difficulty": "Beginner",
+          "problemStatement": "Create a function with proper type annotations that adds two numbers.",
+          "inputDescription": "Two numbers with type annotations.",
+          "outputDescription": "Sum with return type annotation.",
+          "sampleInput": "a: number = 5, b: number = 3",
+          "sampleOutput": "8",
+          "tags": ["basics", "types"]
+        },
+        {
+          "id": "ts-002",
+          "title": "Generic Function",
+          "difficulty": "Intermediate",
+          "problemStatement": "Create a generic function that returns the first element of an array of any type.",
+          "inputDescription": "Array of any type.",
+          "outputDescription": "First element with correct type inference.",
+          "sampleInput": "[1, 2, 3] or [\"a\", \"b\", \"c\"]",
+          "sampleOutput": "1 or \"a\"",
+          "tags": ["generics", "arrays"]
+        },
+        {
+          "id": "ts-003",
+          "title": "Type Guards",
+          "difficulty": "Advanced",
+          "problemStatement": "Create a type guard function that checks if an object is of type Dog or Cat.",
+          "inputDescription": "Animal object.",
+          "outputDescription": "Type narrowing with proper checks.",
+          "sampleInput": "animal = {name: \"Buddy\", bark: () => {}}",
+          "sampleOutput": "Type is Dog",
+          "tags": ["type-guards", "types", "advanced"]
+        }
+      ]
+    },
+    {
+      "languageId": "php",
+      "languageName": "PHP",
+      "exercises": [
+        {
+          "id": "php-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a PHP script that outputs \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Echo \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "echo"]
+        },
+        {
+          "id": "php-002",
+          "title": "Array Functions",
+          "difficulty": "Intermediate",
+          "problemStatement": "Use array functions to filter, map, and reduce an array of numbers.",
+          "inputDescription": "Array of integers.",
+          "outputDescription": "Filtered, mapped, and reduced results.",
+          "sampleInput": "$arr = [1, 2, 3, 4, 5]",
+          "sampleOutput": "Even numbers: [2, 4]",
+          "tags": ["arrays", "functions"]
+        },
+        {
+          "id": "php-003",
+          "title": "RESTful API",
+          "difficulty": "Advanced",
+          "problemStatement": "Create a RESTful API endpoint with proper HTTP methods and JSON responses.",
+          "inputDescription": "API requests.",
+          "outputDescription": "JSON responses with proper status codes.",
+          "sampleInput": "GET /api/users/1",
+          "sampleOutput": "{\"id\": 1, \"name\": \"John\"}",
+          "tags": ["api", "rest", "json"]
+        }
+      ]
+    },
+    {
+      "languageId": "ruby",
+      "languageName": "Ruby",
+      "exercises": [
+        {
+          "id": "rb-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a Ruby program that prints \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "puts"]
+        },
+        {
+          "id": "rb-002",
+          "title": "Blocks and Iterators",
+          "difficulty": "Intermediate",
+          "problemStatement": "Use the each method with a block to iterate over an array.",
+          "inputDescription": "An array of values.",
+          "outputDescription": "Each element printed.",
+          "sampleInput": "[1, 2, 3, 4, 5]",
+          "sampleOutput": "1 2 3 4 5",
+          "tags": ["blocks", "iterators"]
+        },
+        {
+          "id": "rb-003",
+          "title": "Metaprogramming",
+          "difficulty": "Advanced",
+          "problemStatement": "Use define_method to dynamically create getter and setter methods.",
+          "inputDescription": "Method names.",
+          "outputDescription": "Dynamically created methods.",
+          "sampleInput": "define_method(:name)",
+          "sampleOutput": "Methods created dynamically",
+          "tags": ["metaprogramming", "advanced", "dynamic"]
+        }
+      ]
+    },
+    {
+      "languageId": "go",
+      "languageName": "Go",
+      "exercises": [
+        {
+          "id": "go-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a Go program that prints \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "fmt"]
+        },
+        {
+          "id": "go-002",
+          "title": "Goroutines",
+          "difficulty": "Intermediate",
+          "problemStatement": "Create multiple goroutines that execute concurrently.",
+          "inputDescription": "Multiple goroutines.",
+          "outputDescription": "Concurrent execution.",
+          "sampleInput": "5 goroutines",
+          "sampleOutput": "All goroutines completed",
+          "tags": ["goroutines", "concurrency"]
+        },
+        {
+          "id": "go-003",
+          "title": "Channels",
+          "difficulty": "Advanced",
+          "problemStatement": "Use channels to communicate between goroutines.",
+          "inputDescription": "Channel operations.",
+          "outputDescription": "Data passed between goroutines.",
+          "sampleInput": "ch := make(chan int)",
+          "sampleOutput": "Channel communication",
+          "tags": ["channels", "concurrency"]
+        }
+      ]
+    },
+    {
+      "languageId": "rust",
+      "languageName": "Rust",
+      "exercises": [
+        {
+          "id": "rust-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a Rust program that prints \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "println"]
+        },
+        {
+          "id": "rust-002",
+          "title": "Ownership",
+          "difficulty": "Intermediate",
+          "problemStatement": "Demonstrate ownership rules by moving and borrowing values.",
+          "inputDescription": "String operations.",
+          "outputDescription": "Understanding of ownership.",
+          "sampleInput": "let s1 = String::from(\"hello\")",
+          "sampleOutput": "Ownership moved",
+          "tags": ["ownership", "basics"]
+        },
+        {
+          "id": "rust-003",
+          "title": "Lifetimes",
+          "difficulty": "Advanced",
+          "problemStatement": "Use lifetime annotations to ensure references are valid.",
+          "inputDescription": "Functions with references.",
+          "outputDescription": "Lifetime-annotated code.",
+          "sampleInput": "fn longest<'a>(x: &'a str, y: &'a str) -> &'a str",
+          "sampleOutput": "Lifetimes specified",
+          "tags": ["lifetimes", "advanced", "references"]
+        }
+      ]
+    },
+    {
+      "languageId": "swift",
+      "languageName": "Swift",
+      "exercises": [
+        {
+          "id": "swift-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a Swift program that prints \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "print"]
+        },
+        {
+          "id": "swift-002",
+          "title": "Optionals",
+          "difficulty": "Intermediate",
+          "problemStatement": "Demonstrate optional binding and nil coalescing with optional values.",
+          "inputDescription": "Optional values.",
+          "outputDescription": "Safe unwrapping of optionals.",
+          "sampleInput": "var name: String?",
+          "sampleOutput": "Optional handled safely",
+          "tags": ["optionals", "safety"]
+        },
+        {
+          "id": "swift-003",
+          "title": "Protocols",
+          "difficulty": "Advanced",
+          "problemStatement": "Define a protocol and implement it in multiple types.",
+          "inputDescription": "Protocol definition.",
+          "outputDescription": "Protocol conformance.",
+          "sampleInput": "protocol Drawable { func draw() }",
+          "sampleOutput": "Protocol implemented",
+          "tags": ["protocols", "interfaces"]
+        }
+      ]
+    },
+    {
+      "languageId": "kotlin",
+      "languageName": "Kotlin",
+      "exercises": [
+        {
+          "id": "kt-001",
+          "title": "Hello World",
+          "difficulty": "Beginner",
+          "problemStatement": "Write a Kotlin program that prints \"Hello, World!\".",
+          "inputDescription": "No input required.",
+          "outputDescription": "Print \"Hello, World!\".",
+          "sampleInput": "",
+          "sampleOutput": "Hello, World!",
+          "tags": ["basics", "println"]
+        },
+        {
+          "id": "kt-002",
+          "title": "Null Safety",
+          "difficulty": "Intermediate",
+          "problemStatement": "Demonstrate nullable and non-nullable types with safe calls.",
+          "inputDescription": "Nullable values.",
+          "outputDescription": "Safe null handling.",
+          "sampleInput": "var name: String?",
+          "sampleOutput": "Null safety enforced",
+          "tags": ["null-safety", "basics"]
+        },
+        {
+          "id": "kt-003",
+          "title": "Coroutines",
+          "difficulty": "Advanced",
+          "problemStatement": "Use Kotlin coroutines for asynchronous programming.",
+          "inputDescription": "Coroutine operations.",
+          "outputDescription": "Async execution.",
+          "sampleInput": "GlobalScope.launch { }",
+          "sampleOutput": "Coroutine executed",
+          "tags": ["coroutines", "async", "concurrency"]
+        }
+      ]
+    }
+  ]
+}
