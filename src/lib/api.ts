@@ -55,6 +55,7 @@ async function apiRequest<T = unknown>(
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
+    credentials: 'include', // Enable credentials for CORS
   })
 
   const data = await response.json()
