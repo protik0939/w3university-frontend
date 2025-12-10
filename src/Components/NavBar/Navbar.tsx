@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Code2, Menu, X, Globe, BookOpen, Trophy, Users, User, LogOut } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -24,6 +24,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false)
   const t = useTranslations('Navbar')
   const params = useParams()
+  const pathname = usePathname()
   const currentLocale = params.locale as string
 
   // Prevent hydration mismatch by only rendering after mount
@@ -108,7 +109,9 @@ export default function Navbar() {
 
   const switchLocale = () => {
     const newLocale = currentLocale === 'en' ? 'bn' : 'en'
-    window.location.href = `/${newLocale}`
+    // Remove the current locale from pathname and add the new locale
+    const pathWithoutLocale = pathname?.replace(`/${currentLocale}`, '') || ''
+    window.location.href = `/${newLocale}${pathWithoutLocale}`
   }
 
   return (
