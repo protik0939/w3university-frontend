@@ -1,240 +1,247 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { 
   User, Mail, Phone, MapPin, Calendar, Award, 
   Edit2, Save, X, Github, Linkedin, Twitter,
-  BookOpen, Clock, Trophy, Flame, LogOut
+  BookOpen, Clock, Trophy, Flame, LogOut, Upload, Lock, CheckCircle, XCircle
 } from 'lucide-react'
 import Footer from '@/Components/Footer/Footer'
 import { useParams } from 'next/navigation'
+import { profileAPI, getAuthToken, authAPI } from '@/lib/api'
 
-interface Address {
-  street: string
-  city: string
-  state: string
-  country: string
-  zip: string
+interface ProfileData {
+  user: {
+    id: number
+    name: string
+    email: string
+    created_at: string
+  }
+  profile?: {
+    username?: string
+    phone?: string
+    bio?: string
+    avatar?: string
+    github_url?: string
+    linkedin_url?: string
+    twitter_url?: string
+    portfolio_url?: string
+    location?: string
+    skill_level?: string
+    is_public?: boolean
+  }
+  stats?: {
+    total_courses: number
+    hours_learned: number
+    certificates_earned: number
+    current_streak: number
+  }
+  performance?: {
+    total_courses_completed?: number
+    total_hours_learned?: number
+    total_certificates_earned?: number
+    current_streak?: number
+    experience_level?: number
+    total_points?: number
+  }
 }
 
-interface Skill {
-  id: number
+interface EditedData {
   name: string
-  category: string
-  completedDate: string
-  progress: number
-}
-
-interface Stats {
-  totalCourses: number
-  hoursLearned: number
-  certificatesEarned: number
-  currentStreak: number
-}
-
-interface Social {
-  github: string
-  linkedin: string
-  twitter: string
-}
-
-interface UserData {
-  id: number
-  name: string
+  email: string
   username: string
-  email: string
   phone: string
-  address: Address
   bio: string
-  avatar: string
-  joinedDate: string
-  skillsCompleted: Skill[]
-  stats: Stats
-  social: Social
-}
-
-interface UserSession {
-  id: number
-  email: string
-  isLoggedIn: boolean
-  loginTime: string
+  github_url: string
+  linkedin_url: string
+  twitter_url: string
+  portfolio_url: string
+  location: string
+  skill_level: string
+  is_public: boolean
 }
 
 export default function ProfilePage() {
   const params = useParams()
   const currentLocale = (params?.locale as string) || 'en'
   
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [editedData, setEditedData] = useState<UserData | null>(null)
+  const [editedData, setEditedData] = useState<EditedData>({
+    name: '',
+    email: '',
+    username: '',
+    phone: '',
+    bio: '',
+    github_url: '',
+    linkedin_url: '',
+    twitter_url: '',
+    portfolio_url: '',
+    location: '',
+    skill_level: 'beginner',
+    is_public: true
+  })
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [passwordData, setPasswordData] = useState({
+    current_password: '',
+    new_password: '',
+    new_password_confirmation: ''
+  })
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
-  // Check authentication and fetch user data on mount
-  useEffect(() => {
-    setMounted(true)
-    
-    console.log('Profile page mounted, checking authentication...')
-    
-    // Check if user is logged in
-    const userSession = localStorage.getItem('userSession')
-    const authToken = localStorage.getItem('authToken')
-    
-    console.log('UserSession exists:', !!userSession)
-    console.log('AuthToken exists:', !!authToken)
-    
-    if (!userSession || !authToken) {
-      console.log('No session found, redirecting to login...')
-      // Not logged in, redirect to login page
-      setTimeout(() => {
-        window.location.href = `/${currentLocale}/login`
-      }, 100)
-      return
-    }
-    
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
+
+  const fetchProfile = useCallback(async () => {
     try {
-      const session: UserSession = JSON.parse(userSession)
-      console.log('Parsed session:', session)
+      setLoading(true)
+      setError(null)
+      const response = await profileAPI.getProfile() as { success?: boolean; data?: ProfileData } | ProfileData
       
-      if (!session.isLoggedIn) {
-        console.log('Session invalid, redirecting to login...')
-        // Invalid session, redirect to login
-        localStorage.removeItem('userSession')
-        localStorage.removeItem('authToken')
+      console.log('Profile API Response:', response)
+      
+      // Handle both formats: with success property or direct data
+      const data = 'success' in response && response.success ? response.data! : response as ProfileData
+      
+      setProfileData(data)
+      setEditedData({
+        name: data.user?.name || '',
+        email: data.user?.email || '',
+        username: data.profile?.username || '',
+        phone: data.profile?.phone || '',
+        bio: data.profile?.bio || '',
+        github_url: data.profile?.github_url || '',
+        linkedin_url: data.profile?.linkedin_url || '',
+        twitter_url: data.profile?.twitter_url || '',
+        portfolio_url: data.profile?.portfolio_url || '',
+        location: data.profile?.location || '',
+        skill_level: data.profile?.skill_level || 'beginner',
+        is_public: data.profile?.is_public ?? true
+      })
+    } catch (err) {
+      const error = err as Error
+      console.error('Error fetching profile:', error)
+      setError(error.message)
+      if (error.message.includes('Session expired') || error.message.includes('Unauthenticated')) {
         setTimeout(() => {
           window.location.href = `/${currentLocale}/login`
-        }, 100)
-        return
+        }, 1000)
       }
-      
-      console.log('User authenticated, fetching data...')
-      // User is authenticated, fetch user data from API
-      setIsAuthenticated(true)
-      
-      // Fetch user data from Laravel API
-      fetch('https://backend-w3university.vercel.app/api/user', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        credentials: 'include'
-      })
-        .then(response => {
-          if (!response.ok) {
-            // If unauthorized, clear session and redirect
-            if (response.status === 401) {
-              localStorage.removeItem('userSession')
-              localStorage.removeItem('authToken')
-              window.location.href = `/${currentLocale}/login`
-              return null
-            }
-            throw new Error('Failed to fetch user data')
-          }
-          return response.json()
-        })
-        .then(apiUserData => {
-          if (!apiUserData) return
-          
-          // Map API response to UserData interface
-          // For now, using static data structure from userData.json
-          // You can modify this to match your Laravel API response
-          fetch('/userData.json')
-            .then(res => res.json())
-            .then(staticData => {
-              // Merge API data with static data structure
-              const mergedData = {
-                ...staticData,
-                id: apiUserData.id,
-                name: apiUserData.name,
-                email: apiUserData.email,
-                // Add other fields from API as needed
-              }
-              setUserData(mergedData)
-              setEditedData(mergedData)
-              setLoading(false)
-            })
-        })
-        .catch(() => {
-          console.error('Error fetching user data')
-          setLoading(false)
-        })
-      
-    } catch (error) {
-      console.error('Error parsing session data:', error)
-      // Invalid session data, redirect to login
-      localStorage.removeItem('userSession')
-      localStorage.removeItem('authToken')
-      window.location.href = `/${currentLocale}/login`
+    } finally {
+      setLoading(false)
     }
   }, [currentLocale])
 
-  const handleEdit = () => {
-    if (!userData) return
-    setEditedData({ ...userData })
-    setIsEditing(true)
+  useEffect(() => {
+    setMounted(true)
+    const token = getAuthToken()
+    
+    if (!token) {
+      window.location.href = `/${currentLocale}/login`
+      return
+    }
+    
+    fetchProfile()
+  }, [currentLocale, fetchProfile])
+
+  const handleSave = async () => {
+    try {
+      setSaving(true)
+      setError(null)
+
+      if (editedData.name !== profileData?.user.name || editedData.email !== profileData?.user.email) {
+        await profileAPI.updateBasicInfo({
+          name: editedData.name,
+          email: editedData.email
+        })
+      }
+
+      // Only send non-empty string values
+      const profileUpdateData: Record<string, string | boolean> = {}
+      
+      if (editedData.username) profileUpdateData.username = editedData.username
+      if (editedData.phone) profileUpdateData.phone = editedData.phone
+      if (editedData.bio) profileUpdateData.bio = editedData.bio
+      if (editedData.github_url) profileUpdateData.github_url = editedData.github_url
+      if (editedData.linkedin_url) profileUpdateData.linkedin_url = editedData.linkedin_url
+      if (editedData.twitter_url) profileUpdateData.twitter_url = editedData.twitter_url
+      if (editedData.portfolio_url) profileUpdateData.portfolio_url = editedData.portfolio_url
+      if (editedData.location) profileUpdateData.location = editedData.location
+      if (editedData.skill_level) profileUpdateData.skill_level = editedData.skill_level
+      profileUpdateData.is_public = editedData.is_public
+
+      await profileAPI.updateProfile(profileUpdateData)
+
+      if (avatarFile) {
+        await profileAPI.uploadAvatar(avatarFile)
+        setAvatarFile(null)
+        setAvatarPreview(null)
+      }
+
+      await fetchProfile()
+      setIsEditing(false)
+      showToast('Profile updated successfully!', 'success')
+    } catch (err) {
+      const error = err as Error
+      console.error('Error saving profile:', error)
+      showToast('Failed to save profile: ' + error.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
-  const handleSave = () => {
-    if (!editedData) return
-    setUserData({ ...editedData })
-    setIsEditing(false)
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setAvatarFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
-  const handleCancel = () => {
-    if (!userData) return
-    setEditedData({ ...userData })
-    setIsEditing(false)
-  }
+  const handlePasswordChange = async () => {
+    try {
+      if (passwordData.new_password !== passwordData.new_password_confirmation) {
+        showToast('Passwords do not match', 'error')
+        return
+      }
 
-  const handleInputChange = (field: keyof UserData, value: string) => {
-    if (!editedData) return
-    setEditedData(prev => prev ? { ...prev, [field]: value } : null)
-  }
-
-  const handleAddressChange = (field: keyof Address, value: string) => {
-    if (!editedData) return
-    setEditedData(prev => prev ? {
-      ...prev,
-      address: { ...prev.address, [field]: value }
-    } : null)
-  }
-
-  const handleSocialChange = (field: keyof Social, value: string) => {
-    if (!editedData) return
-    setEditedData(prev => prev ? {
-      ...prev,
-      social: { ...prev.social, [field]: value }
-    } : null)
+      await profileAPI.changePassword(passwordData)
+      showToast('Password changed successfully!', 'success')
+      setShowPasswordModal(false)
+      setPasswordData({
+        current_password: '',
+        new_password: '',
+        new_password_confirmation: ''
+      })
+    } catch (err) {
+      const error = err as Error
+      showToast('Failed to change password: ' + error.message, 'error')
+    }
   }
 
   const handleLogout = async () => {
-    const authToken = localStorage.getItem('authToken')
-    
     try {
-      // Call Laravel logout API
-      await fetch('https://backend-w3university.vercel.app/api/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        credentials: 'include'
-      })
+      await authAPI.logout()
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
-      // Clear local storage regardless of API response
-      localStorage.removeItem('userSession')
-      localStorage.removeItem('authToken')
       window.location.href = `/${currentLocale}/login`
     }
   }
 
-  if (!mounted || loading || !isAuthenticated || !userData) {
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500"></div>
@@ -242,116 +249,171 @@ export default function ProfilePage() {
     )
   }
 
+  if (error && !profileData) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button
+            onClick={fetchProfile}
+            className="px-6 py-2 bg-green-500 text-white rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!profileData) return null
+
+  const avatarUrl = avatarPreview || 
+    (profileData.profile?.avatar ? `https://backend-w3university.vercel.app/storage/${profileData.profile.avatar}` : null) ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(profileData.user.name)}&size=128&background=10b981&color=fff`
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
-      {/* Hero Section with Profile Header */}
-      <div className="relative pt-24 pb-12 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800 transition-colors">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top duration-300">
+          <div className={`flex items-center gap-3 px-6 py-4 rounded-lg shadow-lg ${
+            toast.type === 'success' 
+              ? 'bg-green-500 text-white' 
+              : 'bg-red-500 text-white'
+          }`}>
+            {toast.type === 'success' ? <CheckCircle size={20} /> : <XCircle size={20} />}
+            <span className="font-medium">{toast.message}</span>
+          </div>
+        </div>
+      )}
+
+      <div className="relative pt-24 pb-12 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 p-8 transition-colors">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 p-8">
               <div className="flex flex-col md:flex-row gap-8 items-start">
-                {/* Avatar */}
                 <div className="relative">
                   <Image
-                    src={userData?.avatar || '/assets/icons/icon.svg'}
-                    alt={userData?.name || 'User'}
+                    src={avatarUrl}
+                    alt={profileData.user.name}
                     width={128}
                     height={128}
                     className="w-32 h-32 rounded-full border-4 border-green-500 shadow-lg object-cover"
                   />
-                  <div className="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full p-2 shadow-lg">
-                    <Award size={20} />
-                  </div>
+                  {isEditing && (
+                    <label className="absolute -bottom-2 -right-2 bg-green-500 hover:bg-green-600 text-white rounded-full p-2 shadow-lg cursor-pointer">
+                      <Upload size={20} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                  {!isEditing && (
+                    <div className="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full p-2 shadow-lg">
+                      <Award size={20} />
+                    </div>
+                  )}
                 </div>
 
-                {/* User Info */}
                 <div className="flex-1">
-                  {isEditing && editedData ? (
+                  {isEditing ? (
                     <div className="space-y-4">
                       <input
                         type="text"
-                        value={editedData?.name || ''}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="text-3xl font-bold bg-white dark:bg-gray-800 border-2 border-green-500 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-400 w-full"
+                        value={editedData.name}
+                        onChange={(e) => setEditedData({ ...editedData, name: e.target.value })}
+                        className="text-3xl font-bold bg-white dark:bg-gray-800 border-2 border-green-500 rounded-lg px-4 py-2 text-gray-900 dark:text-white w-full"
                         placeholder="Full Name"
-                        autoFocus
                       />
                       <input
                         type="text"
-                        value={editedData?.username || ''}
-                        onChange={(e) => handleInputChange('username', e.target.value)}
-                        className="text-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-400 w-full"
+                        value={editedData.username}
+                        onChange={(e) => setEditedData({ ...editedData, username: e.target.value })}
+                        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white w-full"
                         placeholder="@username"
                       />
                       <textarea
-                        value={editedData?.bio || ''}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
-                        className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                        value={editedData.bio}
+                        onChange={(e) => setEditedData({ ...editedData, bio: e.target.value })}
+                        className="w-full bg-white dark:bg-gray-800 border rounded-lg p-4 text-gray-900 dark:text-white"
                         rows={3}
                         placeholder="Bio"
                       />
+                      <div className="grid grid-cols-2 gap-3">
+                        <input
+                          type="text"
+                          value={editedData.location}
+                          onChange={(e) => setEditedData({ ...editedData, location: e.target.value })}
+                          className="bg-white dark:bg-gray-800 border rounded-lg px-4 py-2 text-gray-900 dark:text-white"
+                          placeholder="Location"
+                        />
+                        <select
+                          value={editedData.skill_level}
+                          onChange={(e) => setEditedData({ ...editedData, skill_level: e.target.value })}
+                          className="bg-white dark:bg-gray-800 border rounded-lg px-4 py-2 text-gray-900 dark:text-white"
+                        >
+                          <option value="beginner">Beginner</option>
+                          <option value="intermediate">Intermediate</option>
+                          <option value="advanced">Advanced</option>
+                          <option value="expert">Expert</option>
+                        </select>
+                      </div>
                     </div>
                   ) : (
                     <>
                       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        {userData?.name || 'User'}
+                        {profileData.user.name}
                       </h1>
                       <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
-                        @{userData?.username || 'username'}
+                        @{profileData.profile?.username || 'username'}
                       </p>
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                        {userData?.bio || 'No bio available'}
+                      <p className="text-gray-700 dark:text-gray-300 mb-2">
+                        {profileData.profile?.bio || 'No bio available'}
                       </p>
+                      {profileData.profile?.location && (
+                        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-2">
+                          <MapPin size={14} />
+                          <span>{profileData.profile.location}</span>
+                        </div>
+                      )}
+                      {profileData.profile?.skill_level && (
+                        <div className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-medium">
+                          {profileData.profile.skill_level.charAt(0).toUpperCase() + profileData.profile.skill_level.slice(1)}
+                        </div>
+                      )}
                     </>
                   )}
-
                   <div className="flex items-center gap-2 mt-4 text-sm text-gray-600 dark:text-gray-400">
                     <Calendar size={16} />
-                    <span>Joined {userData?.joinedDate ? new Date(userData.joinedDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recently'}</span>
+                    <span>Joined {new Date(profileData.user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="relative flex gap-3">
+                <div className="flex flex-col gap-3">
                   {!isEditing ? (
                     <>
-                      <button
-                        onClick={handleEdit}
-                        type="button"
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20 cursor-pointer"
-                      >
-                        <Edit2 size={18} />
-                        Edit Profile
+                      <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg">
+                        <Edit2 size={18} />Edit
                       </button>
-                      <button
-                        onClick={handleLogout}
-                        type="button"
-                        className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-red-500/20 cursor-pointer"
-                      >
-                        <LogOut size={18} />
-                        Logout
+                      <button onClick={() => setShowPasswordModal(true)} className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
+                        <Lock size={18} />Password
+                      </button>
+                      <button onClick={handleLogout} className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg">
+                        <LogOut size={18} />Logout
                       </button>
                     </>
                   ) : (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={handleSave}
-                        type="button"
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-lg transition-all font-medium shadow-lg shadow-green-500/20 cursor-pointer"
-                      >
-                        <Save size={18} />
-                        Save
+                    <>
+                      <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg disabled:opacity-50">
+                        <Save size={18} />{saving ? 'Saving...' : 'Save'}
                       </button>
-                      <button
-                        onClick={handleCancel}
-                        type="button"
-                        className="flex items-center gap-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-all font-medium cursor-pointer"
-                      >
-                        <X size={18} />
-                        Cancel
+                      <button onClick={() => setIsEditing(false)} disabled={saving} className="flex items-center gap-2 px-6 py-3 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg disabled:opacity-50">
+                        <X size={18} />Cancel
                       </button>
-                    </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -360,53 +422,60 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Stats Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-              <div className="flex items-center gap-3 mb-2">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border">
+              <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
                   <BookOpen className="text-green-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.totalCourses || 0}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profileData.performance?.total_courses_completed || 0}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Courses</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-              <div className="flex items-center gap-3 mb-2">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border">
+              <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                   <Clock className="text-blue-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.hoursLearned || 0}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profileData.performance?.total_hours_learned || 0}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Hours</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-              <div className="flex items-center gap-3 mb-2">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border">
+              <div className="flex items-center gap-3">
                 <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                   <Trophy className="text-yellow-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.certificatesEarned || 0}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profileData.performance?.total_certificates_earned || 0}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Certificates</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-              <div className="flex items-center gap-3 mb-2">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border">
+              <div className="flex items-center gap-3">
                 <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
                   <Flame className="text-red-500" size={24} />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{userData?.stats?.currentStreak || 0}</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {profileData.performance?.current_streak || 0}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Day Streak</p>
                 </div>
               </div>
@@ -414,238 +483,114 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Contact Information */}
             <div className="md:col-span-2 space-y-6">
-              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border">
+                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                   <User size={24} className="text-green-500" />
                   Contact Information
                 </h2>
-
                 <div className="space-y-4">
-                  {isEditing && editedData ? (
+                  {isEditing ? (
                     <>
                       <div className="flex items-center gap-3">
-                        <Mail className="text-green-500 flex-shrink-0" size={20} />
+                        <Mail className="text-green-500" size={20} />
                         <input
                           type="email"
-                          value={editedData?.email || ''}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="email@example.com"
+                          value={editedData.email}
+                          onChange={(e) => setEditedData({ ...editedData, email: e.target.value })}
+                          className="flex-1 bg-white dark:bg-gray-800 border rounded-lg px-4 py-2"
                         />
                       </div>
                       <div className="flex items-center gap-3">
-                        <Phone className="text-green-500 flex-shrink-0" size={20} />
+                        <Phone className="text-green-500" size={20} />
                         <input
                           type="tel"
-                          value={editedData?.phone || ''}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="+880 1XXX-XXXXXX"
+                          value={editedData.phone}
+                          onChange={(e) => setEditedData({ ...editedData, phone: e.target.value })}
+                          className="flex-1 bg-white dark:bg-gray-800 border rounded-lg px-4 py-2"
                         />
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                      <div className="flex items-center gap-3">
                         <Mail className="text-green-500" size={20} />
-                        <span>{userData?.email || 'N/A'}</span>
+                        <span>{profileData.user.email}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                        <Phone className="text-green-500" size={20} />
-                        <span>{userData?.phone || 'N/A'}</span>
-                      </div>
+                      {profileData.profile?.phone && (
+                        <div className="flex items-center gap-3">
+                          <Phone className="text-green-500" size={20} />
+                          <span>{profileData.profile.phone}</span>
+                        </div>
+                      )}
                     </>
                   )}
-                </div>
-              </div>
-
-              {/* Address */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <MapPin size={24} className="text-green-500" />
-                  Address
-                </h2>
-
-                {isEditing && editedData ? (
-                  <div className="space-y-3">
-                    <input
-                      type="text"
-                      value={editedData?.address?.street || ''}
-                      onChange={(e) => handleAddressChange('street', e.target.value)}
-                      placeholder="Street Address"
-                      className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
-                    <div className="grid grid-cols-2 gap-3">
-                      <input
-                        type="text"
-                        value={editedData?.address?.city || ''}
-                        onChange={(e) => handleAddressChange('city', e.target.value)}
-                        placeholder="City"
-                        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <input
-                        type="text"
-                        value={editedData?.address?.state || ''}
-                        onChange={(e) => handleAddressChange('state', e.target.value)}
-                        placeholder="State/Division"
-                        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <input
-                        type="text"
-                        value={editedData?.address?.country || ''}
-                        onChange={(e) => handleAddressChange('country', e.target.value)}
-                        placeholder="Country"
-                        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <input
-                        type="text"
-                        value={editedData?.address?.zip || ''}
-                        onChange={(e) => handleAddressChange('zip', e.target.value)}
-                        placeholder="ZIP Code"
-                        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-gray-700 dark:text-gray-300">
-                    <p>{userData?.address?.street || 'N/A'}</p>
-                    <p>{userData?.address?.city || 'N/A'}, {userData?.address?.state || 'N/A'}</p>
-                    <p>{userData?.address?.country || 'N/A'} - {userData?.address?.zip || 'N/A'}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Skills Completed */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Award size={24} className="text-green-500" />
-                  Skills Completed ({userData?.skillsCompleted?.length || 0})
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {userData?.skillsCompleted?.map((skill) => (
-                    <div
-                      key={skill.id}
-                      className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-800 border border-green-200 dark:border-green-900/30 rounded-lg p-4 transition-colors hover:shadow-md"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-gray-900 dark:text-white">
-                          {skill.name}
-                        </h3>
-                        <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full">
-                          {skill.progress}%
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                        {skill.category}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">
-                        Completed: {new Date(skill.completedDate).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Social Links */}
             <div className="space-y-6">
-              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800 transition-colors">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                  Social Links
-                </h2>
-
+              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border">
+                <h2 className="text-xl font-bold mb-6">Social Links</h2>
                 <div className="space-y-4">
-                  {isEditing && editedData ? (
+                  {isEditing ? (
                     <>
-                      <div className="flex items-center gap-3">
-                        <Github className="text-gray-900 dark:text-white flex-shrink-0" size={20} />
-                        <input
-                          type="url"
-                          value={editedData?.social?.github || ''}
-                          onChange={(e) => handleSocialChange('github', e.target.value)}
-                          placeholder="https://github.com/username"
-                          className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Linkedin className="text-blue-500 flex-shrink-0" size={20} />
-                        <input
-                          type="url"
-                          value={editedData?.social?.linkedin || ''}
-                          onChange={(e) => handleSocialChange('linkedin', e.target.value)}
-                          placeholder="https://linkedin.com/in/username"
-                          className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Twitter className="text-sky-500 flex-shrink-0" size={20} />
-                        <input
-                          type="url"
-                          value={editedData?.social?.twitter || ''}
-                          onChange={(e) => handleSocialChange('twitter', e.target.value)}
-                          placeholder="https://twitter.com/username"
-                          className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                      </div>
+                      <input
+                        type="url"
+                        value={editedData.github_url}
+                        onChange={(e) => setEditedData({ ...editedData, github_url: e.target.value })}
+                        placeholder="GitHub URL"
+                        className="w-full bg-white dark:bg-gray-800 border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="url"
+                        value={editedData.linkedin_url}
+                        onChange={(e) => setEditedData({ ...editedData, linkedin_url: e.target.value })}
+                        placeholder="LinkedIn URL"
+                        className="w-full bg-white dark:bg-gray-800 border rounded-lg px-3 py-2 text-sm"
+                      />
+                      <input
+                        type="url"
+                        value={editedData.twitter_url}
+                        onChange={(e) => setEditedData({ ...editedData, twitter_url: e.target.value })}
+                        placeholder="Twitter URL"
+                        className="w-full bg-white dark:bg-gray-800 border rounded-lg px-3 py-2 text-sm"
+                      />
                     </>
                   ) : (
                     <>
-                      {userData?.social?.github && (
-                        <a
-                          href={userData.social.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                        >
-                          <Github size={20} className="group-hover:scale-110 transition-transform" />
+                      {profileData.profile?.github_url && (
+                        <a href={profileData.profile.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-green-500">
+                          <Github size={20} />
                           <span className="text-sm">GitHub</span>
                         </a>
                       )}
-                      {userData?.social?.linkedin && (
-                        <a
-                          href={userData.social.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                        >
-                          <Linkedin size={20} className="group-hover:scale-110 transition-transform" />
+                      {profileData.profile?.linkedin_url && (
+                        <a href={profileData.profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-green-500">
+                          <Linkedin size={20} />
                           <span className="text-sm">LinkedIn</span>
                         </a>
                       )}
-                      {userData?.social?.twitter && (
-                        <a
-                          href={userData.social.twitter}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors group"
-                        >
-                          <Twitter size={20} className="group-hover:scale-110 transition-transform" />
+                      {profileData.profile?.twitter_url && (
+                        <a href={profileData.profile.twitter_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-green-500">
+                          <Twitter size={20} />
                           <span className="text-sm">Twitter</span>
                         </a>
-                      )}
-                      {!userData?.social?.github && !userData?.social?.linkedin && !userData?.social?.twitter && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">No social links added yet</p>
                       )}
                     </>
                   )}
                 </div>
               </div>
 
-              {/* Learning Progress */}
               <div className="bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl p-6 text-white shadow-lg">
                 <h3 className="text-lg font-bold mb-4">Keep Learning! 🚀</h3>
-                <p className="text-sm text-green-50 mb-4">
-                  You&apos;re on a {userData?.stats?.currentStreak || 0}-day streak! Keep up the great work.
+                <p className="text-sm mb-4">
+                  You&apos;re on a {profileData.performance?.current_streak || 0}-day streak!
                 </p>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
                   <div className="flex justify-between text-sm mb-1">
-                    <span>Course Progress</span>
-                    <span>75%</span>
+                    <span>Level {profileData.performance?.experience_level || 1}</span>
+                    <span>{profileData.performance?.total_points || 0} XP</span>
                   </div>
                   <div className="w-full bg-white/30 rounded-full h-2">
                     <div className="bg-white h-2 rounded-full" style={{ width: '75%' }}></div>
@@ -656,6 +601,45 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-8 max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-6">Change Password</h2>
+            <div className="space-y-4">
+              <input
+                type="password"
+                value={passwordData.current_password}
+                onChange={(e) => setPasswordData({ ...passwordData, current_password: e.target.value })}
+                className="w-full bg-white dark:bg-gray-800 border rounded-lg px-4 py-2"
+                placeholder="Current Password"
+              />
+              <input
+                type="password"
+                value={passwordData.new_password}
+                onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
+                className="w-full bg-white dark:bg-gray-800 border rounded-lg px-4 py-2"
+                placeholder="New Password"
+              />
+              <input
+                type="password"
+                value={passwordData.new_password_confirmation}
+                onChange={(e) => setPasswordData({ ...passwordData, new_password_confirmation: e.target.value })}
+                className="w-full bg-white dark:bg-gray-800 border rounded-lg px-4 py-2"
+                placeholder="Confirm Password"
+              />
+              <div className="flex gap-3">
+                <button onClick={handlePasswordChange} className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg">
+                  Change
+                </button>
+                <button onClick={() => { setShowPasswordModal(false); setPasswordData({ current_password: '', new_password: '', new_password_confirmation: '' }) }} className="flex-1 px-6 py-3 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

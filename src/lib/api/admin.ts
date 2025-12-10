@@ -1,6 +1,7 @@
+import { ApiLink } from '../apiLink'
 import { getAdminToken } from '../auth'
 
-const API_BASE_URL = 'https://backend-w3university.vercel.app/api'
+const API_BASE_URL = ApiLink
 
 // Helper function to get auth headers
 function getAuthHeaders(): HeadersInit {

@@ -7,7 +7,7 @@ import { Award, Filter, Grid3x3, LayoutList } from 'lucide-react'
 export default function CertificatesPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [filterDesign, setFilterDesign] = useState<string>('all')
-
+  
   const filteredCertificates = filterDesign === 'all' 
     ? certificatesData 
     : certificatesData.filter(cert => cert.design === filterDesign)

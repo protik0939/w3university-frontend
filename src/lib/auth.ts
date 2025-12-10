@@ -1,4 +1,6 @@
-const API_BASE_URL = 'https://backend-w3university.vercel.app/api'
+import { ApiLink } from "./apiLink"
+
+const API_BASE_URL = ApiLink;
 
 // Admin login
 export async function adminLogin(email: string, password: string) {
