@@ -27,6 +27,8 @@ interface Exercise {
   sampleInput: string;
   sampleOutput: string;
   tags: string[];
+  languageId?: string;
+  languageName?: string;
 }
 
 interface LanguageExercises {
@@ -35,8 +37,27 @@ interface LanguageExercises {
   exercises: Exercise[];
 }
 
-interface ExercisesData {
-  languages: LanguageExercises[];
+interface APIExercise {
+  id: number;
+  title: string;
+  title_bn: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  problem_statement: string;
+  problem_statement_bn: string;
+  input_description: string;
+  input_description_bn: string;
+  output_description: string;
+  output_description_bn: string;
+  sample_input: string;
+  sample_input_bn: string;
+  sample_output: string;
+  sample_output_bn: string;
+  tags: string[];
+  tags_bn: string[];
+  language_id: string;
+  language_name: string;
+  language_name_bn: string;
+  status: string;
 }
 
 export default function ExercisesPage() {
@@ -51,25 +72,71 @@ export default function ExercisesPage() {
   const [exercisesData, setExercisesData] = useState<LanguageExercises[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Fetch exercises data based on locale
+  // Fetch exercises data from API
   useEffect(() => {
     const fetchExercises = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/exercises/exercises-${currentLocale}.json`);
-        const data: ExercisesData = await response.json();
-        setExercisesData(data.languages);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend-w3university.vercel.app/api';
+        const response = await fetch(`${apiUrl}/exercises?status=published`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch exercises');
+        }
+        
+        const result = await response.json();
+        const apiExercises: APIExercise[] = result.data || [];
+        
+        // Group exercises by language
+        const languageMap = new Map<string, LanguageExercises>();
+        
+        apiExercises.forEach((apiExercise) => {
+          const languageId = apiExercise.language_id || 'general';
+          const languageName = currentLocale === 'bn' 
+            ? (apiExercise.language_name_bn || apiExercise.language_name || 'General')
+            : (apiExercise.language_name || 'General');
+          
+          if (!languageMap.has(languageId)) {
+            languageMap.set(languageId, {
+              languageId,
+              languageName,
+              exercises: []
+            });
+          }
+          
+          const exercise: Exercise = {
+            id: apiExercise.id.toString(),
+            title: currentLocale === 'bn' ? (apiExercise.title_bn || apiExercise.title) : apiExercise.title,
+            difficulty: apiExercise.difficulty,
+            problemStatement: currentLocale === 'bn' 
+              ? (apiExercise.problem_statement_bn || apiExercise.problem_statement || '')
+              : (apiExercise.problem_statement || ''),
+            inputDescription: currentLocale === 'bn'
+              ? (apiExercise.input_description_bn || apiExercise.input_description || '')
+              : (apiExercise.input_description || ''),
+            outputDescription: currentLocale === 'bn'
+              ? (apiExercise.output_description_bn || apiExercise.output_description || '')
+              : (apiExercise.output_description || ''),
+            sampleInput: currentLocale === 'bn'
+              ? (apiExercise.sample_input_bn || apiExercise.sample_input || '')
+              : (apiExercise.sample_input || ''),
+            sampleOutput: currentLocale === 'bn'
+              ? (apiExercise.sample_output_bn || apiExercise.sample_output || '')
+              : (apiExercise.sample_output || ''),
+            tags: currentLocale === 'bn' 
+              ? (apiExercise.tags_bn?.length ? apiExercise.tags_bn : apiExercise.tags)
+              : apiExercise.tags,
+            languageId: apiExercise.language_id,
+            languageName: languageName
+          };
+          
+          languageMap.get(languageId)?.exercises.push(exercise);
+        });
+        
+        setExercisesData(Array.from(languageMap.values()));
       } catch (error) {
         console.error('Error fetching exercises:', error);
-        // Fallback to English if locale file not found
-        try {
-          const response = await fetch('/exercises/exercises-en.json');
-          const data: ExercisesData = await response.json();
-          setExercisesData(data.languages);
-        } catch (fallbackError) {
-          console.error('Error fetching fallback exercises:', fallbackError);
-          setExercisesData([]);
-        }
+        setExercisesData([]);
       } finally {
         setLoading(false);
       }
@@ -79,25 +146,31 @@ export default function ExercisesPage() {
   }, [currentLocale]);
 
   // Color themes for difficulty levels
-  const difficultyColors = {
-    Beginner: { 
+  const difficultyColors: Record<string, { bg: string; text: string; border: string; badge: string }> = {
+    beginner: { 
       bg: 'bg-green-500/10', 
       text: 'text-green-400', 
       border: 'border-green-500/30',
       badge: 'bg-green-500'
     },
-    Intermediate: { 
+    intermediate: { 
       bg: 'bg-yellow-500/10', 
       text: 'text-yellow-400', 
       border: 'border-yellow-500/30',
       badge: 'bg-yellow-500'
     },
-    Advanced: { 
+    advanced: { 
       bg: 'bg-red-500/10', 
       text: 'text-red-400', 
       border: 'border-red-500/30',
       badge: 'bg-red-500'
     }
+  };
+
+  // Helper function to get difficulty color safely
+  const getDifficultyColor = (difficulty: string) => {
+    const normalizedDifficulty = difficulty?.toLowerCase() || 'beginner';
+    return difficultyColors[normalizedDifficulty] || difficultyColors.beginner;
   };
 
   // Get unique languages
@@ -303,7 +376,7 @@ export default function ExercisesPage() {
               <div className="grid gap-4">
                 {filteredExercises.map(({ language, exercise }, index) => {
                   const isExpanded = expandedExercise === exercise.id;
-                  const diffColor = difficultyColors[exercise.difficulty];
+                  const diffColor = getDifficultyColor(exercise.difficulty);
                   
                   return (
                     <div
