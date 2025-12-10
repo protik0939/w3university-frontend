@@ -435,6 +435,8 @@ export default function LanguagePage() {
         </div>
       </div>
     }>
+
+   
       <LanguagePageContent />
     </Suspense>
   );

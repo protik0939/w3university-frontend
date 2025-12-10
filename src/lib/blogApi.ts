@@ -1,5 +1,7 @@
+import { ApiLink } from "./apiLink"
+
 // Blog API utility functions
-const API_BASE_URL = 'https://backend-w3university.vercel.app/api'
+const API_BASE_URL = `${ApiLink}`
 
 // Raw API response type
 interface BlogPostRaw {

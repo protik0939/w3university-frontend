@@ -2,17 +2,18 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Code2, Menu, X, Globe, BookOpen, Trophy, Users, User, LogOut } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher'
 import Link from 'next/link'
 import Image from 'next/image'
 
 interface UserSession {
-  id: number
-  email: string
-  name: string
   isLoggedIn: boolean
-  loginTime: string
+  user: {
+    id: number
+    email: string
+    name: string
+  }
 }
 
 export default function Navbar() {
@@ -23,6 +24,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false)
   const t = useTranslations('Navbar')
   const params = useParams()
+  const pathname = usePathname()
   const currentLocale = params.locale as string
 
   // Prevent hydration mismatch by only rendering after mount
@@ -46,15 +48,24 @@ export default function Navbar() {
       const session = localStorage.getItem('userSession')
       const token = localStorage.getItem('authToken')
       
+      console.log('Navbar - Checking auth:', { hasSession: !!session, hasToken: !!token })
+      
       if (session && token) {
         try {
           const parsedSession: UserSession = JSON.parse(session)
+          console.log('Navbar - Parsed session:', parsedSession)
           if (parsedSession.isLoggedIn) {
             setUserSession(parsedSession)
+            console.log('Navbar - User session set!')
+          } else {
+            console.log('Navbar - Session exists but isLoggedIn is false')
           }
         } catch (error) {
           console.error('Error parsing user session:', error)
         }
+      } else {
+        console.log('Navbar - No session or token found')
+        setUserSession(null)
       }
     }
 
@@ -98,7 +109,9 @@ export default function Navbar() {
 
   const switchLocale = () => {
     const newLocale = currentLocale === 'en' ? 'bn' : 'en'
-    window.location.href = `/${newLocale}`
+    // Remove the current locale from pathname and add the new locale
+    const pathWithoutLocale = pathname?.replace(`/${currentLocale}`, '') || ''
+    window.location.href = `/${newLocale}${pathWithoutLocale}`
   }
 
   return (
@@ -166,9 +179,9 @@ export default function Navbar() {
                     className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-green-400 dark:hover:text-green-400 border border-gray-300 dark:border-gray-700 hover:border-green-500/50 dark:hover:border-green-500/50 rounded-lg transition-all bg-white dark:bg-gray-900/50"
                   >
                     <div className="w-6 h-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white text-xs font-bold">
-                      {userSession.name.charAt(0).toUpperCase()}
+                      {userSession.user.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="hidden sm:inline">{userSession.name}</span>
+                    <span className="hidden sm:inline">{userSession.user.name}</span>
                   </button>
                   
                   {/* User Dropdown Menu */}
@@ -225,11 +238,11 @@ export default function Navbar() {
               <div className="pb-3 mb-3 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white font-bold">
-                    {userSession.name.charAt(0).toUpperCase()}
+                    {userSession.user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-medium">{userSession.name}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">{userSession.email}</div>
+                    <div className="font-medium">{userSession.user.name}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{userSession.user.email}</div>
                   </div>
                 </div>
               </div>
