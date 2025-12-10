@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { tutorialAPI } from '@/lib/tutorialApi'
 
 export default function TestTutorialAPI() {
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<Record<string, unknown> | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,8 +27,9 @@ export default function TestTutorialAPI() {
         languages,
         timestamp: new Date().toISOString()
       })
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -54,8 +55,9 @@ export default function TestTutorialAPI() {
       }, token)
       
       setResult(result)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

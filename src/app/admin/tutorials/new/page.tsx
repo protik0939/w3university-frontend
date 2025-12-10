@@ -35,8 +35,9 @@ export default function NewTutorialPage() {
       await tutorialAPI.adminCreate(formData, authToken)
       showToast('Tutorial created successfully!', 'success')
       router.push('/admin/tutorials')
-    } catch (error: any) {
-      showToast(error.message || 'Failed to create tutorial', 'error')
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create tutorial'
+      showToast(errorMessage, 'error')
     } finally {
       setLoading(false)
     }

@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import languagesData from '@/data/languages.json';
 import { Terminal, Code, BookOpen, Dumbbell, ChevronLeft, ChevronDown, CheckCircle2, XCircle } from 'lucide-react';
-import { tutorialAPI, Tutorial as APITutorial } from '@/lib/tutorialApi';
+import { tutorialAPI } from '@/lib/tutorialApi';
 
 interface Tutorial {
   id: number;
@@ -68,13 +68,15 @@ function LanguagePageContent() {
     setLoadingTutorials(true);
     try {
       const apiTutorials = await tutorialAPI.getByLanguage(languageId);
-      // Transform API tutorials to match component interface
-      const transformedTutorials: Tutorial[] = apiTutorials.map(t => ({
-        id: t.id,
-        title: t.title,
-        content: t.content,
-        codeExample: t.code_example || undefined,
-      }));
+      // Transform API tutorials to match component interface and sort by order
+      const transformedTutorials: Tutorial[] = apiTutorials
+        .sort((a, b) => a.order - b.order) // Sort by order field
+        .map(t => ({
+          id: t.id,
+          title: t.title,
+          content: t.content,
+          codeExample: t.code_example || undefined,
+        }));
       setTutorials(transformedTutorials);
     } catch (error) {
       console.error('Error loading tutorials:', error);

@@ -37,8 +37,9 @@ export default function EditTutorialPage({ params }: { params: { id: string } })
         order: tutorial.order,
         is_published: tutorial.is_published
       })
-    } catch (error: any) {
-      showToast(error.message || 'Failed to load tutorial', 'error')
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load tutorial'
+      showToast(errorMessage, 'error')
       router.push('/admin/tutorials')
     } finally {
       setLoading(false)
@@ -60,8 +61,9 @@ export default function EditTutorialPage({ params }: { params: { id: string } })
       await tutorialAPI.adminUpdate(parseInt(params.id), formData, authToken)
       showToast('Tutorial updated successfully!', 'success')
       router.push('/admin/tutorials')
-    } catch (error: any) {
-      showToast(error.message || 'Failed to update tutorial', 'error')
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update tutorial'
+      showToast(errorMessage, 'error')
     } finally {
       setSubmitting(false)
     }

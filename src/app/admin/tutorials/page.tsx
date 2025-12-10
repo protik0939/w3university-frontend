@@ -35,14 +35,14 @@ function TutorialsContent() {
         return
       }
 
-      const params: any = {}
+      const params: { language_id?: string; search?: string } = {}
       if (languageFilter !== 'all') params.language_id = languageFilter
       if (searchTerm) params.search = searchTerm
 
       const data = await tutorialAPI.adminGetAll(params, authToken)
       setTutorials(data)
       setTotal(data.length)
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Load tutorials error:', error)
       showToast('Failed to load tutorials', 'error')
     } finally {
@@ -61,8 +61,9 @@ function TutorialsContent() {
       setTutorials(tutorials.filter(t => t.id !== id))
       showToast('Tutorial deleted successfully', 'success')
       loadTutorials()
-    } catch (error: any) {
-      showToast(error.message || 'Failed to delete tutorial', 'error')
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete tutorial'
+      showToast(errorMessage, 'error')
     }
   }
 
@@ -78,8 +79,9 @@ function TutorialsContent() {
       )
       showToast('Status updated successfully', 'success')
       loadTutorials()
-    } catch (error: any) {
-      showToast(error.message || 'Failed to update status', 'error')
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update status'
+      showToast(errorMessage, 'error')
     }
   }
 

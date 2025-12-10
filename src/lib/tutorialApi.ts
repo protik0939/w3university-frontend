@@ -1,4 +1,5 @@
 // Tutorial API utility functions
+// Using Laravel backend API endpoint
 const API_BASE_URL = 'https://backend-w3university.vercel.app/api'
 
 export interface Tutorial {
@@ -55,6 +56,7 @@ export const tutorialAPI = {
       headers: {
         'Accept': 'application/json',
       },
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -65,10 +67,10 @@ export const tutorialAPI = {
   },
 
   /**
-   * Get tutorials for a specific language
+   * Get tutorials for a specific language (published only)
    */
   async getByLanguage(languageId: string): Promise<Tutorial[]> {
-    return this.getAll({ language_id: languageId })
+    return this.getAll({ language_id: languageId, is_published: true })
   },
 
   /**
@@ -80,6 +82,7 @@ export const tutorialAPI = {
       headers: {
         'Accept': 'application/json',
       },
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -98,6 +101,7 @@ export const tutorialAPI = {
       headers: {
         'Accept': 'application/json',
       },
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -118,6 +122,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
 
@@ -140,6 +145,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
 
@@ -161,6 +167,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -182,6 +189,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify({ ids }),
     })
 
@@ -204,6 +212,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify({ ids, is_published: isPublished }),
     })
 
@@ -239,6 +248,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -259,6 +269,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
 
@@ -281,6 +292,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
 
@@ -302,6 +314,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -323,6 +336,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify({ ids }),
     })
 
@@ -345,6 +359,7 @@ export const tutorialAPI = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
+      credentials: 'include',
       body: JSON.stringify({ ids, is_published: isPublished }),
     })
 
