@@ -1,6 +1,7 @@
+import { ApiLink } from '../apiLink'
 import { getAdminToken } from '../auth'
 
-const API_BASE_URL = 'https://backend-w3university.vercel.app/api'
+const API_BASE_URL = ApiLink
 
 // Helper function to get auth headers
 function getAuthHeaders(): HeadersInit {
@@ -71,6 +72,7 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   try {
     const response = await fetch(`${API_BASE_URL}/blogs/stats`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -119,6 +121,7 @@ export async function fetchAdminBlogs(params?: {
 
     const response = await fetch(`${API_BASE_URL}/blogs?${queryParams}`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -138,6 +141,7 @@ export async function fetchAdminBlog(id: number | string): Promise<AdminBlog> {
   try {
     const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
@@ -158,6 +162,7 @@ export async function createBlog(data: Partial<AdminBlog>): Promise<AdminBlog> {
     const response = await fetch(`${API_BASE_URL}/blogs`, {
       method: 'POST',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data)
     })
 
@@ -179,6 +184,7 @@ export async function updateBlog(id: number | string, data: Partial<AdminBlog>):
     const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify(data)
     })
 
@@ -199,7 +205,8 @@ export async function deleteBlog(id: number | string): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -217,6 +224,7 @@ export async function bulkDeleteBlogs(ids: number[]): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/blogs/bulk-delete`, {
       method: 'POST',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ ids })
     })
 
@@ -234,6 +242,7 @@ export async function fetchCategories(): Promise<string[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/categories`, {
       headers: getAuthHeaders(),
+      credentials: 'include',
       cache: 'no-store'
     })
 
