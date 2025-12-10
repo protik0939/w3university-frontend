@@ -77,6 +77,20 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Dashboard stats API error:', response.status, errorText)
+      
+      // Return empty stats if endpoint doesn't exist or no data
+      if (response.status === 404 || response.status === 500) {
+        return {
+          total_blogs: 0,
+          published_blogs: 0,
+          draft_blogs: 0,
+          total_views: 0,
+          total_categories: 0,
+          recent_blogs: [],
+          popular_categories: []
+        }
+      }
+      
       throw new Error(`Failed to fetch dashboard stats: ${response.status}`)
     }
 
@@ -93,7 +107,16 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
     }
   } catch (error) {
     console.error('Error fetching dashboard stats:', error)
-    throw error
+    // Return empty stats instead of throwing
+    return {
+      total_blogs: 0,
+      published_blogs: 0,
+      draft_blogs: 0,
+      total_views: 0,
+      total_categories: 0,
+      recent_blogs: [],
+      popular_categories: []
+    }
   }
 }
 

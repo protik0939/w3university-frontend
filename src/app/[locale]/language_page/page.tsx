@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import languagesData from '@/data/languages.json';
 import { Terminal, Code, BookOpen, Dumbbell, ChevronLeft, ChevronDown, CheckCircle2, XCircle } from 'lucide-react';
+import { tutorialAPI, Tutorial as APITutorial } from '@/lib/tutorialApi';
 
 interface Tutorial {
   id: number;
@@ -43,12 +44,16 @@ function LanguagePageContent() {
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: number }>({});
   const [showResults, setShowResults] = useState(false);
   const [languageInfo, setLanguageInfo] = useState<LanguageData | null>(null);
+  const [tutorials, setTutorials] = useState<Tutorial[]>([]);
+  const [loadingTutorials, setLoadingTutorials] = useState(false);
 
   useEffect(() => {
     if (langId) {
       const language = languagesData.find((lang: LanguageData) => lang.id === langId);
       if (language) {
         setLanguageInfo(language);
+        // Fetch tutorials for this language
+        loadTutorials(langId);
       } else {
         // Redirect to languages page if language not found
         router.push(`/${currentLocale}/languages`);
@@ -58,6 +63,27 @@ function LanguagePageContent() {
       router.push(`/${currentLocale}/languages`);
     }
   }, [langId, router, currentLocale]);
+
+  const loadTutorials = async (languageId: string) => {
+    setLoadingTutorials(true);
+    try {
+      const apiTutorials = await tutorialAPI.getByLanguage(languageId);
+      // Transform API tutorials to match component interface
+      const transformedTutorials: Tutorial[] = apiTutorials.map(t => ({
+        id: t.id,
+        title: t.title,
+        content: t.content,
+        codeExample: t.code_example || undefined,
+      }));
+      setTutorials(transformedTutorials);
+    } catch (error) {
+      console.error('Error loading tutorials:', error);
+      // Fallback to empty array if API fails
+      setTutorials([]);
+    } finally {
+      setLoadingTutorials(false);
+    }
+  };
 
   if (!languageInfo) {
     return (
@@ -69,33 +95,6 @@ function LanguagePageContent() {
       </div>
     );
   }
-
-  const tutorials: Tutorial[] = [
-    {
-      id: 1,
-      title: 'Introduction to JavaScript',
-      content: 'JavaScript is a lightweight, interpreted programming language with first-class functions.',
-      codeExample: 'console.log("Hello, World!");'
-    },
-    {
-      id: 2,
-      title: 'Variables and Data Types',
-      content: 'Learn about var, let, const and different data types in JavaScript.',
-      codeExample: 'let name = "John";\nconst age = 25;\nvar isStudent = true;'
-    },
-    {
-      id: 3,
-      title: 'Functions',
-      content: 'Functions are reusable blocks of code that perform specific tasks.',
-      codeExample: 'function greet(name) {\n  return `Hello, ${name}!`;\n}'
-    },
-    {
-      id: 4,
-      title: 'Arrays and Objects',
-      content: 'Learn how to work with arrays and objects in JavaScript.',
-      codeExample: 'const arr = [1, 2, 3];\nconst obj = { name: "Alice", age: 30 };'
-    }
-  ];
 
   const exercises: Exercise[] = [
     {
@@ -283,41 +282,58 @@ function LanguagePageContent() {
         {/* Tutorial Section */}
         {activeTab === 'tutorial' && (
           <div className="max-w-4xl mx-auto">
-            <div className="space-y-4">
-              {tutorials.map((tutorial) => (
-                <div key={tutorial.id} className="bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden transition-colors">
-                  <button
-                    onClick={() => toggleTutorial(tutorial.id)}
-                    className="w-full px-6 py-4 flex justify-between items-center hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <span className="text-lg font-semibold text-gray-900 dark:text-white transition-colors">{tutorial.title}</span>
-                    <ChevronDown
-                      className={`text-gray-600 dark:text-gray-400 transform transition-transform ${
-                        expandedTutorial === tutorial.id ? 'rotate-180' : ''
-                      }`}
-                      size={24}
-                    />
-                  </button>
-                  
-                  {expandedTutorial === tutorial.id && (
-                    <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 transition-colors">
-                      <p className="text-gray-600 dark:text-gray-400 mb-4 transition-colors">{tutorial.content}</p>
-                      {tutorial.codeExample && (
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2 transition-colors">
-                            <Code size={14} className="text-green-400" />
-                            Code Example:
-                          </h4>
-                          <pre className="bg-gray-900 dark:bg-gray-950 text-green-400 p-4 rounded-lg overflow-x-auto border border-gray-800">
-                            <code>{tutorial.codeExample}</code>
-                          </pre>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+            {loadingTutorials ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400 transition-colors">Loading tutorials...</p>
+              </div>
+            ) : tutorials.length === 0 ? (
+              <div className="text-center py-12">
+                <BookOpen className="mx-auto h-16 w-16 text-gray-400 mb-4" />
+                <p className="text-gray-600 dark:text-gray-400 transition-colors text-lg">
+                  No tutorials available yet for this language.
+                </p>
+                <p className="text-gray-500 dark:text-gray-500 transition-colors text-sm mt-2">
+                  Check back later for new content!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {tutorials.map((tutorial) => (
+                  <div key={tutorial.id} className="bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden transition-colors">
+                    <button
+                      onClick={() => toggleTutorial(tutorial.id)}
+                      className="w-full px-6 py-4 flex justify-between items-center hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors"
+                    >
+                      <span className="text-lg font-semibold text-gray-900 dark:text-white transition-colors">{tutorial.title}</span>
+                      <ChevronDown
+                        className={`text-gray-600 dark:text-gray-400 transform transition-transform ${
+                          expandedTutorial === tutorial.id ? 'rotate-180' : ''
+                        }`}
+                        size={24}
+                      />
+                    </button>
+                    
+                    {expandedTutorial === tutorial.id && (
+                      <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800 transition-colors">
+                        <p className="text-gray-600 dark:text-gray-400 mb-4 transition-colors">{tutorial.content}</p>
+                        {tutorial.codeExample && (
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2 transition-colors">
+                              <Code size={14} className="text-green-400" />
+                              Code Example:
+                            </h4>
+                            <pre className="bg-gray-900 dark:bg-gray-950 text-green-400 p-4 rounded-lg overflow-x-auto border border-gray-800">
+                              <code>{tutorial.codeExample}</code>
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
