@@ -1,22 +1,86 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { 
   User, Mail, Phone, MapPin, Calendar, Award, 
   Edit2, Save, X, Github, Linkedin, Twitter,
-  BookOpen, Clock, Trophy, Flame, LogOut, Upload, Lock, Globe
+  BookOpen, Clock, Trophy, Flame, LogOut, Upload, Lock, CheckCircle, XCircle
 } from 'lucide-react'
 import Footer from '@/Components/Footer/Footer'
 import { useParams } from 'next/navigation'
 import { profileAPI, getAuthToken, authAPI } from '@/lib/api'
 
+interface ProfileData {
+  user: {
+    id: number
+    name: string
+    email: string
+    created_at: string
+  }
+  profile?: {
+    username?: string
+    phone?: string
+    bio?: string
+    avatar?: string
+    github_url?: string
+    linkedin_url?: string
+    twitter_url?: string
+    portfolio_url?: string
+    location?: string
+    skill_level?: string
+    is_public?: boolean
+  }
+  stats?: {
+    total_courses: number
+    hours_learned: number
+    certificates_earned: number
+    current_streak: number
+  }
+  performance?: {
+    total_courses_completed?: number
+    total_hours_learned?: number
+    total_certificates_earned?: number
+    current_streak?: number
+    experience_level?: number
+    total_points?: number
+  }
+}
+
+interface EditedData {
+  name: string
+  email: string
+  username: string
+  phone: string
+  bio: string
+  github_url: string
+  linkedin_url: string
+  twitter_url: string
+  portfolio_url: string
+  location: string
+  skill_level: string
+  is_public: boolean
+}
+
 export default function ProfilePage() {
   const params = useParams()
   const currentLocale = (params?.locale as string) || 'en'
   
-  const [profileData, setProfileData] = useState<any>(null)
+  const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [editedData, setEditedData] = useState<any>({})
+  const [editedData, setEditedData] = useState<EditedData>({
+    name: '',
+    email: '',
+    username: '',
+    phone: '',
+    bio: '',
+    github_url: '',
+    linkedin_url: '',
+    twitter_url: '',
+    portfolio_url: '',
+    location: '',
+    skill_level: 'beginner',
+    is_public: true
+  })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -29,34 +93,44 @@ export default function ProfilePage() {
   })
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
-  const fetchProfile = async () => {
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
+
+  const fetchProfile = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const response = await profileAPI.getProfile()
+      const response = await profileAPI.getProfile() as { success?: boolean; data?: ProfileData } | ProfileData
       
-      if (response.success) {
-        setProfileData(response.data)
-        setEditedData({
-          name: response.data.user.name,
-          email: response.data.user.email,
-          username: response.data.profile?.username || '',
-          phone: response.data.profile?.phone || '',
-          bio: response.data.profile?.bio || '',
-          github_url: response.data.profile?.github_url || '',
-          linkedin_url: response.data.profile?.linkedin_url || '',
-          twitter_url: response.data.profile?.twitter_url || '',
-          portfolio_url: response.data.profile?.portfolio_url || '',
-          location: response.data.profile?.location || '',
-          skill_level: response.data.profile?.skill_level || 'beginner',
-          is_public: response.data.profile?.is_public ?? true
-        })
-      }
-    } catch (err: any) {
-      console.error('Error fetching profile:', err)
-      setError(err.message)
-      if (err.message.includes('Session expired') || err.message.includes('Unauthenticated')) {
+      console.log('Profile API Response:', response)
+      
+      // Handle both formats: with success property or direct data
+      const data = 'success' in response && response.success ? response.data! : response as ProfileData
+      
+      setProfileData(data)
+      setEditedData({
+        name: data.user?.name || '',
+        email: data.user?.email || '',
+        username: data.profile?.username || '',
+        phone: data.profile?.phone || '',
+        bio: data.profile?.bio || '',
+        github_url: data.profile?.github_url || '',
+        linkedin_url: data.profile?.linkedin_url || '',
+        twitter_url: data.profile?.twitter_url || '',
+        portfolio_url: data.profile?.portfolio_url || '',
+        location: data.profile?.location || '',
+        skill_level: data.profile?.skill_level || 'beginner',
+        is_public: data.profile?.is_public ?? true
+      })
+    } catch (err) {
+      const error = err as Error
+      console.error('Error fetching profile:', error)
+      setError(error.message)
+      if (error.message.includes('Session expired') || error.message.includes('Unauthenticated')) {
         setTimeout(() => {
           window.location.href = `/${currentLocale}/login`
         }, 1000)
@@ -64,7 +138,7 @@ export default function ProfilePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentLocale])
 
   useEffect(() => {
     setMounted(true)
@@ -76,7 +150,7 @@ export default function ProfilePage() {
     }
     
     fetchProfile()
-  }, [currentLocale])
+  }, [currentLocale, fetchProfile])
 
   const handleSave = async () => {
     try {
@@ -90,7 +164,21 @@ export default function ProfilePage() {
         })
       }
 
-      await profileAPI.updateProfile(editedData)
+      // Only send non-empty string values
+      const profileUpdateData: Record<string, string | boolean> = {}
+      
+      if (editedData.username) profileUpdateData.username = editedData.username
+      if (editedData.phone) profileUpdateData.phone = editedData.phone
+      if (editedData.bio) profileUpdateData.bio = editedData.bio
+      if (editedData.github_url) profileUpdateData.github_url = editedData.github_url
+      if (editedData.linkedin_url) profileUpdateData.linkedin_url = editedData.linkedin_url
+      if (editedData.twitter_url) profileUpdateData.twitter_url = editedData.twitter_url
+      if (editedData.portfolio_url) profileUpdateData.portfolio_url = editedData.portfolio_url
+      if (editedData.location) profileUpdateData.location = editedData.location
+      if (editedData.skill_level) profileUpdateData.skill_level = editedData.skill_level
+      profileUpdateData.is_public = editedData.is_public
+
+      await profileAPI.updateProfile(profileUpdateData)
 
       if (avatarFile) {
         await profileAPI.uploadAvatar(avatarFile)
@@ -100,10 +188,11 @@ export default function ProfilePage() {
 
       await fetchProfile()
       setIsEditing(false)
-      alert('Profile updated successfully!')
-    } catch (err: any) {
-      console.error('Error saving profile:', err)
-      alert('Failed to save profile: ' + err.message)
+      showToast('Profile updated successfully!', 'success')
+    } catch (err) {
+      const error = err as Error
+      console.error('Error saving profile:', error)
+      showToast('Failed to save profile: ' + error.message, 'error')
     } finally {
       setSaving(false)
     }
@@ -124,20 +213,21 @@ export default function ProfilePage() {
   const handlePasswordChange = async () => {
     try {
       if (passwordData.new_password !== passwordData.new_password_confirmation) {
-        alert('Passwords do not match')
+        showToast('Passwords do not match', 'error')
         return
       }
 
       await profileAPI.changePassword(passwordData)
-      alert('Password changed successfully!')
+      showToast('Password changed successfully!', 'success')
       setShowPasswordModal(false)
       setPasswordData({
         current_password: '',
         new_password: '',
         new_password_confirmation: ''
       })
-    } catch (err: any) {
-      alert('Failed to change password: ' + err.message)
+    } catch (err) {
+      const error = err as Error
+      showToast('Failed to change password: ' + error.message, 'error')
     }
   }
 
@@ -183,6 +273,20 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top duration-300">
+          <div className={`flex items-center gap-3 px-6 py-4 rounded-lg shadow-lg ${
+            toast.type === 'success' 
+              ? 'bg-green-500 text-white' 
+              : 'bg-red-500 text-white'
+          }`}>
+            {toast.type === 'success' ? <CheckCircle size={20} /> : <XCircle size={20} />}
+            <span className="font-medium">{toast.message}</span>
+          </div>
+        </div>
+      )}
+
       <div className="relative pt-24 pb-12 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">

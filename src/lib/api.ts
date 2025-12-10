@@ -1,9 +1,20 @@
 // API Configuration and Helper Functions
+
+import { ApiLink } from "./apiLink"
+
+// Type definitions
+interface AuthResponse {
+  token?: string
+  access_token?: string
+  user: {
+    id: number
+    name: string
+    email: string
+  }
+}
+
 // Use localhost for development, Vercel for production
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
-  (process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:8000/api' 
-    : 'https://backend-w3university.vercel.app/api')
+const API_BASE_URL = ApiLink;
 
 // Get auth token from localStorage
 export function getAuthToken(): string | null {
@@ -25,16 +36,16 @@ export function isAuthenticated(): boolean {
 }
 
 // API Request Helper
-async function apiRequest(
+async function apiRequest<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<any> {
+): Promise<T> {
   const token = getAuthToken()
   
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(options.headers || {}),
+    ...(options.headers as Record<string, string> || {}),
   }
 
   if (token) {
@@ -71,7 +82,7 @@ export const authAPI = {
     password: string
     password_confirmation: string
   }) => {
-    const data = await apiRequest('/register', {
+    const data = await apiRequest<AuthResponse>('/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     })
@@ -80,7 +91,13 @@ export const authAPI = {
     const token = data.token || data.access_token
     if (token) {
       localStorage.setItem('authToken', token)
-      localStorage.setItem('userSession', JSON.stringify(data.user))
+      // Store user session with proper structure
+      const userSession = {
+        isLoggedIn: true,
+        user: data.user
+      }
+      localStorage.setItem('userSession', JSON.stringify(userSession))
+      console.log('Register - Stored user session:', userSession)
     }
 
     return data
@@ -88,7 +105,7 @@ export const authAPI = {
 
   // Login user
   login: async (credentials: { email: string; password: string }) => {
-    const data = await apiRequest('/login', {
+    const data = await apiRequest<AuthResponse>('/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     })
@@ -97,7 +114,13 @@ export const authAPI = {
     const token = data.token || data.access_token
     if (token) {
       localStorage.setItem('authToken', token)
-      localStorage.setItem('userSession', JSON.stringify(data.user))
+      // Store user session with proper structure
+      const userSession = {
+        isLoggedIn: true,
+        user: data.user
+      }
+      localStorage.setItem('userSession', JSON.stringify(userSession))
+      console.log('Login - Stored user session:', userSession)
     }
 
     return data
@@ -121,9 +144,9 @@ export const authAPI = {
 
 // Profile APIs
 export const profileAPI = {
-  // Get complete profile
+  // Get complete profile (uses /user endpoint)
   getProfile: async () => {
-    return await apiRequest('/profile')
+    return await apiRequest('/user')
   },
 
   // Update basic info (name, email)
@@ -221,7 +244,15 @@ export const favoritesAPI = {
   },
 
   // Update favorite
-  updateFavorite: async (id: number, data: any) => {
+  updateFavorite: async (id: number, data: Partial<{
+    type: 'course' | 'tutorial' | 'blog' | 'tool' | 'resource'
+    title: string
+    description?: string
+    url?: string
+    category?: string
+    tags?: string[]
+    order?: number
+  }>) => {
     return await apiRequest(`/profile/favorites/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -283,7 +314,7 @@ export const publicProfileAPI = {
   },
 }
 
-export default {
+const api = {
   auth: authAPI,
   profile: profileAPI,
   favorites: favoritesAPI,
@@ -291,3 +322,5 @@ export default {
   performance: performanceAPI,
   publicProfile: publicProfileAPI,
 }
+
+export default api
