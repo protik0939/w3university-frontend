@@ -13,7 +13,7 @@ import { profileAPI, getAuthToken, authAPI } from '@/lib/api'
 interface ProfileData {
   user: {
     id: number
-    name: string
+    name: string                
     email: string
     created_at: string
   }
