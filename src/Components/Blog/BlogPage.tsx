@@ -5,6 +5,7 @@ import { BlogPost, fetchBlogs, fetchCategories } from '@/lib/blogApi'
 import Footer from '../Footer/Footer'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import Image from 'next/image'
 
 export default function BlogPage() {
   const params = useParams()
@@ -178,7 +179,18 @@ export default function BlogPage() {
                   
                   <div className="hidden md:flex items-center justify-center">
                     <div className="w-full h-64 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30 dark:border-green-500/30 flex items-center justify-center">
-                      <div className="text-6xl">📝</div>
+                      {
+                        featuredPost.image_url ? (
+                        <Image
+                          src={featuredPost.image_url}
+                          alt={getLocalizedField(featuredPost, 'title')}
+                          className="w-full h-full object-cover rounded-xl"
+                          height={100}
+                          width={100}
+                        />
+                        ) : <div className="text-6xl">📝</div>
+                      }
+                      
                     </div>
                   </div>
                 </div>
@@ -249,7 +261,17 @@ export default function BlogPage() {
                     <article className="group relative bg-gray-100 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-green-500/50 hover:shadow-xl hover:shadow-green-500/10 transition-all duration-300 cursor-pointer flex flex-col h-full">
                       {/* Image placeholder */}
                       <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-center relative overflow-hidden transition-colors">
-                        <div className="text-5xl opacity-50">💻</div>
+                        {
+                        post.image_url ? (
+                          <Image
+                            src={post.image_url}
+                            alt={getLocalizedField(post, 'title')}
+                            className="w-full h-full object-cover"
+                            height={100}
+                            width={100}
+                          />
+                        ) : null
+                        }
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-100/80 dark:from-gray-900/80 to-transparent" />
                       </div>
                       
