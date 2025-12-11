@@ -70,7 +70,7 @@ export interface PaginatedBlogResponse {
 // Fetch Dashboard Stats
 export async function fetchDashboardStats(): Promise<DashboardStats> {
   try {
-    const response = await fetch(`${API_BASE_URL}/blogs/stats`, {
+    const response = await fetch(`${API_BASE_URL}/admin/blogs/stats`, {
       headers: getAuthHeaders(),
       credentials: 'include',
       cache: 'no-store'
@@ -142,7 +142,7 @@ export async function fetchAdminBlogs(params?: {
     if (params?.sort_by) queryParams.append('sort_by', params.sort_by)
     if (params?.sort_order) queryParams.append('sort_order', params.sort_order)
 
-    const response = await fetch(`${API_BASE_URL}/blogs?${queryParams}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/blogs?${queryParams}`, {
       headers: getAuthHeaders(),
       credentials: 'include',
       cache: 'no-store'
@@ -162,7 +162,7 @@ export async function fetchAdminBlogs(params?: {
 // Fetch Single Blog
 export async function fetchAdminBlog(id: number | string): Promise<AdminBlog> {
   try {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/blogs/${id}`, {
       headers: getAuthHeaders(),
       credentials: 'include',
       cache: 'no-store'
@@ -172,7 +172,8 @@ export async function fetchAdminBlog(id: number | string): Promise<AdminBlog> {
       throw new Error('Failed to fetch blog')
     }
 
-    return await response.json()
+    const result = await response.json()
+    return result.data || result
   } catch (error) {
     console.error('Error fetching blog:', error)
     throw error
@@ -182,7 +183,7 @@ export async function fetchAdminBlog(id: number | string): Promise<AdminBlog> {
 // Create Blog
 export async function createBlog(data: Partial<AdminBlog>): Promise<AdminBlog> {
   try {
-    const response = await fetch(`${API_BASE_URL}/blogs`, {
+    const response = await fetch(`${API_BASE_URL}/admin/blogs`, {
       method: 'POST',
       headers: getAuthHeaders(),
       credentials: 'include',
@@ -194,7 +195,8 @@ export async function createBlog(data: Partial<AdminBlog>): Promise<AdminBlog> {
       throw new Error(error.message || 'Failed to create blog')
     }
 
-    return await response.json()
+    const result = await response.json()
+    return result.blog || result.data || result
   } catch (error) {
     console.error('Error creating blog:', error)
     throw error
@@ -204,7 +206,7 @@ export async function createBlog(data: Partial<AdminBlog>): Promise<AdminBlog> {
 // Update Blog
 export async function updateBlog(id: number | string, data: Partial<AdminBlog>): Promise<AdminBlog> {
   try {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/blogs/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       credentials: 'include',
@@ -216,7 +218,8 @@ export async function updateBlog(id: number | string, data: Partial<AdminBlog>):
       throw new Error(error.message || 'Failed to update blog')
     }
 
-    return await response.json()
+    const result = await response.json()
+    return result.blog || result.data || result
   } catch (error) {
     console.error('Error updating blog:', error)
     throw error
@@ -226,7 +229,7 @@ export async function updateBlog(id: number | string, data: Partial<AdminBlog>):
 // Delete Blog
 export async function deleteBlog(id: number | string): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/admin/blogs/${id}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
       credentials: 'include'

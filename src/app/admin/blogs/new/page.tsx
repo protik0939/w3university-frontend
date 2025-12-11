@@ -5,6 +5,8 @@ import { useToast } from '@/Components/Providers/ToastProvider'
 import { Save, Globe } from 'lucide-react'
 import AdminSidebar from '@/Components/Admin/AdminSidebar'
 import Breadcrumb from '@/Components/Admin/Breadcrumb'
+import ImageUpload from '@/Components/Admin/ImageUpload'
+import { createBlog } from '@/lib/api/admin'
 
 export default function NewBlogPage() {
   const router = useRouter()
@@ -18,11 +20,16 @@ export default function NewBlogPage() {
     content: '',
     content_bn: '',
     category: '',
+    category_bn: '',
     author: '',
+    author_bn: '',
     tags: '',
+    tags_bn: '',
     read_time: '',
+    read_time_bn: '',
     status: 'draft' as 'draft' | 'published',
-    image_url: ''
+    image_url: '',
+    featured_image: ''
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,11 +37,20 @@ export default function NewBlogPage() {
     setLoading(true)
 
     try {
-      // API call to create blog
+      // Convert comma-separated tags to arrays
+      const tags = formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+      const tags_bn = formData.tags_bn.split(',').map(t => t.trim()).filter(Boolean)
+
+      await createBlog({
+        ...formData,
+        tags,
+        tags_bn: tags_bn.length > 0 ? tags_bn : undefined
+      })
+
       showToast('Blog created successfully!', 'success')
       router.push('/admin/blogs')
-    } catch {
-      showToast('Failed to create blog', 'error')
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to create blog', 'error')
     } finally {
       setLoading(false)
     }
@@ -153,6 +169,19 @@ export default function NewBlogPage() {
             </div>
           </div>
 
+          {/* Image Upload */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 transition-colors">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">Featured Image</h2>
+            <ImageUpload
+              value={formData.image_url}
+              onChange={(url) => setFormData({ ...formData, image_url: url })}
+              label="Blog Featured Image"
+              aspectRatio={16 / 9}
+              maxWidth={1200}
+              maxHeight={630}
+            />
+          </div>
+
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 transition-colors">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">Metadata & Settings</h2>
             
@@ -203,14 +232,47 @@ export default function NewBlogPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">Image URL <span className="text-gray-400">(optional)</span></label>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">Category (বাংলা) <span className="text-gray-400">(optional)</span></label>
                 <input
-                  type="url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  type="text"
+                  value={formData.category_bn}
+                  onChange={(e) => setFormData({ ...formData, category_bn: e.target.value })}
                   className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none transition-all"
-                  placeholder="https://example.com/image.jpg"
+                  placeholder="যেমন: রিয়্যাক্ট, জাভাস্ক্রিপ্ট"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">Author (বাংলা) <span className="text-gray-400">(optional)</span></label>
+                <input
+                  type="text"
+                  value={formData.author_bn}
+                  onChange={(e) => setFormData({ ...formData, author_bn: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none transition-all"
+                  placeholder="লেখকের নাম (বাংলা)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">Tags (বাংলা) <span className="text-gray-400">(comma-separated)</span></label>
+                <input
+                  type="text"
+                  value={formData.tags_bn}
+                  onChange={(e) => setFormData({ ...formData, tags_bn: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none transition-all"
+                  placeholder="রিয়্যাক্ট, জাভাস্ক্রিপ্ট, ওয়েব ডেভেলপমেন্ট"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">Read Time (বাংলা) <span className="text-gray-400">(optional)</span></label>
+                <input
+                  type="text"
+                  value={formData.read_time_bn}
+                  onChange={(e) => setFormData({ ...formData, read_time_bn: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none transition-all"
+                  placeholder="৫ মিনিট পড়ুন"
                 />
               </div>
 
